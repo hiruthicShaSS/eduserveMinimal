@@ -1,4 +1,10 @@
+import 'package:eduserveMinimal/settings.dart';
 import 'package:flutter/material.dart';
+
+import 'package:hexcolor/hexcolor.dart';
+
+import 'package:eduserveMinimal/home.dart';
+import 'package:eduserveMinimal/user.dart';
 
 void main() {
   runApp(
@@ -9,7 +15,7 @@ void main() {
         visualDensity: VisualDensity.adaptivePlatformDensity,
         colorScheme: ColorScheme.dark(),
       ),
-      home: MyHomePage(title: "eduserveMinimal"),
+      home: MyHomePage(title: "eduserve"),
     ),
   );
 }
@@ -24,233 +30,93 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  int _currentIndex = 0;
+  final List<Widget> _children = [
+    Home(classAttendence: 98.0, assemblyAttendence: 45.0),
+    User(),
+  ];
+
+  List<Widget> appBarActions = [];
+
+  final Shader linearGradient = LinearGradient(
+    colors: <Color>[
+      HexColor("#833ab4"),
+      HexColor("#fd1d1d"),
+      HexColor("#fcb045")
+    ],
+  ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
+
   @override
   Widget build(BuildContext context) {
-    final double _width = MediaQuery.of(context).size.width;
-    final double _height = MediaQuery.of(context).size.height;
-
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(
+          "eduserveMinimal",
+          style: TextStyle(foreground: Paint()..shader = linearGradient),
+        ),
         backgroundColor: Colors.black87,
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(Icons.more_horiz_outlined),
+          icon: Icon(Icons.menu),
           onPressed: () {},
         ),
+        actions: appBarActions,
       ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            buildAttendenceContainer(_width, _height),
-            SizedBox(height: 10.0),
-            buildStudentInfoContainer(),
-            SizedBox(height: 10.0),
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.only(
-                    left: _width / 30, right: _width / 30, top: _height / 60),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Colors.black12,
-                ),
-                child: ListView(
-                  children: [
-                    Center(child: Text("Leave Application's", style: TextStyle(fontSize: 20, color: Colors.purple[400]),)),
-                    SizedBox(height: 20.0),
-                    ListTile(
-                      title: Text("List item Active"),
-                      tileColor: Colors.green,
-                    ),
-                    SizedBox(height: 5.0),
-                    ListTile(
-                      title: Text("List item Pending"),
-                      tileColor: Colors.orange,
-                    ),
-                    SizedBox(height: 5.0),
-                    ListTile(
-                      title: Text("List item Rejected"),
-                      tileColor: Colors.red,
-                    ),
-                    SizedBox(height: 5.0),
-                    ListTile(
-                      title: Text("List item Rejected"),
-                      tileColor: Colors.red,
-                    ),
-                  ],
-                ),
-              ),
-            )
+      body: _children[_currentIndex],
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(
+              topRight: Radius.circular(30), topLeft: Radius.circular(30)),
+          boxShadow: [
+            BoxShadow(color: Colors.white38, spreadRadius: 0, blurRadius: 10),
           ],
         ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(30.0),
+            topRight: Radius.circular(30.0),
+          ),
+          child: BottomNavigationBar(
+            currentIndex: _currentIndex,
+            onTap: onTabTapped,
+            items: [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: "Home",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.supervised_user_circle),
+                label: "User",
+              ),
+            ],
+            selectedItemColor: Colors.amberAccent,
+            unselectedItemColor: Colors.white,
+          ),
+        ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0,
-        onTap: (index) {
-          print(index);
+    );
+  }
+
+  void onTabTapped(int index) {
+    if (index == 1) {
+      // user Page
+      appBarActions.add(IconButton(
+        icon: Icon(Icons.settings),
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Settings(),
+              ));
         },
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: "Home",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.supervised_user_circle),
-            label: "User",
-          ),
-        ],
-      ),
-    );
-  }
+      ));
+    } else if (index == 0) {
+      // Home Page
+      appBarActions.clear();
+    }
 
-  Container buildStudentInfoContainer() {
-    return Container(
-      // Basic student info
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "Current Semester: ",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
-              ),
-              Text(
-                "4th",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "Arrear's: ",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
-              ),
-              Text(
-                "5",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "ML Corrected: ",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
-              ),
-              Text(
-                "98.0",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "OD Corrected: ",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
-              ),
-              Text(
-                "97.0",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Container buildAttendenceContainer(double width, double height) {
-    return Container(
-      // Attendance Details
-      color: Colors.black87,
-      padding: EdgeInsets.only(bottom: 10.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Padding(
-            // Class Attendence box
-            padding: EdgeInsets.only(left: width / 20, top: height / 30),
-            child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15.0),
-                  color: Colors.white24,
-                ),
-                width: width / 2.5,
-                height: height / 8,
-                child: Column(
-                  children: [
-                    Text(
-                      "Class Attendance",
-                      style: TextStyle(
-                          fontSize: 16.0, fontWeight: FontWeight.w800),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20.0, left: 35.0),
-                      child: Row(
-                        children: [
-                          Text(
-                            "98.0",
-                            style: TextStyle(
-                                fontSize: 30.0, color: Colors.green[300]),
-                          ),
-                          Padding(
-                              padding: EdgeInsets.only(top: 10.0, bottom: 2.0),
-                              child: Text(
-                                "/100",
-                                style: TextStyle(fontSize: 15.0),
-                              ))
-                        ],
-                      ),
-                    ),
-                  ],
-                )),
-          ),
-          Padding(
-            // Assembly Attendence box
-            padding: EdgeInsets.only(left: width / 10, top: height / 30),
-            child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15.0),
-                  color: Colors.white24,
-                ),
-                width: width / 2.5,
-                height: height / 8,
-                child: Column(
-                  children: [
-                    Text(
-                      "Assembly Attendance",
-                      style: TextStyle(
-                          fontSize: 16.0, fontWeight: FontWeight.w800),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20.0, left: 35.0),
-                      child: Row(
-                        children: [
-                          Text(
-                            "45",
-                            style: TextStyle(fontSize: 15.0, color: Colors.red),
-                          ),
-                          Padding(
-                              padding: EdgeInsets.only(top: 10.0, bottom: 2.0),
-                              child: Text(
-                                "/100",
-                                style: TextStyle(fontSize: 30.0),
-                              ))
-                        ],
-                      ),
-                    ),
-                  ],
-                )),
-          ),
-        ],
-      ),
-    );
+    setState(() {
+      _currentIndex = index;
+    });
   }
 }
