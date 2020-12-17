@@ -11,6 +11,8 @@ eduserveMinimal.iml
 
 .vscode/
 
+# Secrets
+client_secrets.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

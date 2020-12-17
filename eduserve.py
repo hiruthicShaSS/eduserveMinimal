@@ -1,9 +1,12 @@
 import os
 import time
 import json
+import datetime
 
 from colorama import init
 from colorama import Fore, Back, Style
+from pydrive.auth import GoogleAuth
+from pydrive.drive import GoogleDrive
 
 from selenium import webdriver
 from selenium.common.exceptions import ElementNotInteractableException, NoSuchElementException
@@ -113,8 +116,6 @@ class EduServe:
                     try:
                         applications.append(web.find_element_by_xpath(
                             f"//tbody/tr[@id='ctl00_mainContent_grdStudentOD_ctl00__{row}']/td[{column}]").text)
-                        print(
-                            f"//tbody/tr[@id='ctl00_mainContent_grdStudentOD_ctl00__{row}']/td[{column}]")
                     except IndexError:
                         continue
                     except NoSuchElementException:
@@ -122,14 +123,34 @@ class EduServe:
             except NoSuchElementException:
                 continue
 
-        print(applications)
         self.dumpData()
 
     def dumpData(self):
-        print("Writing to file...", end="")
+        print(Fore.WHITE, "Writing to file...")
         with open("datadump.json", "w") as dump:
+            self.data["lastUpdated"] = datetime.datetime.now().strftime(
+                "%d-%m-%Y %H:%M:%S")
             json.dump(self.data, dump)
         print(Fore.GREEN, "Done.")
 
+    def upload(self):
+        print(Fore.WHITE, "Uploading data...")
+        gauth = GoogleAuth()
+        gauth.LocalWebserverAuth()
+        drive = GoogleDrive(gauth)
+
+        tracking = drive.CreateFile(
+            {"title": "datadump.json", 'mimeType': 'application/json', "id": self.config["sharingLink"].split("/")[5]})
+        tracking_content = tracking.GetContentString()
+        lines = str()
+        for line in open("datadump.json", "r").readlines():
+            lines += line
+        tracking_content = lines
+        tracking.SetContentString(tracking_content)
+        tracking.Upload()
+        tracking = None
+        print(Fore.GREEN, "Done.")
+
     def finish(self):
+        self.upload()
         web.close()  # Close browser instance
