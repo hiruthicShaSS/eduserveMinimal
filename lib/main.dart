@@ -31,8 +31,9 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0;
+
   final List<Widget> _children = [
-    Home(classAttendence: 98.0, assemblyAttendence: 45.0),
+    Home(),
     User(),
   ];
 
@@ -45,6 +46,7 @@ class _MyHomePageState extends State<MyHomePage> {
       HexColor("#fcb045")
     ],
   ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
+
 
   @override
   Widget build(BuildContext context) {

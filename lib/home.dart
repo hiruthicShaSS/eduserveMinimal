@@ -1,20 +1,33 @@
 import 'package:flutter/material.dart';
 
-class Home extends StatefulWidget {
-  final double classAttendence;
-  final double assemblyAttendence;
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-  Home(
-      {Key key,
-      @required this.classAttendence,
-      @required this.assemblyAttendence})
-      : super(key: key);
+import 'package:eduserveMinimal/service/getData.dart';
+
+class Home extends StatefulWidget {
+  Home({Key key}) : super(key: key);
 
   @override
   _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
+  static Services services = new Services();
+  Map cloudData = services.getData();
+
+  void updateData() async {
+    if (cloudData["downloaded"] != true) {
+      cloudData = await services.getDataFromCloud();
+      setState(() {});
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    updateData();
+  }
+
   @override
   Widget build(BuildContext context) {
     final double _width = MediaQuery.of(context).size.width;
@@ -34,19 +47,30 @@ class _HomeState extends State<Home> {
   }
 
   Expanded buildApplicationsExpanded(double _width, double _height) {
-    List data = [
-      {"title": "List item Active", "status": 1},
-      {"title": "List item Pending", "status": 2},
-      {"title": "List item Active", "status": 1},
-      {"title": "List item Rejected", "status": 3},
-      {"title": "List item Rejected", "status": 3},
-      {"title": "List item Rejected", "status": 3},
-      {"title": "List item Active", "status": 1},
-      {"title": "List item Pending", "status": 2},
-      {"title": "List item Rejected", "status": 3},
-      {"title": "List item Active", "status": 1},
-      {"title": "List item Active", "status": 1},
-    ]; // Dummy data
+    List parseApplications() {
+      Map data = cloudData["leaveApplications"];
+      List returnData = new List();
+
+      data.forEach((key, value) {
+        try {
+          returnData.add({
+            "title": key,
+            "type": value[0],
+            "date": value[2],
+            "dayOff": value[3],
+            "status": (value[6] == "Rejected")
+                ? 3
+                : (value[6] == "Active")
+                    ? 1
+                    : 2
+          });
+        } catch (e) {}
+      });
+
+      return returnData;
+    }
+
+    List data = parseApplications();
 
     return Expanded(
       child: Container(
@@ -64,6 +88,21 @@ class _HomeState extends State<Home> {
                   SizedBox(height: 5.0),
                   ListTile(
                     title: Text(data[index]["title"]),
+                    leading: (data[index]["dayOff"] == "Full Day")
+                        ? Icon(Icons.star)
+                        : (data[index]["dayOff"] == "Half Day")
+                            ? Icon(Icons.star_half)
+                            : null,
+                    trailing: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(data[index]["date"]),
+                        Text(
+                          data[index]["type"],
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
                     tileColor: (data[index]["status"] == 1)
                         ? Colors.green
                         : (data[index]["status"] == 2)
@@ -91,7 +130,7 @@ class _HomeState extends State<Home> {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
               ),
               Text(
-                "4th",
+                cloudData["semester"],
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
               ),
             ],
@@ -104,7 +143,7 @@ class _HomeState extends State<Home> {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
               ),
               Text(
-                "5",
+                cloudData["arrears"],
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
               ),
             ],
@@ -152,24 +191,34 @@ class _HomeState extends State<Home> {
     Color classAttendenceBoxColor = Colors.white24;
     Color assemblyAttendenceBoxColor = Colors.white24;
 
-    if (widget.classAttendence < 85.0) {
-      classAttendenceBoxColor = Colors.amber[900];
-    }
-    if (widget.assemblyAttendence < 85.0) {
-      assemblyAttendenceBoxColor = Colors.amber[900];
+    String classAttStatus = "";
+    String asmAttStatus = "";
+    try {
+      if (double.parse(cloudData["att"]) < 85.0) {
+        classAttendenceBoxColor = Colors.amber[900];
+      }
+      if (double.parse(cloudData["asm"]) < 85.0) {
+        assemblyAttendenceBoxColor = Colors.amber[900];
+      }
+    } on Exception catch (e) {
+      classAttStatus = cloudData["att"];
+      asmAttStatus = cloudData["asm"];
+
+      cloudData["att"] = "0.0";
+      cloudData["asm"] = "0.0";
     }
 
     return Container(
       // Attendance Details
       padding: EdgeInsets.only(bottom: 20.0),
       decoration: BoxDecoration(
-        color: Colors.black87,
-        borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
+          color: Colors.black87,
+          borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(20),
+              bottomRight: Radius.circular(20)),
           boxShadow: [
             BoxShadow(blurRadius: 20, color: Colors.white24, spreadRadius: 3)
-          ]
-      ),
+          ]),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -194,19 +243,21 @@ class _HomeState extends State<Home> {
                     padding: const EdgeInsets.only(top: 20.0, left: 35.0),
                     child: Row(
                       children: [
-                        Text(widget.classAttendence.toString(),
-                            style: (widget.classAttendence > 85.0)
+                        Text(cloudData["att"].toString(),
+                            style: (double.parse(cloudData["att"]) > 85.0)
                                 ? safeNumbersStyle[0]
                                 : unsafeNumbersStyle[0]),
                         Padding(
                             padding: EdgeInsets.only(top: 10.0, bottom: 2.0),
                             child: Text("/100",
-                                style: (widget.classAttendence > 85.0)
+                                style: (double.parse(cloudData["att"]) > 85.0)
                                     ? safeNumbersStyle[1]
                                     : unsafeNumbersStyle[1]))
                       ],
                     ),
                   ),
+                  Text(
+                      (classAttStatus == "Out-of-rolls") ? classAttStatus : ""),
                 ],
               ),
             ),
@@ -232,19 +283,20 @@ class _HomeState extends State<Home> {
                     padding: const EdgeInsets.only(top: 20.0, left: 35.0),
                     child: Row(
                       children: [
-                        Text(widget.assemblyAttendence.toString(),
-                            style: (widget.assemblyAttendence > 85.0)
+                        Text(cloudData["asm"].toString(),
+                            style: (double.parse(cloudData["asm"]) > 85.0)
                                 ? safeNumbersStyle[0]
                                 : unsafeNumbersStyle[0]),
                         Padding(
                             padding: EdgeInsets.only(top: 10.0, bottom: 2.0),
                             child: Text("/100",
-                                style: (widget.assemblyAttendence > 85.0)
+                                style: (double.parse(cloudData["asm"]) > 85.0)
                                     ? safeNumbersStyle[1]
                                     : unsafeNumbersStyle[1]))
                       ],
                     ),
                   ),
+                  Text((asmAttStatus == "Out-of-rolls") ? asmAttStatus : ""),
                 ],
               ),
             ),

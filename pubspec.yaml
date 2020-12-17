@@ -27,6 +27,9 @@ dependencies:
   hexcolor: ^1.0.6
   url_launcher: ^5.7.10
   fluttertoast: ^7.1.5
+  http: ^0.12.2
+  flutter_spinkit: ^4.1.2
+  shared_preferences: ^0.5.12+4
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

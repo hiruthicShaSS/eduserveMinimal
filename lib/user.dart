@@ -1,10 +1,9 @@
+import 'package:eduserveMinimal/service/getData.dart';
 import 'package:flutter/material.dart';
 
 class User extends StatelessWidget {
-  final String name = "hiruthicSha";
-  final String register = "URK19CS2017";
-  final String dob = "18/05/2002";
-  final String dept = "CSE";
+  static Services services = new Services();
+  Map cloudData = services.getData();
 
   @override
   Widget build(BuildContext context) {
@@ -26,10 +25,9 @@ class User extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Name: $name"),
-            Text("Register Number: $register"),
-            Text("D.O.B: $dob"),
-            Text("Dept. : $dept"),
+            Text("Name: ${cloudData['name']}"),
+            Text("Register Number: ${cloudData['reg']}"),
+            Text("Dept. : ${cloudData['programme']}"),
           ],
         )
       ],

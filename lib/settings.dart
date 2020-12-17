@@ -2,14 +2,20 @@ import 'package:flutter/material.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Settings extends StatelessWidget {
   final String eduserveURL =
       "https://eduserve.karunya.edu/Login.aspx?ReturnUrl=%2f";
+  SharedPreferences prefs;
+  void setPrefs() async {
+    prefs = await SharedPreferences.getInstance();
+  }
 
   @override
   Widget build(BuildContext context) {
     final _height = MediaQuery.of(context).size.height;
+    setPrefs();
 
     return Scaffold(
       appBar: AppBar(
@@ -66,11 +72,15 @@ class Settings extends StatelessWidget {
   }
 
   Scaffold buildUpdateLinkPage() {
+    TextEditingController _linkController = new TextEditingController();
+    _linkController.text = prefs.getString("link");
+
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           TextField(
+            controller: _linkController,
             decoration: new InputDecoration(
               labelText: "New cloud link",
               fillColor: Colors.white,
@@ -88,7 +98,11 @@ class Settings extends StatelessWidget {
           SizedBox(height: 10),
           RaisedButton(
             child: Text("Update"),
-            onPressed: () {},
+            onPressed: () async {
+              String link = _linkController.text;
+              await prefs.setString("link", link);
+              Fluttertoast.showToast(msg: "Link updated");
+            },
           )
         ],
       ),
