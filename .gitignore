@@ -10,6 +10,7 @@ eduserveMinimal.iml
 .flutter-plugins-dependencies
 
 .vscode/
+--obfuscate/
 
 # Secrets
 client_secrets.json
