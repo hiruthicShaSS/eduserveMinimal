@@ -60,7 +60,7 @@ class EduServe:
         self.data["mobile"] = web.find_element_by_id(
             'mainContent_LBLMOBILENO').text
         self.data["mentor"] = web.find_element_by_id(
-            'mainContent_LBLMOBILENO').text
+            'mainContent_LBLMENTOR').text
         self.data["studentIMG"] = web.find_element_by_id(
             "mainContent_IMGSTUDENT").get_attribute("src")
 
