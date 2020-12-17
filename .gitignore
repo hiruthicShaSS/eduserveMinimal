@@ -6,6 +6,11 @@ build
 ios
 .packages
 eduserveMinimal.iml
+.flutter-plugins
+.flutter-plugins-dependencies
+
+.vscode/
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
