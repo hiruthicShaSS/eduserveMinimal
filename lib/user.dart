@@ -1,20 +1,26 @@
+import 'package:eduserveMinimal/home.dart';
 import 'package:eduserveMinimal/service/getData.dart';
 import 'package:flutter/material.dart';
 
 class User extends StatelessWidget {
-  static Services services = new Services();
-  Map cloudData = services.getData();
-
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         SizedBox(height: 10.0),
         Center(
-            child: Image.network(
-          "https://img.icons8.com/dusk/512/000000/user-male-circle--v1.png",
-          width: 200,
-        )),
+          child: Image.network(
+            Home.cloudData["studentIMG"],
+            width: 200,
+            errorBuilder: (BuildContext context, Object exception,
+                StackTrace stackTrace) {
+              return Image.network(
+                "https://img.icons8.com/dusk/512/000000/user-male-circle--v1.png",
+                width: 200,
+              );
+            },
+          ),
+        ),
         Padding(
           padding: const EdgeInsets.all(10.0),
           child: Divider(
@@ -25,9 +31,18 @@ class User extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Name: ${cloudData['name']}"),
-            Text("Register Number: ${cloudData['reg']}"),
-            Text("Dept. : ${cloudData['programme']}"),
+            Text("Name: ${Home.cloudData['name']}"),
+            Text("Register Number: ${Home.cloudData['reg']}"),
+            Text("Dept. : ${Home.cloudData['programme']}"),
+            Text("KMail : ${Home.cloudData['kmail']}"),
+            Text("Mobile : ${Home.cloudData['mobile']}"),
+            Text("Mentor : ${Home.cloudData['mentor']}"),
+            Text("Credits : ${Home.cloudData['credits']}"),
+            Text("CGPA : ${Home.cloudData['cgpa']}"),
+            Text("SGPA : ${Home.cloudData['sgpa']}"),
+            Text(
+                "Non Academic Credits : ${Home.cloudData['nonAcademicCredits']}"),
+            Text("CGPA : ${Home.cloudData['cgpa']}"),
           ],
         )
       ],

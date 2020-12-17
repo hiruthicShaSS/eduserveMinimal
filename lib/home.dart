@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-
 import 'package:eduserveMinimal/service/getData.dart';
 
 class Home extends StatefulWidget {
+  static Map cloudData;
   Home({Key key}) : super(key: key);
 
   @override
@@ -12,21 +11,22 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  static Services services = new Services();
-  Map cloudData = services.getData();
+  // static Services services = new Services();
+  Map cloudData = Home.cloudData; // services.getData();
 
-  void updateData() async {
-    if (cloudData["downloaded"] != true) {
-      cloudData = await services.getDataFromCloud();
-      setState(() {});
-    }
-  }
+  // void updateData() async {
+  //   if (cloudData["downloaded"] != true) {
+  //     cloudData = await services.getDataFromCloud();
+  //     Home.cloudData = cloudData;
+  //     setState(() {});
+  //   }
+  // }
 
-  @override
-  void initState() {
-    super.initState();
-    updateData();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   updateData();
+  // }
 
   @override
   Widget build(BuildContext context) {

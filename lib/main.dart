@@ -1,5 +1,7 @@
+import 'package:eduserveMinimal/service/getData.dart';
 import 'package:eduserveMinimal/settings.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'package:hexcolor/hexcolor.dart';
 
@@ -47,6 +49,13 @@ class _MyHomePageState extends State<MyHomePage> {
     ],
   ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
 
+  Map cloudData = new Map();
+  Future<Map> downloadData() async {
+    Services services = new Services();
+    Map data = await services.getDataFromCloud();
+    cloudData = data;
+    return data;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +73,22 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         actions: appBarActions,
       ),
-      body: _children[_currentIndex],
+      body: FutureBuilder(
+        future: downloadData(),
+        builder: (context, AsyncSnapshot<Map> snapshot) {
+          if (snapshot.hasData) {
+            Home.cloudData = cloudData;
+            return _children[_currentIndex];
+          } else {
+            return Center(
+              child: SpinKitCubeGrid(
+                color: Colors.white,
+                size: 80,
+              ),
+            );
+          }
+        },
+      ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
