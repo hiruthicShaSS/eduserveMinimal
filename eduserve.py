@@ -1,4 +1,5 @@
 import os
+import random
 import time
 import json
 import datetime
@@ -44,9 +45,33 @@ class EduServe:
             web.find_element_by_id('mainContent_Login1_LoginButton').click()
             print(Fore.GREEN, "Login Successful.")
             time.sleep(3)
+            if web.current_url == "https://eduserve.karunya.edu/MIS/IQAC/HFBCollection.aspx":
+                self.bypassFeedbackCollection()
         except Exception as e:
             print(Fore.RED, "Login unsuccessful")
             print(Fore.RED, e)
+
+    def bypassFeedbackCollection(self):
+        print(Fore.GREEN, f"Bypass feedback collection with {self.config['stars']} star's")
+        try:
+            web.find_element_by_xpath("//li[@class='rrtSelected']//span[contains(text(),'5')]").click()
+        except:
+            pass
+
+        try:
+            if self.config["stars"] == "6":
+                self.config["stars"] = random.randint(1, 5)
+            for i in range(10):
+                self.config["stars"] = random.randint(1, 5)
+                web.find_element_by_xpath(f"//tr[@id='ctl00_mainContent_grdHFB_ctl00__{i}']//li[{self.config['stars']}]//a[1]").click()
+        except:
+            try:
+                web.find_element_by_xpath("//input[@id='mainContent_btnSave']").click()
+                time.sleep(2)
+                return 1
+            except:
+                print(Back.RED, "Something went wrong while filling feedback form")
+                return 0
 
     def fetch(self):
         self.data["reg"] = web.find_element_by_id('mainContent_LBLREGNO').text
