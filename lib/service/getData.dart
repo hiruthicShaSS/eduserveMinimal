@@ -6,11 +6,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Services {
   static var cacheData = {};
 
-  Map getData() {
+  Map getData() {  // returns the cached data
     return cacheData;
   }
 
-  Future<Map> getDataFromCloud() async {
+  Future<Map> getDataFromCloud() async {  // Fetches new data from the cloud
     SharedPreferences prefs;
     prefs = await SharedPreferences.getInstance();
     
@@ -22,7 +22,7 @@ class Services {
     var response = await http.get(driveLink);
     Map data = jsonDecode(response.body);
     cacheData = data;
-    cacheData["downloaded"] = true;
+    cacheData["downloaded"] = true;  // Flag to identify the data is cached
     return cacheData;
   }
 }

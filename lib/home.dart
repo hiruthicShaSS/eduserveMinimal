@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:eduserveMinimal/service/getData.dart';
 
 class Home extends StatefulWidget {
   static Map cloudData;
@@ -11,22 +10,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  // static Services services = new Services();
-  Map cloudData = Home.cloudData; // services.getData();
+  Map cloudData = Home.cloudData;
 
-  // void updateData() async {
-  //   if (cloudData["downloaded"] != true) {
-  //     cloudData = await services.getDataFromCloud();
-  //     Home.cloudData = cloudData;
-  //     setState(() {});
-  //   }
-  // }
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   updateData();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -36,18 +21,18 @@ class _HomeState extends State<Home> {
     return SafeArea(
       child: Column(
         children: [
-          buildAttendenceContainer(_width, _height),
+          buildAttendenceContainer(_width, _height),  // Create attendence box
           SizedBox(height: 10.0),
-          buildStudentInfoContainer(),
+          buildStudentInfoContainer(),  // Create column of basic info
           SizedBox(height: 10.0),
-          buildApplicationsExpanded(_width, _height)
+          buildApplicationsExpanded(_width, _height)  // Build application's list view
         ],
       ),
     );
   }
 
   Expanded buildApplicationsExpanded(double _width, double _height) {
-    List parseApplications() {
+    List parseApplications() {  // Get only the leave application's and its information's
       Map data = cloudData["leaveApplications"];
       List returnData = new List();
 
@@ -180,6 +165,7 @@ class _HomeState extends State<Home> {
   }
 
   Container buildAttendenceContainer(double width, double height) {
+    // Change colors and text style depending on attendence level
     List safeNumbersStyle = [
       TextStyle(fontSize: 30.0, color: Colors.green[300]),
       TextStyle(fontSize: 15.0)

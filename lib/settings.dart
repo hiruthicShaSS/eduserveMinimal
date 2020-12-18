@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Settings extends StatelessWidget {
   final String eduserveURL =
       "https://eduserve.karunya.edu/Login.aspx?ReturnUrl=%2f";
-  SharedPreferences prefs;
+  SharedPreferences prefs;  // Shared preferences instance
   void setPrefs() async {
     prefs = await SharedPreferences.getInstance();
   }
@@ -73,7 +73,7 @@ class Settings extends StatelessWidget {
 
   Scaffold buildUpdateLinkPage() {
     TextEditingController _linkController = new TextEditingController();
-    _linkController.text = prefs.getString("link");
+    _linkController.text = prefs.getString("link");  // Set the stored link from shared preferences back to the text box
 
     return Scaffold(
       body: Column(

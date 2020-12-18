@@ -1,5 +1,4 @@
 import 'package:eduserveMinimal/home.dart';
-import 'package:eduserveMinimal/service/getData.dart';
 import 'package:flutter/material.dart';
 
 class User extends StatelessWidget {
@@ -13,7 +12,7 @@ class User extends StatelessWidget {
             Home.cloudData["studentIMG"],
             width: 200,
             errorBuilder: (BuildContext context, Object exception,
-                StackTrace stackTrace) {
+                StackTrace stackTrace) {  // Return's plcaeholder image if the original link is not valid
               return Image.network(
                 "https://img.icons8.com/dusk/512/000000/user-male-circle--v1.png",
                 width: 200,

@@ -37,9 +37,10 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<Widget> _children = [
     Home(),
     User(),
-  ];
+  ]; // Routes for navbar
 
-  List<Widget> appBarActions = [];
+  List<Widget> appBarActions =
+      []; // For adding actions on the fly while switching pages via navbar
 
   final Shader linearGradient = LinearGradient(
     colors: <Color>[
@@ -49,8 +50,9 @@ class _MyHomePageState extends State<MyHomePage> {
     ],
   ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
 
-  Map cloudData = new Map();
+  Map cloudData = new Map(); // For holding the data downloaded from cloud
   Future<Map> downloadData() async {
+    // populate the cloudData map on function call
     Services services = new Services();
     Map data = await services.getDataFromCloud();
     cloudData = data;
@@ -74,12 +76,16 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: appBarActions,
       ),
       body: FutureBuilder(
-        future: downloadData(),
+        // Show loading page untill the data has downloaded
+        future:
+            downloadData(), // Assigning the download function as the waiting target
         builder: (context, AsyncSnapshot<Map> snapshot) {
           if (snapshot.hasData) {
+            // If the cloudData has data then return home page
             Home.cloudData = cloudData;
             return _children[_currentIndex];
           } else {
+            // Return loading page
             return Center(
               child: SpinKitCubeGrid(
                 color: Colors.white,
@@ -123,7 +129,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void onTabTapped(int index) {
+  void onTabTapped(int index) {  // Bottom navbar interaction's
     if (index == 1) {
       // user Page
       appBarActions.add(IconButton(
