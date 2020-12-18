@@ -20,6 +20,8 @@ This script uses Google Drive to sync the data with mobile app.
     pip install -r requirements.txt
     python main.py
     ```
+    #### This script require client_secret.json file which can be attainde from [Google Developer Console](https://stackoverflow.com/questions/40136699/using-google-api-for-python-where-do-i-get-the-client-secrets-json-file-from).
+    *If you are gnna use different storage solution you dont need this step and you can modify the code on the file [eduserve.py](/eduserve.py) on line [136](https://github.com/hiruthic2002/eduserveMinimal/blob/86bb401677be61f684c0f3a8b33fe0cbbe54adfb/eduserve.py#L136)*
 
     *This create's a file called 'datadump.json' which contains the eduserve data.*
 
