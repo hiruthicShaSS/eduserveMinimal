@@ -1,12 +1,13 @@
-import 'package:eduserveMinimal/service/getData.dart';
-import 'package:eduserveMinimal/settings.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:lottie/lottie.dart';
 
 import 'package:eduserveMinimal/home.dart';
 import 'package:eduserveMinimal/user.dart';
+import 'package:eduserveMinimal/service/getData.dart';
+import 'package:eduserveMinimal/settings.dart';
 
 void main() {
   runApp(
@@ -31,7 +32,8 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
+  AnimationController _animationController;
   int _currentIndex = 0;
 
   final List<Widget> _children = [
@@ -57,6 +59,29 @@ class _MyHomePageState extends State<MyHomePage> {
     Map data = await services.getDataFromCloud();
     cloudData = data;
     return data;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(vsync: this);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _animationController.dispose();
+  }
+
+  Widget SplashScreen() {
+    return Container(
+      child: Lottie.asset("assets/splashscreen.json",
+          controller: _animationController, onLoaded: (composition) {
+        _animationController
+          ..duration = composition.duration
+          ..forward();
+      }),
+    );
   }
 
   @override
@@ -86,12 +111,13 @@ class _MyHomePageState extends State<MyHomePage> {
             return _children[_currentIndex];
           } else {
             // Return loading page
-            return Center(
-              child: SpinKitCubeGrid(
-                color: Colors.white,
-                size: 80,
-              ),
-            );
+            // return Center(
+            //   child: SpinKitCubeGrid(
+            //     color: Colors.white,
+            //     size: 80,
+            //   ),
+            // );
+            return SplashScreen();
           }
         },
       ),
@@ -129,7 +155,8 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void onTabTapped(int index) {  // Bottom navbar interaction's
+  void onTabTapped(int index) {
+    // Bottom navbar interaction's
     if (index == 1) {
       // user Page
       appBarActions.add(IconButton(
