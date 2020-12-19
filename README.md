@@ -21,18 +21,19 @@ This script uses Google Drive to sync the data with mobile app.
     python main.py
     ```
 
-    #### This script require client_secret.json file which can be attained from [Google Developer Console](https://stackoverflow.com/questions/40136699/using-google-api-for-python-where-do-i-get-the-client-secrets-json-file-from). If you have dedicated cloud storage please use that, with GDrive you need to give permission every time the script executes.
+    **Google Drive method:**
 
-    *If you are gnna use different storage solution you dont need this step and you can modify the code on the file [eduserve.py](/eduserve.py) on line [136](https://github.com/hiruthic2002/eduserveMinimal/blob/86bb401677be61f684c0f3a8b33fe0cbbe54adfb/eduserve.py#L136)*
+    This script require client_secret.json file which can be attained from [Google Developer Console](https://stackoverflow.com/questions/40136699/using-google-api-for-python-where-do-i-get-the-client-secrets-json-file-from). If you have dedicated cloud storage please use that, with GDrive you need to give permission every time the script executes.
+
+    *If you are gonna use different storage solution you dont need this step and you can modify the code on the file [eduserve.py](/eduserve.py) below the 'upload' function*
 
     *This create's a file called 'datadump.json' which contains the eduserve data.*
-
     *This is a one time process*
-    - Uplodad this file to your [Google Drive](https://drive.google.com/drive/u/0/my-drive).
+
+    - Uplodad this file to your [Google Drive](https://drive.google.comdrive/u/0/my-drive).
     - Right click on the uploaded file and click 'Get link' and change the access to 'Anyone with the link' and copy the link.
-    - Paste the sharing link on the value of 'sharingLink' key in 'config.json' file.
+    - Paste the sharing link on the value of 'sharingLink' key in 'config json' file.
     - [Generate](https://sites.google.com/site/gdocs2direct/home) direct download link.
-    - Copy the direct download link and paste it in the app in User -> Settings -> Update cloud link.
 
 3. ### Automation
 
@@ -51,18 +52,33 @@ This script uses Google Drive to sync the data with mobile app.
       10. Now go to the 'Conditions' tab and check the "Start only if the following network connection is available" and select your reliable network. Andpress 'OK'.
   - With the release package:
       1. Install the package on your system.
-      2. Copy the 'config.json' and 'client_secrets.json' file's to the installed directory.
-      3. Press Windows + R and type ```%appdata%\Microsoft\Windows\Start Menu\Programs``` this opens a folder in explorer.
-      4. Create shortcut on the above directory with main.exe.
+      2. Install the setup.
+      3. Copy the file 'client_secrets.json' to the installed directory.
+      4. Configure the 'config.json' file:
+
+            - "username": Your EduServe register number.
+            - "password": EduServe password.
+            - "stars": Number of stars for each feedback form.
+            - "sharingLink": Your drive file sharing link.
+      5. Press Windows + R and type ```%appdata%\Microsoft\Windows\Start Menu\Programs``` this opens a folder in explorer.
+      6. Create shortcut on the above directory with main.exe.
 
 - #### For noob's
 
-   [Video](https://youtu.be/A0VbXT0Dv2E)
+   [Video](https://youtu.be/LeXXiJaNVG0)
 
    1. Go to [releases](https://github.com/hiruthic2002/eduserveMinimal/releases) tab and download the latest release.
    2. Install the setup.
-   3. Copy the file's 'config.json' and 'client_secrets.json' to the installed directory
-   4. Press Windows + R and type '%appdata%\Microsoft\Windows\Start Menu\Programs' this opens a folder in explorer.
-   5. Right click on the folder and click New -> Shortcut and click 'Browse'.
-   6. Now navigate and select the main.exe file from the installed directory and click 'next' and then 'Finish'.
+   3. Copy the file 'client_secrets.json' to the installed directory.
+   4. Configure the 'config.json' file:
+
+        - "username": Your EduServe register number.
+        - "password": EduServe password.
+        - "stars": Number of stars for each feedback form.
+        - "sharingLink": Your drive file sharing link.
+
+   5. Press Windows + R and type ```%appdata%\Microsoft\Windows\Start Menu\Programs``` this opens a folder in explorer.
+   6. Right click on the folder and click New -> Shortcut and click 'Browse'.
+   7. Now navigate and select the main.exe file from the installed directory and click 'next' and then 'Finish'.
+   8. Copy the file 'esM app.apk' to your mobile and install. And update the link in the mobile. **Procedure**: Copy the direct download link and paste it in the app in User ->Settings -> Update cloud link.
 
