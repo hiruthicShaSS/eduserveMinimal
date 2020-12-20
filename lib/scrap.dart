@@ -88,6 +88,7 @@ class Scraper {
     List td = soup.find_all("td").map((e) => (e.text)).toList();
 
     bool flagReached = false;
+    bool flagStop = false;
     int flagLines = 0;
     Map leaveApplication = new Map();
 
@@ -98,34 +99,48 @@ class Scraper {
 
     String temp = "";
     td.forEach((element) {
-      element = element.trim();
-
-      if (leaveTypeExp.hasMatch(element)) {
-        flagReached = true;
-      }
-      if (flagReached) {
-        if (flagLines != 7) {
-          temp += "$element<space>";
-          flagLines++;
-        } else {
-          List splited = temp.split("<space>");
-          splited.asMap().forEach((i, value) {
-            try {
-              int.parse(element[i]);
-              return;
-            } catch (e) {}
-            splited[i] = splited[i].trim();
-          });
-          splited.removeWhere(
-              (element) => element.toString() == ""); // Remove empty elements
-          leaveApplication[splited[1]] = splited;
-
-          flagLines = 0;
-          temp = "";
+      if (!flagStop) {
+        element = element.trim();
+        // print(element);
+        if (element == "No records to display.") {
+          flagStop = true;
         }
-        print(leaveApplication);
+
+        if (leaveTypeExp.hasMatch(element)) {
+          // if leave applications found set the flag to true.
+          flagReached = true;
+        }
+
+        if (flagReached) {
+          // Wait untill the leave applications found.
+          print(flagLines);
+          if (flagLines != 8) {
+            // 7 items in the application section -> [Leave Type, Reason, From Date, From Session, To Date, To Session, Status, Pending with]
+            temp +=
+                "$element<space>"; // Add each one of'em with delimiter : <space>
+            flagLines++;
+          } else {
+            List splited = temp
+                .split("<space>"); // Once completed parse the string to list.
+            splited
+                .removeWhere((element) => RegExp(r"\d{5,}").hasMatch(element));
+            // print(splited);
+            splited.asMap().forEach((i, value) {
+              splited[i] = splited[i].trim();
+            });
+            splited.removeWhere((element) =>
+                element.toString() == ""); // Remove empty elements.
+            leaveApplication[splited[1]] = splited;
+
+            flagLines = 0;
+            temp = "";
+          }
+        }
+      } else {
+        return;
       }
     });
+    // leaveApplication.forEach((key, value) => print("$key -> $value"));
 
     basicInfo.add(studentImage);
     basicInfo.removeWhere(
