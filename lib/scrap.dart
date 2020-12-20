@@ -99,19 +99,7 @@ class Scraper {
     String temp = "";
     td.forEach((element) {
       element = element.trim();
-      // if (element ==
-      //     "Leave IDLeave TypeReasonFrom DateFrom SessionTo DateTo SessionStatusPending with") {
-      //   reached = true;
-      //   return;
-      // }
-      // if (reached == true) {
-      //   leaveApplication.add(element);
 
-      //   Iterable<RegExpMatch> matches = leaveDurationExp.allMatches(element);
-      //   matches.forEach((element) {
-      //     print(element.group(0));
-      //   });
-      // }
       if (leaveTypeExp.hasMatch(element)) {
         flagReached = true;
       }
@@ -120,10 +108,22 @@ class Scraper {
           temp += "$element<space>";
           flagLines++;
         } else {
-          flagLines = 0;
           List splited = temp.split("<space>");
+          splited.asMap().forEach((i, value) {
+            try {
+              int.parse(element[i]);
+              return;
+            } catch (e) {}
+            splited[i] = splited[i].trim();
+          });
+          splited.removeWhere(
+              (element) => element.toString() == ""); // Remove empty elements
           leaveApplication[splited[1]] = splited;
+
+          flagLines = 0;
+          temp = "";
         }
+        print(leaveApplication);
       }
     });
 

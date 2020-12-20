@@ -32,6 +32,7 @@ class _HomeState extends State<Home> {
   }
 
   Expanded buildApplicationsExpanded(double _width, double _height) {
+    print(cloudData["leaveApplications"]);
     List parseApplications() {  // Get only the leave application's and its information's
       Map data = cloudData["leaveApplications"];
       List returnData = new List();
