@@ -8,15 +8,13 @@ class User extends StatelessWidget {
       children: [
         SizedBox(height: 10.0),
         Center(
-          child: Image.network(
-            Home.cloudData["studentIMG"],
-            width: 200,
-            errorBuilder: (BuildContext context, Object exception,
-                StackTrace stackTrace) {  // Return's plcaeholder image if the original link is not valid
-              return Image.network(
-                "https://img.icons8.com/dusk/512/000000/user-male-circle--v1.png",
-                width: 200,
-              );
+          child: CircleAvatar(
+            radius: 90,
+            backgroundImage: NetworkImage(Home.cloudData["studentIMG"]),
+            backgroundColor: Colors.transparent,
+            onBackgroundImageError: (_, __) {
+              return Image.asset(
+                  "https://img.icons8.com/dusk/512/000000/user-male-circle--v1.png");
             },
           ),
         ),

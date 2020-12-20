@@ -1,13 +1,14 @@
+import 'package:eduserveMinimal/creds.dart';
+import 'package:eduserveMinimal/service/scrap.dart';
+import 'package:eduserveMinimal/settings.dart';
 import 'package:flutter/material.dart';
 
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:lottie/lottie.dart';
 
 import 'package:eduserveMinimal/home.dart';
 import 'package:eduserveMinimal/user.dart';
-import 'package:eduserveMinimal/service/getData.dart';
-import 'package:eduserveMinimal/settings.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(
@@ -19,6 +20,11 @@ void main() {
         colorScheme: ColorScheme.dark(),
       ),
       home: MyHomePage(title: "eduserve"),
+      routes: {
+        "/home": (context) => Home(),
+        "/users": (context) => User(),
+        "/updateCreds": (context) => Creds(),
+      },
     ),
   );
 }
@@ -54,9 +60,18 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   Map cloudData = new Map(); // For holding the data downloaded from cloud
   Future<Map> downloadData() async {
-    // populate the cloudData map on function call
-    Services services = new Services();
-    Map data = await services.getDataFromCloud();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String username = prefs.getString("username");
+    String password = prefs.getString("password");
+    int stars = prefs.getInt("stars");
+    print(username);
+    
+    if (username == null || password == null) {
+      Navigator.pushNamed(context, "/updateCreds");
+    }
+
+    Scraper scraper = new Scraper();
+    Map data = await scraper.getInfo();
     cloudData = data;
     return data;
   }
@@ -159,6 +174,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     // Bottom navbar interaction's
     if (index == 1) {
       // user Page
+      appBarActions.clear();
       appBarActions.add(IconButton(
         icon: Icon(Icons.settings),
         onPressed: () {

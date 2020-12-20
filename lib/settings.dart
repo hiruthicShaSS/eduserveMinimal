@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 
+import 'package:google_fonts/google_fonts.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Settings extends StatelessWidget {
   final String eduserveURL =
       "https://eduserve.karunya.edu/Login.aspx?ReturnUrl=%2f";
-  SharedPreferences prefs;  // Shared preferences instance
-  void setPrefs() async {
-    prefs = await SharedPreferences.getInstance();
-  }
+  final Shader linearGradient = LinearGradient(
+    colors: <Color>[
+      HexColor("#eeaeca"),
+      HexColor("#94bbe9"),
+    ],
+  ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
 
   @override
   Widget build(BuildContext context) {
     final _height = MediaQuery.of(context).size.height;
-    setPrefs();
 
     return Scaffold(
       appBar: AppBar(
@@ -28,19 +31,6 @@ class Settings extends StatelessWidget {
             RaisedButton(
               child: Text("Themes"),
               onPressed: () {},
-            ),
-            RaisedButton(
-              child: Text("Update cloud link"),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return buildUpdateLinkPage();
-                    },
-                  ),
-                );
-              },
             ),
             RaisedButton(
               child: Text("Open EduServe"),
@@ -60,52 +50,175 @@ class Settings extends StatelessWidget {
               },
             ),
             RaisedButton(
-              child: Text("Check updates"),
-              onPressed: () {},
+              child: Text("Update credentials"),
+              onPressed: () {
+                Navigator.pushNamed(context, "/updateCreds");
+              },
             ),
-            SizedBox(height: _height / 1.58),
-            Center(child: Text("Version 1.0 alpha")),
+            RaisedButton(
+              child: Text("Check updates"),
+              onPressed: () async {},
+            ),
+            RaisedButton(
+              child: Text("About"),
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return buildAboutPage();
+                }));
+              },
+            )
           ],
         ),
       ),
     );
   }
 
-  Scaffold buildUpdateLinkPage() {
-    TextEditingController _linkController = new TextEditingController();
-    _linkController.text = prefs.getString("link");  // Set the stored link from shared preferences back to the text box
-
+  Scaffold buildAboutPage() {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          TextField(
-            controller: _linkController,
-            decoration: new InputDecoration(
-              labelText: "New cloud link",
-              fillColor: Colors.white,
-              border: new OutlineInputBorder(
-                borderRadius: new BorderRadius.circular(25.0),
-                borderSide: new BorderSide(),
-              ),
-              //fillColor: Colors.green
-            ),
-            keyboardType: TextInputType.emailAddress,
-            style: new TextStyle(
-              fontFamily: "Poppins",
-            ),
-          ),
-          SizedBox(height: 10),
-          RaisedButton(
-            child: Text("Update"),
-            onPressed: () async {
-              String link = _linkController.text;
-              await prefs.setString("link", link);
-              Fluttertoast.showToast(msg: "Link updated");
-            },
-          )
-        ],
+      appBar: AppBar(
+        title: Text("About"),
+        centerTitle: true,
       ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(30.0),
+                child: Center(
+                  child: CircleAvatar(
+                    radius: 80,
+                    backgroundImage: NetworkImage(
+                        "https://avatars1.githubusercontent.com/u/56349092?s=400&u=bd905296ec34d032c6c6d87f5b89e0f7dc5f0956&v=4"),
+                    backgroundColor: Colors.transparent,
+                    onBackgroundImageError: (_, __) {
+                      return Image.asset("assets/placeholder_profile.png");
+                    },
+                  ),
+                ),
+              ),
+              Spacer(),
+              Text(
+                "hiruthicSha",
+                style: GoogleFonts.kanit(
+                  fontSize: 30,
+                  foreground: Paint()..shader = linearGradient,
+                ),
+              ),
+              Spacer(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.email),
+                    onPressed: () async {
+                      if (await canLaunch("mailto:hiruthic@karunya.edu")) {
+                        launch("mailto:hiruthic@karunya.edu");
+                      }
+                    },
+                  ),
+                  SizedBox(width: 10),
+                  Text(
+                    "hiruthic@karunya.edu.in",
+                    style: GoogleFonts.kanit(
+                      fontSize: 25,
+                    ),
+                  ),
+                ],
+              ),
+              Spacer(),
+              RaisedButton(
+                color: Colors.amberAccent,
+                splashColor: Colors.amber,
+                child: Text(
+                  "Request Feature",
+                  style: GoogleFonts.kanit(fontSize: 25, color: Colors.black),
+                ),
+                onPressed: () async {
+                  if (await canLaunch(
+                      "https://github.com/hiruthic2002/eduserveMinimal/issues/new")) {
+                    launch(
+                        "https://github.com/hiruthic2002/eduserveMinimal/issues/new");
+                  }
+                },
+              ),
+              Spacer(),
+              buildSocialIcons()
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Row buildSocialIcons() {
+    return Row(
+      children: [
+        IconButton(
+          icon: FaIcon(
+            FontAwesomeIcons.instagram,
+            size: 40,
+            color: Colors.red,
+          ),
+          onPressed: () async {
+            if (await canLaunch("https://www.instagram.com/hiruthicSha/")) {
+              launch("https://www.instagram.com/hiruthicSha/");
+            } else {
+              Fluttertoast.showToast(msg: "Cant open Instagram at the moment");
+            }
+          },
+          tooltip: "Instagram",
+        ),
+        Spacer(),
+        IconButton(
+          icon: FaIcon(
+            FontAwesomeIcons.twitter,
+            size: 40,
+            color: Colors.blue,
+          ),
+          onPressed: () async {
+            if (await canLaunch("https://twitter.com/Hiruthic1")) {
+              launch("https://twitter.com/Hiruthic1");
+            } else {
+              Fluttertoast.showToast(msg: "Cant open Twitter at the moment");
+            }
+          },
+          tooltip: "Twitter",
+        ),
+        Spacer(),
+        IconButton(
+          icon: FaIcon(
+            FontAwesomeIcons.linkedin,
+            size: 40,
+            color: Colors.blueAccent,
+          ),
+          onPressed: () async {
+            if (await canLaunch("https://in.linkedin.com/in/hiruthic-s-s")) {
+              launch("https://in.linkedin.com/in/hiruthic-s-s/");
+            } else {
+              Fluttertoast.showToast(msg: "Cant open LinkedIn at the moment");
+            }
+          },
+          tooltip: "LinkedIn",
+        ),
+        Spacer(),
+        IconButton(
+          icon: FaIcon(
+            FontAwesomeIcons.github,
+            size: 40,
+            color: Colors.white38,
+          ),
+          onPressed: () async {
+            if (await canLaunch("https://github.com/hiruthic2002")) {
+              launch("https://github.com/hiruthic2002");
+            } else {
+              Fluttertoast.showToast(msg: "Cant open GitHub at the moment");
+            }
+          },
+          tooltip: "GitHub",
+        ),
+      ],
     );
   }
 }

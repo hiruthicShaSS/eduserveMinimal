@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class Home extends StatefulWidget {
   static Map cloudData;
   Home({Key key}) : super(key: key);
@@ -12,7 +11,6 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   Map cloudData = Home.cloudData;
 
-
   @override
   Widget build(BuildContext context) {
     final double _width = MediaQuery.of(context).size.width;
@@ -21,18 +19,20 @@ class _HomeState extends State<Home> {
     return SafeArea(
       child: Column(
         children: [
-          buildAttendenceContainer(_width, _height),  // Create attendence box
+          buildAttendenceContainer(_width, _height), // Create attendence box
           SizedBox(height: 10.0),
-          buildStudentInfoContainer(),  // Create column of basic info
+          buildStudentInfoContainer(), // Create column of basic info
           SizedBox(height: 10.0),
-          buildApplicationsExpanded(_width, _height)  // Build application's list view
+          buildApplicationsExpanded(
+              _width, _height) // Build application's list view
         ],
       ),
     );
   }
 
   Expanded buildApplicationsExpanded(double _width, double _height) {
-    List parseApplications() {  // Get only the leave application's and its information's
+    List parseApplications() {
+      // Get only the leave application's and its information's
       Map data = cloudData["leaveApplications"];
       List returnData = new List();
 
