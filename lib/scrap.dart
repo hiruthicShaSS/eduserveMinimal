@@ -81,21 +81,83 @@ class Scrapper {
     status += "\nScrapping data...";
 
     var soup = Beautifulsoup(studentHomePage);
-    List basicInfo = soup.find_all("span").map((e) => (e.innerHtml)).toList().sublist(54);
-    String studentImage = soup.find_all("img").map((e) => (e.attributes["src"])).toList()[2];
+    List basicInfo =
+        soup.find_all("span").map((e) => (e.innerHtml)).toList().sublist(54);
+    String studentImage =
+        soup.find_all("img").map((e) => (e.attributes["src"])).toList()[2];
+    List td = soup.find_all("td").map((e) => (e.text)).toList();
+
+    bool flagReached = false;
+    int flagLines = 0;
+    Map leaveApplication = new Map();
+
+    RegExp leaveTypeExp = new RegExp(r"[^\d\s].*Leave");
+    RegExp leaveReasonExp = new RegExp(r"[^\d\s].*Leave");
+    RegExp leaveDurationExp = new RegExp(
+        r"(\d{1,}\s\w{1,3}\s\d{1,4})\s\w.*(\d{1,}\s\w{1,3}\s\d{1,4})\s.+Day");
+
+    String temp = "";
+    td.forEach((element) {
+      element = element.trim();
+      // if (element ==
+      //     "Leave IDLeave TypeReasonFrom DateFrom SessionTo DateTo SessionStatusPending with") {
+      //   reached = true;
+      //   return;
+      // }
+      // if (reached == true) {
+      //   leaveApplication.add(element);
+
+      //   Iterable<RegExpMatch> matches = leaveDurationExp.allMatches(element);
+      //   matches.forEach((element) {
+      //     print(element.group(0));
+      //   });
+      // }
+      if (leaveTypeExp.hasMatch(element)) {
+        flagReached = true;
+      }
+      if (flagReached) {
+        if (flagLines != 7) {
+          temp += "$element<space>";
+          flagLines++;
+        } else {
+          flagLines = 0;
+          List splited = temp.split("<space>");
+          leaveApplication[splited[1]] = splited;
+        }
+      }
+    });
+    return leaveApplication.toString();
 
     basicInfo.add(studentImage);
-    basicInfo.removeWhere((element) => element.toString() == "");  // Remove empty elements
+    basicInfo.removeWhere(
+        (element) => element.toString() == ""); // Remove empty elements
     basicInfo.remove("Academic Performance Summary");
 
-    List basicInfoKeys = ["reg", "kmail", "name", "mobile", "programme", "mentor", "semester", "att", "asm", "cgpa", "arrears", "resultOf", "credits", "cgpa", "sgpa", "nonAcademicCredits", "studentIMG"];
+    List basicInfoKeys = [
+      "reg",
+      "kmail",
+      "name",
+      "mobile",
+      "programme",
+      "mentor",
+      "semester",
+      "att",
+      "asm",
+      "cgpa",
+      "arrears",
+      "resultOf",
+      "credits",
+      "cgpa",
+      "sgpa",
+      "nonAcademicCredits",
+      "studentIMG"
+    ];
 
+    // generate Map of infromation
     Map data = new Map();
-
     basicInfoKeys.asMap().forEach((i, element) {
       data[basicInfoKeys[i]] = basicInfo[i];
     });
-
 
     return data.toString();
   }
