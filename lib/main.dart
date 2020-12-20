@@ -1,3 +1,4 @@
+import 'package:eduserveMinimal/scrap.dart';
 import 'package:eduserveMinimal/service/getData.dart';
 import 'package:eduserveMinimal/settings.dart';
 import 'package:flutter/material.dart';
@@ -52,9 +53,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Map cloudData = new Map(); // For holding the data downloaded from cloud
   Future<Map> downloadData() async {
-    // populate the cloudData map on function call
-    Services services = new Services();
-    Map data = await services.getDataFromCloud();
+    Scraper scraper = new Scraper();
+    Map data = await scraper.getInfo();
     cloudData = data;
     return data;
   }
@@ -129,7 +129,8 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void onTabTapped(int index) {  // Bottom navbar interaction's
+  void onTabTapped(int index) {
+    // Bottom navbar interaction's
     if (index == 1) {
       // user Page
       appBarActions.add(IconButton(

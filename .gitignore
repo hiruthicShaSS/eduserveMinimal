@@ -2,6 +2,7 @@
 .vscode/
 client_secrets.json
 env/
+avoid_me/
 
 # Miscellaneous
 *.class
