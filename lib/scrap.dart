@@ -1,7 +1,7 @@
 import 'package:http/http.dart';
 import 'package:beautifulsoup/beautifulsoup.dart';
 
-class Scrapper {
+class Scraper {
   static String status = "";
 
   Future<String> login() async {
@@ -76,7 +76,7 @@ class Scrapper {
     return res.body;
   }
 
-  Future<String> parse() async {
+  Future<Map> parse() async {
     String studentHomePage = await login();
     status += "\nScrapping data...";
 
@@ -126,7 +126,6 @@ class Scrapper {
         }
       }
     });
-    return leaveApplication.toString();
 
     basicInfo.add(studentImage);
     basicInfo.removeWhere(
@@ -159,10 +158,12 @@ class Scrapper {
       data[basicInfoKeys[i]] = basicInfo[i];
     });
 
-    return data.toString();
+    data["leaveApplications"] = leaveApplication;
+
+    return data;
   }
 
-  Future<String> getInfo() async {
+  Future<Map> getInfo() async {
     status += "Done.";
     return await parse();
   }
