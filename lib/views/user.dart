@@ -1,6 +1,7 @@
-import 'package:eduserveMinimal/home.dart';
+import 'package:eduserveMinimal/views/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class User extends StatelessWidget {
   @override
@@ -9,12 +10,17 @@ class User extends StatelessWidget {
       children: [
         SizedBox(height: 10.0),
         Center(
-          child: CircleAvatar(
-            radius: 80,
-            backgroundImage: NetworkImage(Home.cloudData["studentIMG"]),
-            backgroundColor: Colors.transparent,
-            onBackgroundImageError: (_, __) {
-              return Image.asset("assets/placeholder_profile.png");
+          child: GestureDetector(
+            child: CircleAvatar(
+              radius: 80,
+              backgroundImage: NetworkImage(Home.cloudData["studentIMG"]),
+              backgroundColor: Colors.transparent,
+              onBackgroundImageError: (_, __) {
+                return Image.asset("assets/placeholder_profile.png");
+              },
+            ),
+            onTap: () {
+              Fluttertoast.showToast(msg: "Update profile, feature coming soon!😊");
             },
           ),
         ),

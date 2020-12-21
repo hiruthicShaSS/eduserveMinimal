@@ -1,16 +1,17 @@
 import 'dart:io';
 
-import 'package:eduserveMinimal/creds.dart';
+import 'package:eduserveMinimal/views/creds.dart';
 import 'package:eduserveMinimal/service/scrap.dart';
-import 'package:eduserveMinimal/settings.dart';
+import 'package:eduserveMinimal/views/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'package:hexcolor/hexcolor.dart';
 import 'package:lottie/lottie.dart';
 
-import 'package:eduserveMinimal/home.dart';
-import 'package:eduserveMinimal/user.dart';
+import 'package:eduserveMinimal/views/home.dart';
+import 'package:eduserveMinimal/views/user.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -70,7 +71,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     String password = prefs.getString("password");
     int stars = prefs.getInt("stars");
 
-    if ((username == null || password == null) || (username == "" || password == "")) {
+    if ((username == null || password == null) ||
+        (username == "" || password == "")) {
       Navigator.pushNamed(context, "/updateCreds");
     }
 
@@ -99,8 +101,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    super.dispose();
     _animationController.dispose();
+    super.dispose();
   }
 
   Widget SplashScreen() {
@@ -114,10 +116,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               ..duration = composition.duration
               ..forward();
           }),
-          // SpinKitCubeGrid(
-          //   color: Colors.white,
-          //   size: 80,
-          // )
+
           // Text(Scraper.status),
         ],
       ),
@@ -126,7 +125,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    GlobalKey<ScaffoldState> _mainScaffoldKey = GlobalKey();
+    var currentHour = DateTime.now().hour;
+
     return Scaffold(
+      key: _mainScaffoldKey,
       appBar: AppBar(
         title: Text(
           "eduserveMinimal",
@@ -136,7 +139,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         centerTitle: true,
         leading: IconButton(
           icon: Icon(Icons.menu),
-          onPressed: () {},
+          onPressed: () => _mainScaffoldKey.currentState.openDrawer(),
         ),
         actions: (appBarActions.isEmpty)
             ? [
@@ -149,6 +152,76 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                 )
               ]
             : appBarActions,
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        backgroundImage: AssetImage("assets/appIcon.png"),
+                        radius: 30,
+                      ),
+                      Spacer(),
+                      Text("Last Updated: 12-23-4566"),
+                    ],
+                  ),
+                  Text(
+                    (currentHour > 0 && currentHour < 12)
+                        ? "Good Morning, buddy"
+                        : (currentHour >= 12 && currentHour < 16)
+                            ? "Good Afternoon"
+                            : (currentHour >= 16 && currentHour < 20)
+                                ? "Good Evening, amigo"
+                                : "Go to bed",
+                    style: GoogleFonts.comfortaa(
+                        color: Colors.amberAccent,
+                        fontSize: 20,
+                        fontStyle: FontStyle.italic),
+                  )
+                ],
+              ),
+              decoration: BoxDecoration(
+                color: Colors.black,
+              ),
+            ),
+            ListTile(
+              title: Text("Fees"),
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            ListTile(
+              title: Text("Apply Leave"),
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            ListTile(
+              title: Text("Class Timetable"),
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            ListTile(
+              title: Text("Download Hall Ticket"),
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            ListTile(
+              title: Text("Internal Assessment"),
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        ),
       ),
       body: (cloudData.isEmpty)
           ? FutureBuilder(

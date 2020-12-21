@@ -229,6 +229,22 @@ class Settings extends StatelessWidget {
           },
           tooltip: "GitHub",
         ),
+        Spacer(),
+        IconButton(
+          icon: FaIcon(
+            FontAwesomeIcons.globe,
+            size: 40,
+            color: Colors.white38,
+          ),
+          onPressed: () async {
+            if (await canLaunch("http://sha-resume.herokuapp.com/")) {
+              launch("http://sha-resume.herokuapp.com/");
+            } else {
+              Fluttertoast.showToast(msg: "Cant open site at the moment");
+            }
+          },
+          tooltip: "GitHub",
+        ),
       ],
     );
   }

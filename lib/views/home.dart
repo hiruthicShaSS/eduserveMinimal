@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
@@ -72,7 +73,12 @@ class _HomeState extends State<Home> {
                 children: [
                   SizedBox(height: 5.0),
                   ListTile(
-                    title: Text(data[index]["title"]),
+                    title: AutoSizeText(
+                      data[index]["title"],
+                      minFontSize: 10,
+                      maxFontSize: 20,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                     leading: (data[index]["dayOff"] == "Full Day")
                         ? Icon(Icons.star)
                         : (data[index]["dayOff"] == "Half Day")
@@ -219,31 +225,40 @@ class _HomeState extends State<Home> {
               width: width / 2.5,
               height: height / 8,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
+                  AutoSizeText(
                     "Class Attendance",
+                    minFontSize: 10,
+                    maxFontSize: 16,
+                    overflow: TextOverflow.ellipsis,
                     style:
                         TextStyle(fontSize: 16.0, fontWeight: FontWeight.w800),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20.0, left: 35.0),
-                    child: Row(
-                      children: [
-                        Text(cloudData["att"].toString(),
-                            style: (double.parse(cloudData["att"]) > 85.0)
-                                ? safeNumbersStyle[0]
-                                : unsafeNumbersStyle[0]),
-                        Padding(
-                            padding: EdgeInsets.only(top: 10.0, bottom: 2.0),
-                            child: Text("/100",
-                                style: (double.parse(cloudData["att"]) > 85.0)
-                                    ? safeNumbersStyle[1]
-                                    : unsafeNumbersStyle[1]))
-                      ],
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      AutoSizeText(cloudData["att"].toString(),
+                          minFontSize: 12,
+                          maxFontSize: 16,
+                          style: (double.parse(cloudData["att"]) > 85.0)
+                              ? safeNumbersStyle[0]
+                              : unsafeNumbersStyle[0]),
+                      Padding(
+                          padding: EdgeInsets.only(top: 10.0, bottom: 2.0),
+                          child: AutoSizeText("/100",
+                              style: (double.parse(cloudData["att"]) > 85.0)
+                                  ? safeNumbersStyle[1]
+                                  : unsafeNumbersStyle[1]))
+                    ],
                   ),
-                  Text(
-                      (classAttStatus == "Out-of-rolls") ? classAttStatus : ""),
+                  AutoSizeText(
+                    (classAttStatus == "Out-of-rolls") ? classAttStatus : "",
+                    minFontSize: 10,
+                    maxFontSize: 16,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ],
               ),
             ),
@@ -260,29 +275,38 @@ class _HomeState extends State<Home> {
               height: height / 8,
               child: Column(
                 children: [
-                  Text(
+                  AutoSizeText(
                     "Assembly Attendance",
+                    minFontSize: 10,
+                    maxFontSize: 16,
+                    overflow: TextOverflow.ellipsis,
                     style:
                         TextStyle(fontSize: 16.0, fontWeight: FontWeight.w800),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20.0, left: 35.0),
-                    child: Row(
-                      children: [
-                        Text(cloudData["asm"].toString(),
-                            style: (double.parse(cloudData["asm"]) > 85.0)
-                                ? safeNumbersStyle[0]
-                                : unsafeNumbersStyle[0]),
-                        Padding(
-                            padding: EdgeInsets.only(top: 10.0, bottom: 2.0),
-                            child: Text("/100",
-                                style: (double.parse(cloudData["asm"]) > 85.0)
-                                    ? safeNumbersStyle[1]
-                                    : unsafeNumbersStyle[1]))
-                      ],
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      AutoSizeText(cloudData["asm"].toString(),
+                          minFontSize: 10,
+                          maxFontSize: 16,
+                          overflow: TextOverflow.ellipsis,
+                          style: (double.parse(cloudData["asm"]) > 85.0)
+                              ? safeNumbersStyle[0]
+                              : unsafeNumbersStyle[0]),
+                      Padding(
+                          padding: EdgeInsets.only(top: 10.0, bottom: 2.0),
+                          child: Text("/100",
+                              style: (double.parse(cloudData["asm"]) > 85.0)
+                                  ? safeNumbersStyle[1]
+                                  : unsafeNumbersStyle[1]))
+                    ],
                   ),
-                  Text((asmAttStatus == "Out-of-rolls") ? asmAttStatus : ""),
+                  AutoSizeText(
+                    (asmAttStatus == "Out-of-rolls") ? asmAttStatus : "",
+                    minFontSize: 10,
+                    maxFontSize: 16,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ],
               ),
             ),

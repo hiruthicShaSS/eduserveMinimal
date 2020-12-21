@@ -7,6 +7,7 @@ import 'package:http/http.dart';
 import 'package:beautifulsoup/beautifulsoup.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:connectivity/connectivity.dart';
 
 class Scraper {
   static BuildContext mainPageContext;
@@ -19,6 +20,15 @@ class Scraper {
   }
 
   Future<String> login() async {
+    var connection = await (Connectivity().checkConnectivity());
+    if (connection == ConnectivityResult.none) {
+      Fluttertoast.showToast(
+        msg:
+            "Are you a caveman? coz you didn't know that we need internet to access a webpage.😂",
+        timeInSecForIosWeb: 10,
+      );
+    }
+
     String hostname = "https://eduserve.karunya.edu";
     String loginAddress = "/Login.aspx?ReturnUrl=%2f";
     String url = "";
@@ -207,15 +217,29 @@ class Scraper {
     String appDocPath = appDocDir.path;
     File cacheData = File("$appDocPath/cacheData.json");
 
-    try {
-      final data = jsonDecode(await cacheData.readAsString());
-      Fluttertoast.showToast(msg: "You're viewing a cached copy, refresh to get new copy");
-      return data;
-    } catch (e) {
+    Future<Map> getFreshData() async {
       Map data = await parse();
+      data["dateScraped"] = DateTime.now().toString();
       cacheData.writeAsString(jsonEncode(data));
       Fluttertoast.showToast(msg: "New data cached!");
       return data;
+    }
+
+    try {
+      Map data = jsonDecode(await cacheData.readAsString());
+      int lastScraped = DateTime.now()
+          .difference(DateTime.parse(data["dateScraped"]))
+          .inHours;
+      if (lastScraped >= 12) {
+        return getFreshData();
+      }
+      data.remove("dateScraped");
+
+      Fluttertoast.showToast(
+          msg: "You're viewing a cached copy, refresh to get new copy");
+      return data;
+    } catch (e) {
+      return getFreshData();
     }
   }
 }
