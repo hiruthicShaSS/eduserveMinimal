@@ -1,12 +1,16 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:http/http.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Settings extends StatelessWidget {
+  static final thisAppPublishDate = "2020-12-20 19:38:07.569667";
   final String eduserveURL =
       "https://eduserve.karunya.edu/Login.aspx?ReturnUrl=%2f";
   final Shader linearGradient = LinearGradient(
@@ -30,7 +34,9 @@ class Settings extends StatelessWidget {
           children: [
             RaisedButton(
               child: Text("Themes"),
-              onPressed: () {},
+              onPressed: () {
+                Fluttertoast.showToast(msg: "Feature comming soon! ☺", fontSize: 16);
+              },
             ),
             RaisedButton(
               child: Text("Open EduServe"),
@@ -56,9 +62,14 @@ class Settings extends StatelessWidget {
               },
             ),
             RaisedButton(
-              child: Text("Check updates"),
-              onPressed: () async {},
-            ),
+                child: Text("Check updates"),
+                onPressed: () async {
+                  if (await canLaunch(
+                      "https://github.com/hiruthic2002/eduserveMinimal/releases")) {
+                    launch(
+                        "https://github.com/hiruthic2002/eduserveMinimal/releases");
+                  }
+                }),
             RaisedButton(
               child: Text("About"),
               onPressed: () {

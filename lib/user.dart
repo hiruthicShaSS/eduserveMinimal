@@ -1,5 +1,6 @@
 import 'package:eduserveMinimal/home.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class User extends StatelessWidget {
   @override
@@ -9,12 +10,11 @@ class User extends StatelessWidget {
         SizedBox(height: 10.0),
         Center(
           child: CircleAvatar(
-            radius: 90,
+            radius: 80,
             backgroundImage: NetworkImage(Home.cloudData["studentIMG"]),
             backgroundColor: Colors.transparent,
             onBackgroundImageError: (_, __) {
-              return Image.asset(
-                  "https://img.icons8.com/dusk/512/000000/user-male-circle--v1.png");
+              return Image.asset("assets/placeholder_profile.png");
             },
           ),
         ),

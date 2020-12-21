@@ -21,6 +21,7 @@ void main() {
       ),
       home: MyHomePage(title: "eduserve"),
       routes: {
+        "/splashScreen": (context) => MyHomePage(),
         "/home": (context) => Home(),
         "/users": (context) => User(),
         "/updateCreds": (context) => Creds(),
@@ -64,13 +65,13 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     String username = prefs.getString("username");
     String password = prefs.getString("password");
     int stars = prefs.getInt("stars");
-    print(username);
-    
+
     if (username == null || password == null) {
       Navigator.pushNamed(context, "/updateCreds");
     }
 
     Scraper scraper = new Scraper();
+    Scraper.mainPageContext = context;
     Map data = await scraper.getInfo();
     cloudData = data;
     return data;
@@ -90,12 +91,17 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   Widget SplashScreen() {
     return Container(
-      child: Lottie.asset("assets/splashscreen.json",
-          controller: _animationController, onLoaded: (composition) {
-        _animationController
-          ..duration = composition.duration
-          ..forward();
-      }),
+      child: ListView(
+        children: [
+          Lottie.asset("assets/splashscreen.json",
+              controller: _animationController, onLoaded: (composition) {
+            _animationController
+              ..duration = composition.duration
+              ..forward();
+          }),
+          // Text(Scraper.status),
+        ],
+      ),
     );
   }
 
@@ -190,8 +196,10 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       appBarActions.clear();
     }
 
-    setState(() {
-      _currentIndex = index;
-    });
+    if (_currentIndex != index) {
+      setState(() {
+        _currentIndex = index;
+      });
+    }
   }
 }

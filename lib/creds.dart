@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Creds extends StatelessWidget {
@@ -13,7 +14,9 @@ class Creds extends StatelessWidget {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       _usernameController.text = prefs.getString("username");
       _passwordController.text = prefs.getString("password");
-      _starsController.text = (prefs.getInt("stars") == null) ? "1" : prefs.getInt("stars").toString();
+      _starsController.text = (prefs.getInt("stars") == null)
+          ? "1"
+          : prefs.getInt("stars").toString();
     }
 
     setDefaults();

@@ -1,9 +1,17 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 import 'package:beautifulsoup/beautifulsoup.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:path_provider/path_provider.dart';
 
 class Scraper {
+  static BuildContext mainPageContext;
   static String status = "";
+  SharedPreferences prefs;
 
   int bypassFeedbackForm(int stars) {
     // TODO: Implement bypass code for feedback form.
@@ -15,7 +23,7 @@ class Scraper {
     String loginAddress = "/Login.aspx?ReturnUrl=%2f";
     String url = "";
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs = await SharedPreferences.getInstance();
     String username = prefs.getString("username");
     String password = prefs.getString("password");
     int stars = prefs.getInt("stars");
@@ -76,6 +84,15 @@ class Scraper {
     // Post to login.aspx
     res = await client.post(url, headers: headers, body: login_data);
 
+    if (res.body.indexOf(
+            "Your login attempt was not successful. Please try again.") !=
+        -1) {
+      Fluttertoast.showToast(
+          msg:
+              "EduServe: Your login attempt was not successful. Please try again.",
+          gravity: ToastGravity.CENTER);
+    }
+
     if (res.statusCode == 302) {
       status += "\nRedirecting to Home";
       headers["cookie"] += "; ${res.headers['set-cookie'].split(';')[0]}";
@@ -84,6 +101,7 @@ class Scraper {
           headers: headers);
     }
 
+    print(res.body.indexOf("ANDREW"));
     return res.body;
   }
 
@@ -185,7 +203,20 @@ class Scraper {
 
   Future<Map> getInfo() async {
     status += "Done.";
-    return await parse();
+
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    String appDocPath = appDocDir.path;
+    File cacheData = File("$appDocPath/cacheData.json");
+
+    try {
+      Fluttertoast.showToast(msg: "You're viewing a cached copy, refresh to get new copy");
+      return jsonDecode(await cacheData.readAsString());
+    } catch (e) {
+      Map data = await parse();
+      cacheData.writeAsString(jsonEncode(data));
+      Fluttertoast.showToast(msg: "New data cached!");
+      return data;
+    }
   }
 }
 
