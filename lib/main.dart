@@ -1,13 +1,17 @@
+import 'dart:io';
+
 import 'package:eduserveMinimal/creds.dart';
 import 'package:eduserveMinimal/service/scrap.dart';
 import 'package:eduserveMinimal/settings.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'package:hexcolor/hexcolor.dart';
 import 'package:lottie/lottie.dart';
 
 import 'package:eduserveMinimal/home.dart';
 import 'package:eduserveMinimal/user.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -66,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     String password = prefs.getString("password");
     int stars = prefs.getInt("stars");
 
-    if (username == null || password == null) {
+    if ((username == null || password == null) || (username == "" || password == "")) {
       Navigator.pushNamed(context, "/updateCreds");
     }
 
@@ -75,6 +79,16 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     Map data = await scraper.getInfo();
     cloudData = data;
     return data;
+  }
+
+  Future<void> refreshData() async {
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    String appDocPath = appDocDir.path;
+    File cacheData = File("$appDocPath/cacheData.json");
+    cacheData.delete();
+    setState(() {
+      cloudData = new Map();
+    });
   }
 
   @override
@@ -91,7 +105,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   Widget SplashScreen() {
     return Container(
-      child: ListView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Lottie.asset("assets/splashscreen.json",
               controller: _animationController, onLoaded: (composition) {
@@ -99,6 +114,10 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               ..duration = composition.duration
               ..forward();
           }),
+          // SpinKitCubeGrid(
+          //   color: Colors.white,
+          //   size: 80,
+          // )
           // Text(Scraper.status),
         ],
       ),
@@ -119,29 +138,34 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           icon: Icon(Icons.menu),
           onPressed: () {},
         ),
-        actions: appBarActions,
+        actions: (appBarActions.isEmpty)
+            ? [
+                IconButton(
+                  icon: Icon(Icons.refresh),
+                  onPressed: () {
+                    refreshData();
+                    Navigator.pushReplacementNamed(context, "/splashScreen");
+                  },
+                )
+              ]
+            : appBarActions,
       ),
-      body: FutureBuilder(
-        // Show loading page untill the data has downloaded
-        future:
-            downloadData(), // Assigning the download function as the waiting target
-        builder: (context, AsyncSnapshot<Map> snapshot) {
-          if (snapshot.hasData) {
-            // If the cloudData has data then return home page
-            Home.cloudData = cloudData;
-            return _children[_currentIndex];
-          } else {
-            // Return loading page
-            // return Center(
-            //   child: SpinKitCubeGrid(
-            //     color: Colors.white,
-            //     size: 80,
-            //   ),
-            // );
-            return SplashScreen();
-          }
-        },
-      ),
+      body: (cloudData.isEmpty)
+          ? FutureBuilder(
+              // Show loading page untill the data has downloaded
+              future:
+                  downloadData(), // Assigning the download function as the waiting target
+              builder: (context, AsyncSnapshot<Map> snapshot) {
+                if (snapshot.hasData) {
+                  // If the cloudData has data then return home page
+                  Home.cloudData = cloudData;
+                  return _children[_currentIndex];
+                } else {
+                  return SplashScreen();
+                }
+              },
+            )
+          : _children[_currentIndex],
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
@@ -194,12 +218,16 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     } else if (index == 0) {
       // Home Page
       appBarActions.clear();
+      appBarActions.add(IconButton(
+        icon: Icon(Icons.refresh),
+        onPressed: () {
+          refreshData();
+        },
+      ));
     }
 
     if (_currentIndex != index) {
-      setState(() {
-        _currentIndex = index;
-      });
+      setState(() => _currentIndex = index);
     }
   }
 }

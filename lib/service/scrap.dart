@@ -101,7 +101,6 @@ class Scraper {
           headers: headers);
     }
 
-    print(res.body.indexOf("ANDREW"));
     return res.body;
   }
 
@@ -209,8 +208,9 @@ class Scraper {
     File cacheData = File("$appDocPath/cacheData.json");
 
     try {
+      final data = jsonDecode(await cacheData.readAsString());
       Fluttertoast.showToast(msg: "You're viewing a cached copy, refresh to get new copy");
-      return jsonDecode(await cacheData.readAsString());
+      return data;
     } catch (e) {
       Map data = await parse();
       cacheData.writeAsString(jsonEncode(data));
