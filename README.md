@@ -1,5 +1,16 @@
 # eduserveMinimal
 
+<hr>
+
+# DEPRECATED
+
+### This branch is no longer necesary for the application's work.
+Get the standalone app in branch [mobile_app](https://github.com/hiruthic2002/eduserveMinimal/tree/mobile_app).
+
+Or get the release app in [releases](https://github.com/hiruthic2002/eduserveMinimal/releases)
+<hr>
+<br/>
+
 Minimalist app for eduserve
 
 This branch contains the code for scrapping eduserve and upload the data to cloud.
