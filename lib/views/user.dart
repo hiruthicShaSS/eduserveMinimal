@@ -1,6 +1,5 @@
 import 'package:eduserveMinimal/views/home.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class User extends StatelessWidget {

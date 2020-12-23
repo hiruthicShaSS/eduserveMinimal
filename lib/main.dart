@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:eduserveMinimal/views/creds.dart';
 import 'package:eduserveMinimal/service/scrap.dart';
+import 'package:eduserveMinimal/views/fees.dart';
 import 'package:eduserveMinimal/views/settings.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:hexcolor/hexcolor.dart';
@@ -36,6 +36,7 @@ void main() {
 }
 
 class MyHomePage extends StatefulWidget {
+  static Scraper scraper;
   MyHomePage({Key key, this.title}) : super(key: key);
 
   final String title;
@@ -47,6 +48,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   AnimationController _animationController;
   int _currentIndex = 0;
+  
 
   final List<Widget> _children = [
     Home(),
@@ -76,9 +78,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       Navigator.pushNamed(context, "/updateCreds");
     }
 
-    Scraper scraper = new Scraper();
+    MyHomePage.scraper = new Scraper();
     Scraper.mainPageContext = context;
-    Map data = await scraper.getInfo();
+    Map data = await MyHomePage.scraper.getInfo();
     cloudData = data;
     return data;
   }
@@ -107,19 +109,12 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   Widget SplashScreen() {
     return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Lottie.asset("assets/splashscreen.json",
-              controller: _animationController, onLoaded: (composition) {
-            _animationController
-              ..duration = composition.duration
-              ..forward();
-          }),
-
-          // Text(Scraper.status),
-        ],
-      ),
+      child: Lottie.asset("assets/splashscreen.json",
+          controller: _animationController, onLoaded: (composition) {
+        _animationController
+          ..duration = composition.duration
+          ..forward();
+      }),
     );
   }
 
@@ -181,8 +176,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                 : "Go to bed",
                     style: GoogleFonts.comfortaa(
                         color: Colors.amberAccent,
-                        fontSize: 20,
-                        fontStyle: FontStyle.italic),
+                        fontSize: 18,
+                        fontStyle: FontStyle.italic,
+                        fontWeight: FontWeight.w800),
                   )
                 ],
               ),
@@ -192,8 +188,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
             ),
             ListTile(
               title: Text("Fees"),
-              onTap: () {
+              onTap: () async {
                 Navigator.of(context).pop();
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => Fees(),
+                ));
               },
             ),
             ListTile(

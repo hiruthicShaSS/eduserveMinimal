@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+
 import 'package:http/http.dart';
 import 'package:beautifulsoup/beautifulsoup.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,12 +15,32 @@ class Scraper {
   static String status = "";
   SharedPreferences prefs;
 
+  String hostname = "https://eduserve.karunya.edu";
+  String url = "";
+
+  Map<String, String> headers = {
+    "user-agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36 Edg/87.0.664.66",
+    "accept":
+        "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+    "content-type": "application/x-www-form-urlencoded",
+    "origin": "https://eduserve.karunya.edu",
+    "referer": "",
+    "sec-fetch-dest": "document",
+    "sec-fetch-mode": "navigate",
+    "sec-fetch-site": "same-origin",
+    "sec-fetch-user": "?1",
+    "upgrade-insecure-requests": "1"
+  };
+
+  Client client = new Client();
+
   int bypassFeedbackForm(int stars) {
     // TODO: Implement bypass code for feedback form.
     return 0;
   }
 
-  Future<String> login() async {
+  Future<String> login([callback]) async {
     var connection = await (Connectivity().checkConnectivity());
     if (connection == ConnectivityResult.none) {
       Fluttertoast.showToast(
@@ -29,29 +50,16 @@ class Scraper {
       );
     }
 
-    String hostname = "https://eduserve.karunya.edu";
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    String appDocPath = appDocDir.path;
+    File loginData = File("$appDocPath/loginData.json");
+
     String loginAddress = "/Login.aspx?ReturnUrl=%2f";
-    String url = "";
 
     prefs = await SharedPreferences.getInstance();
     String username = prefs.getString("username");
     String password = prefs.getString("password");
     int stars = prefs.getInt("stars");
-
-    Map<String, String> headers = {
-      "user-agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36 Edg/87.0.664.66",
-      "accept":
-          "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-      "content-type": "application/x-www-form-urlencoded",
-      "origin": "https://eduserve.karunya.edu",
-      "referer": url,
-      "sec-fetch-dest": "document",
-      "sec-fetch-mode": "navigate",
-      "sec-fetch-site": "same-origin",
-      "sec-fetch-user": "?1",
-      "upgrade-insecure-requests": "1"
-    };
 
     Map<String, String> login_data = {
       "RadScriptManager1_TSM": "",
@@ -65,8 +73,15 @@ class Scraper {
       "ctl00\$mainContent\$Login1\$LoginButton": "Log In"
     };
 
+    try {
+      if (await loginData.readAsString() != null) {
+        Map data = jsonDecode(await loginData.readAsString());
+        login_data = data["login"];
+        headers = data["headers"];
+      }
+    } catch (e) {}
+
     status = "Get EduServe...";
-    Client client = new Client();
 
     // Get karunya.edu
     url = hostname;
@@ -111,10 +126,123 @@ class Scraper {
           headers: headers);
     }
 
+    loginData
+        .writeAsString(jsonEncode({"headers": headers, "login": login_data}));
+
     return res.body;
   }
 
+  Future<Map> fees({bool force = false}) async {
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    String appDocPath = appDocDir.path;
+    File fees = File("$appDocPath/fees.json");
+
+    if (force) {
+      try {
+        if (await fees.readAsString() != null) {
+          return jsonDecode(await fees.readAsString());
+        }
+      } catch (e) {}
+    }
+
+    String feesDownload = "/Student/Fees/DownloadReceipt.aspx";
+    String feesOverallStatement = "/Student/Fees/FeesStatement.aspx";
+    Map feesStatement = new Map();
+
+    Response page =
+        await client.get("$hostname${feesDownload}", headers: headers);
+
+    Response dues =
+        await client.get("$hostname${feesOverallStatement}", headers: headers);
+    var dueSoup = Beautifulsoup(dues.body);
+    List dueslist = dueSoup
+        .find_all("span")
+        .map((e) => (e.attributes["id"] == "mainContent_LBLDUES" ||
+                e.attributes["id"] == "mainContent_LBLEXCESS")
+            ? e.text
+            : "")
+        .toSet()
+        .toList();
+    dueslist.removeWhere((element) => element == "");
+
+    var soup = Beautifulsoup(page.body);
+    List td = soup
+        .find_all("td")
+        .map((e) => (e.attributes.keys.length == 0) ? e.text : "")
+        .toList();
+
+    RegExp recieptExp = new RegExp(r"[RE]\d{1,7}");
+    RegExp dateExp = new RegExp(r"\d{2} \w{3} \d{4}");
+    RegExp amountExp = new RegExp(r"\d{1,}\.\d{1,}");
+
+    List reArrangeFees(List list) {
+      String reciept = "";
+      String date = "";
+      String amount = "";
+      String title = "";
+      String currency = "";
+      list.forEach((element) {
+        if (recieptExp.hasMatch(element)) {
+          reciept = element;
+        } else if (dateExp.hasMatch(element)) {
+          date = element;
+        } else if (amountExp.hasMatch(element)) {
+          amount = element;
+        } else {
+          title = element;
+        }
+      });
+      return [reciept, date, amount, title];
+    }
+
+    bool flagReached = false;
+    bool flagStop = false;
+    int flagLines = 0;
+
+    String temp = "";
+    td.forEach((element) {
+      element = element.trim();
+
+      if (recieptExp.hasMatch(element) && element.length < 40) {
+        flagReached = true;
+      }
+
+      if (flagReached) {
+        if (element.length <= 2) {
+          // If the element is just 'A' or any stray characters, return.
+          return false;
+        }
+
+        if (flagLines != 5) {
+          temp += "$element<space>";
+          flagLines++;
+        } else {
+          List splited = temp
+              .split("<space>")
+              .toSet()
+              .toList(); // Once completed parse the string to list.
+          splited.removeWhere(
+              (element) => element.toString() == ""); // Remove empty elements.
+          splited.removeWhere((element) => element == "Indian Rupee");
+          temp = "";
+          flagLines = 0;
+
+          // Somethings messing with the position of elements to be in same order
+          splited = reArrangeFees(splited);
+          feesStatement[splited[0]] = splited.sublist(1);
+        }
+      }
+    });
+
+    feesStatement["dues"] = dueslist;
+
+    fees.writeAsString(jsonEncode(feesStatement));
+
+    return feesStatement;
+  }
+
   Future<Map> parse() async {
+    // Parse the student basic info
     String studentHomePage = await login();
     status += "\nScrapping data...";
 
@@ -172,7 +300,6 @@ class Scraper {
         return;
       }
     });
-    // leaveApplication.forEach((key, value) => print("$key -> $value"));
 
     basicInfo.add(studentImage);
     basicInfo.removeWhere(

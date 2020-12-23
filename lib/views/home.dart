@@ -192,7 +192,7 @@ class _HomeState extends State<Home> {
       if (double.parse(cloudData["asm"]) < 85.0) {
         assemblyAttendenceBoxColor = Colors.amber[900];
       }
-    } on Exception catch (e) {
+    } catch (e) {
       classAttStatus = cloudData["att"];
       asmAttStatus = cloudData["asm"];
 
