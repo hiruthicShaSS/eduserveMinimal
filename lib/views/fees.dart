@@ -2,10 +2,10 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:eduserveMinimal/main.dart';
 import 'package:eduserveMinimal/service/scrap.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:clipboard_manager/clipboard_manager.dart';
 
 class Fees extends StatelessWidget {
   Future<Map> getFeesStatement({bool force = false}) async {
@@ -39,7 +39,9 @@ class Fees extends StatelessWidget {
         builder: (context, AsyncSnapshot<Map> snapshot) {
           if (snapshot.hasData) {
             Map data = snapshot.data;
-            List dues = (data["dues"] == null || data["dues"].length < 2) ? [0, 0] : data["dues"];
+            List dues = (data["dues"] == null || data["dues"].length < 2)
+                ? [0, 0]
+                : data["dues"];
             data.remove("dues");
 
             return Column(
@@ -122,12 +124,16 @@ class Fees extends StatelessWidget {
                             ],
                           ),
                           onTap: () {
-                            ClipboardManager.copyToClipBoard(
-                                    "${data[data.keys.toList()[index]][2]}\nReciept no. : ${data.keys.toList()[index]}\nAmount: ${data[data.keys.toList()[index]][1]}\nDate Payed: ${data[data.keys.toList()[index]][0]}")
-                                .then((result) {
-                              Fluttertoast.showToast(
-                                  msg: "Copied to clipboard");
-                            });
+                            // ClipboardManager.copyToClipBoard(
+                            //         "${data[data.keys.toList()[index]][2]}\nReciept no. : ${data.keys.toList()[index]}\nAmount: ${data[data.keys.toList()[index]][1]}\nDate Payed: ${data[data.keys.toList()[index]][0]}")
+                            //     .then((result) {
+                            //   Fluttertoast.showToast(
+                            //       msg: "Copied to clipboard");
+                            // });
+                            Clipboard.setData(ClipboardData(
+                                text:
+                                    "${data[data.keys.toList()[index]][2]}\nReciept no. : ${data.keys.toList()[index]}\nAmount: ${data[data.keys.toList()[index]][1]}\nDate Payed: ${data[data.keys.toList()[index]][0]}"));
+                            Fluttertoast.showToast(msg: "Copied to clipboard");
                           },
                         ),
                       );
