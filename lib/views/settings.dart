@@ -6,6 +6,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import 'package:eduserveMinimal/themes/themes.dart';
+
 class Settings extends StatelessWidget {
   static final thisAppPublishDate = "2020-12-20 19:38:07.569667";
   final String eduserveURL =
@@ -31,8 +33,36 @@ class Settings extends StatelessWidget {
           children: [
             RaisedButton(
               child: Text("Themes"),
-              onPressed: () {
-                Fluttertoast.showToast(msg: "Feature comming soon! ☺", fontSize: 16);
+              onPressed: () async {
+                CustomTheme themes = new CustomTheme();
+                List theme = await themes.getTheme();
+
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => Scaffold(
+                      appBar: AppBar(
+                        title: Text("Themes"),
+                        centerTitle: true,
+                      ),
+                      body: Container(
+                        alignment: Alignment.center,
+                        child: ListView.builder(
+                          itemCount: theme[1].length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              title: Text(theme[1][index]),
+                              leading: Icon(Icons.thumb_up),
+                              onTap: () {
+                                themes.setTheme(theme[1][index]);
+                              },
+                            );
+                          },
+                        )
+                      ),
+                    )
+                  )
+                );
+                // Fluttertoast.showToast(msg: "Feature comming soon! ☺", fontSize: 16);
               },
             ),
             RaisedButton(

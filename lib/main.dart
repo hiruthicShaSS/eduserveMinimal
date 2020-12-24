@@ -1,19 +1,24 @@
 import 'dart:io';
 
-import 'package:eduserveMinimal/views/creds.dart';
-import 'package:eduserveMinimal/service/scrap.dart';
-import 'package:eduserveMinimal/views/fees.dart';
-import 'package:eduserveMinimal/views/settings.dart';
+import 'package:eduserveMinimal/views/timetable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+import 'package:lottie/lottie.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'package:hexcolor/hexcolor.dart';
-import 'package:lottie/lottie.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 import 'package:eduserveMinimal/views/home.dart';
 import 'package:eduserveMinimal/views/user.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:eduserveMinimal/views/creds.dart';
+import 'package:eduserveMinimal/views/fees.dart';
+import 'package:eduserveMinimal/views/settings.dart';
+
+import 'package:eduserveMinimal/service/scrap.dart';
 
 void main() {
   runApp(
@@ -37,9 +42,9 @@ void main() {
 
 class MyHomePage extends StatefulWidget {
   static Scraper scraper;
-  MyHomePage({Key key, this.title}) : super(key: key);
-
   final String title;
+
+  MyHomePage({Key key, this.title}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -48,7 +53,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   AnimationController _animationController;
   int _currentIndex = 0;
-  
 
   final List<Widget> _children = [
     Home(),
@@ -123,6 +127,10 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     GlobalKey<ScaffoldState> _mainScaffoldKey = GlobalKey();
     var currentHour = DateTime.now().hour;
 
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+
     return Scaffold(
       key: _mainScaffoldKey,
       appBar: AppBar(
@@ -148,80 +156,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               ]
             : appBarActions,
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            DrawerHeader(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        backgroundImage: AssetImage("assets/appIcon.png"),
-                        radius: 30,
-                      ),
-                      Spacer(),
-                      Text("Last Updated: 12-23-4566"),
-                    ],
-                  ),
-                  Text(
-                    (currentHour > 0 && currentHour < 12)
-                        ? "Good Morning, buddy"
-                        : (currentHour >= 12 && currentHour < 16)
-                            ? "Good Afternoon"
-                            : (currentHour >= 16 && currentHour < 20)
-                                ? "Good Evening, amigo"
-                                : "Go to bed",
-                    style: GoogleFonts.comfortaa(
-                        color: Colors.amberAccent,
-                        fontSize: 18,
-                        fontStyle: FontStyle.italic,
-                        fontWeight: FontWeight.w800),
-                  )
-                ],
-              ),
-              decoration: BoxDecoration(
-                color: Colors.black,
-              ),
-            ),
-            ListTile(
-              title: Text("Fees"),
-              onTap: () async {
-                Navigator.of(context).pop();
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => Fees(),
-                ));
-              },
-            ),
-            ListTile(
-              title: Text("Apply Leave"),
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            ListTile(
-              title: Text("Class Timetable"),
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            ListTile(
-              title: Text("Download Hall Ticket"),
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            ListTile(
-              title: Text("Internal Assessment"),
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        ),
-      ),
+      drawer: buildDrawer(currentHour, context),
       body: (cloudData.isEmpty)
           ? FutureBuilder(
               // Show loading page untill the data has downloaded
@@ -268,6 +203,86 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
             unselectedItemColor: Colors.white,
           ),
         ),
+      ),
+    );
+  }
+
+  Drawer buildDrawer(int currentHour, BuildContext context) {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          DrawerHeader(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Row(
+                  children: [
+                    CircleAvatar(
+                      backgroundImage: AssetImage("assets/appIcon.png"),
+                      radius: 30,
+                    ),
+                    Spacer(),
+                    Text("Last Updated: 12-23-4566"),
+                  ],
+                ),
+                Text(
+                  (currentHour > 0 && currentHour < 12)
+                      ? "Good Morning, buddy"
+                      : (currentHour >= 12 && currentHour < 16)
+                          ? "Good Afternoon"
+                          : (currentHour >= 16 && currentHour < 20)
+                              ? "Good Evening, amigo"
+                              : "Go to bed",
+                  style: GoogleFonts.comfortaa(
+                      color: Colors.amberAccent,
+                      fontSize: 18,
+                      fontStyle: FontStyle.italic,
+                      fontWeight: FontWeight.w800),
+                )
+              ],
+            ),
+            decoration: BoxDecoration(
+              color: Colors.black,
+            ),
+          ),
+          ListTile(
+            title: Text("Fees"),
+            onTap: () async {
+              Navigator.of(context).pop();
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => Fees(),
+              ));
+            },
+          ),
+          ListTile(
+            title: Text("Apply Leave"),
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          ListTile(
+            title: Text("Class Timetable"),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => TimeTable(),
+              ));
+            },
+          ),
+          ListTile(
+            title: Text("Download Hall Ticket"),
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          ListTile(
+            title: Text("Internal Assessment"),
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
       ),
     );
   }
