@@ -19,7 +19,8 @@ class User extends StatelessWidget {
               },
             ),
             onTap: () {
-              Fluttertoast.showToast(msg: "Update profile, feature coming soon!😊");
+              Fluttertoast.showToast(
+                  msg: "Update profile, feature coming soon!😊");
             },
           ),
         ),

@@ -37,31 +37,27 @@ class Settings extends StatelessWidget {
                 CustomTheme themes = new CustomTheme();
                 List theme = await themes.getTheme();
 
-                Navigator.of(context).push(
-                  MaterialPageRoute(
+                Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => Scaffold(
-                      appBar: AppBar(
-                        title: Text("Themes"),
-                        centerTitle: true,
-                      ),
-                      body: Container(
-                        alignment: Alignment.center,
-                        child: ListView.builder(
-                          itemCount: theme[1].length,
-                          itemBuilder: (context, index) {
-                            return ListTile(
-                              title: Text(theme[1][index]),
-                              leading: Icon(Icons.thumb_up),
-                              onTap: () {
-                                themes.setTheme(theme[1][index]);
-                              },
-                            );
-                          },
-                        )
-                      ),
-                    )
-                  )
-                );
+                          appBar: AppBar(
+                            title: Text("Themes"),
+                            centerTitle: true,
+                          ),
+                          body: Container(
+                              alignment: Alignment.center,
+                              child: ListView.builder(
+                                itemCount: theme[1].length,
+                                itemBuilder: (context, index) {
+                                  return ListTile(
+                                    title: Text(theme[1][index]),
+                                    leading: Icon(Icons.thumb_up),
+                                    onTap: () {
+                                      themes.setTheme(theme[1][index]);
+                                    },
+                                  );
+                                },
+                              )),
+                        )));
                 // Fluttertoast.showToast(msg: "Feature comming soon! ☺", fontSize: 16);
               },
             ),

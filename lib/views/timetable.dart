@@ -54,7 +54,7 @@ class TimeTable extends StatelessWidget {
             return Container(
                 alignment: Alignment.center,
                 child: SpinKitCubeGrid(
-                  size: 100,
+                  size: 80,
                   color: Colors.white,
                 ));
           }
@@ -94,44 +94,17 @@ class TimeTable extends StatelessWidget {
                 dataRowHeight: MediaQuery.of(context).size.height / 5,
                 columnSpacing: MediaQuery.of(context).size.width / 20,
                 headingRowColor: MaterialStateProperty.all(Colors.white70),
-                columns: [
-                  DataColumn(
-                      label: Text("Day/Hour",
-                          style: TextStyle(fontSize: 10, color: Colors.black))),
-                  DataColumn(
-                      label: Text("Hour 1",
-                          style: TextStyle(fontSize: 15, color: Colors.black))),
-                  DataColumn(
-                      label: Text("Hour 2",
-                          style: TextStyle(fontSize: 15, color: Colors.black))),
-                  DataColumn(
-                      label: Text("Hour 3",
-                          style: TextStyle(fontSize: 15, color: Colors.black))),
-                  DataColumn(
-                      label: Text("Hour 4",
-                          style: TextStyle(fontSize: 15, color: Colors.black))),
-                  DataColumn(
-                      label: Text("Hour 5",
-                          style: TextStyle(fontSize: 15, color: Colors.black))),
-                  DataColumn(
-                      label: Text("Hour 6",
-                          style: TextStyle(fontSize: 15, color: Colors.black))),
-                  DataColumn(
-                      label: Text("Hour 7",
-                          style: TextStyle(fontSize: 15, color: Colors.black))),
-                  DataColumn(
-                      label: Text("Hour 8",
-                          style: TextStyle(fontSize: 15, color: Colors.black))),
-                  DataColumn(
-                      label: Text("Hour 9",
-                          style: TextStyle(fontSize: 15, color: Colors.black))),
-                  DataColumn(
-                      label: Text("Hour 10",
-                          style: TextStyle(fontSize: 15, color: Colors.black))),
-                  DataColumn(
-                      label: Text("Hour 11",
-                          style: TextStyle(fontSize: 15, color: Colors.black))),
-                ],
+                dividerThickness: 2,
+                columns: List.generate(
+                    12,
+                    (index) => DataColumn(
+                        label: (index == 0)
+                            ? Text("Day/Hour",
+                                style: TextStyle(
+                                    fontSize: 12, color: Colors.black))
+                            : Text("Hour $index",
+                                style: TextStyle(
+                                    fontSize: 15, color: Colors.black)))),
                 rows: List.generate(
                     days.length,
                     (index) => DataRow(

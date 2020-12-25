@@ -41,7 +41,8 @@ class Creds extends StatelessWidget {
               RaisedButton(
                 child: Text("Save"),
                 onPressed: () async {
-                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                  SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
                   prefs.setString("username", _usernameController.text);
                   prefs.setString("password", _passwordController.text);
                   prefs.setInt("stars", int.parse(_starsController.text));

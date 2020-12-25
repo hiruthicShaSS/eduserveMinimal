@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:eduserveMinimal/views/hallticket.dart';
+import 'package:eduserveMinimal/views/internals.dart';
 import 'package:eduserveMinimal/views/timetable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,7 +12,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 
 import 'package:eduserveMinimal/views/home.dart';
 import 'package:eduserveMinimal/views/user.dart';
@@ -274,12 +275,18 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
             title: Text("Download Hall Ticket"),
             onTap: () {
               Navigator.of(context).pop();
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => HallTicket(),
+              ));
             },
           ),
           ListTile(
             title: Text("Internal Assessment"),
             onTap: () {
               Navigator.of(context).pop();
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => InternalMarks(),
+              ));
             },
           ),
         ],
