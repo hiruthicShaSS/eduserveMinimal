@@ -383,37 +383,25 @@ class Scraper {
       formData["ctl00\$mainContent\$DDLACADEMICTERM"] = academicTerm.toString();
       Response res = await client.post("$hostname$internalsURL",
           headers: headers, body: formData);
+
       var soup = Beautifulsoup(res.body);
-      List table =
-          soup.find_all("td").map((e) => e.text.trim()).toSet().toList();
+      List table = soup.find_all("tr").map((e) => e.innerHtml).toSet().toList();
 
       bool flagReached = false;
-      int flagLines = 0;
-      List temp = new List();
       Map data = new Map();
       table.forEach((element) {
-        element = element.toString().trim();
-
-        if (element.indexOf("Entered on") != -1) {
+        if (element.indexOf("Entered by") != -1) {
           flagReached = true;
+          return;
         }
-
         if (flagReached) {
-          if (flagLines != 11) {
-            print(element);
-            temp.add(element);
-
-            flagLines++;
-          } else {
-            print(temp);
-            data[temp[0]] = temp;
-
-            flagLines = 0;
-            temp = new List();
-          }
+          element = element.trim().replaceAll("<td>", "");
+          element = element.trim().replaceAll("</td>", "<space>");
+          
+          data[element.split("<space>")[8]] = element.split("<space>");
+          data[element.split("<space>")[8]].removeWhere((element) => element == "");
         }
       });
-      data.removeWhere((key, value) => key.length > 100);
 
       return (res.body.indexOf("No records to display.") != -1)
           ? "No records to display."

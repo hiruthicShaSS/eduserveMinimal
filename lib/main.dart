@@ -80,7 +80,10 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
     if ((username == null || password == null) ||
         (username == "" || password == "")) {
-      Navigator.pushNamed(context, "/updateCreds");
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (context) => Creds(pushHomePage: true,)
+      ));
+      return null;
     }
 
     MyHomePage.scraper = new Scraper();

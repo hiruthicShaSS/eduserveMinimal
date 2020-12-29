@@ -74,7 +74,6 @@ class _InternalMarksState extends State<InternalMarks> {
                                 if (data.runtimeType != String) {
                                   // table data
                                   List dataCell = new List();
-                                  // print(data);
                                   data.forEach((key, value) {
                                     List<DataCell> temp = new List();
                                     value.forEach((element) {

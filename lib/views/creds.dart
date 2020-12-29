@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:eduserveMinimal/main.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -5,6 +8,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
 class Creds extends StatelessWidget {
+  bool pushHomePage = false;
+  Creds({this.pushHomePage});
+
   @override
   Widget build(BuildContext context) {
     TextEditingController _usernameController = new TextEditingController();
@@ -45,9 +51,16 @@ class Creds extends StatelessWidget {
                       await SharedPreferences.getInstance();
                   prefs.setString("username", _usernameController.text);
                   prefs.setString("password", _passwordController.text);
-                  prefs.setInt("stars", int.parse(_starsController.text));
+                  prefs.setInt("stars", min(int.parse(_starsController.text), 5));
                   Fluttertoast.showToast(msg: "Credentials update successfuly");
-                  Navigator.pop(context);
+                  
+                  if (pushHomePage ?? false) {
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => MyHomePage()
+                    ));
+                  } else {
+                    Navigator.pop(context);
+                  }
                 },
               ),
               SizedBox(height: 30.0),
