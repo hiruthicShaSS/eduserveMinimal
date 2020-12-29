@@ -95,16 +95,22 @@ class Fees extends StatelessWidget {
                   child: ListView.builder(
                     itemCount: data.keys.length,
                     itemBuilder: (context, index) {
+                      String currency = "";
+                      if (data[data.keys.toList()[index]][data[data.keys.toList()[index]].length - 2] == "Indian Rupee") {
+                        currency = "\u{20B9}";
+                      } 
+                      // else if (# new currency logic) {}
+
                       return Padding(
                         padding: const EdgeInsets.all(5.0),
                         child: ListTile(
                           tileColor: Colors.black,
                           title:
-                              AutoSizeText(data[data.keys.toList()[index]][2]),
+                              AutoSizeText(data[data.keys.toList()[index]][3]),
                           trailing: Column(
                             children: [
                               AutoSizeText(
-                                data[data.keys.toList()[index]][1], // Amount
+                                "$currency ${data[data.keys.toList()[index]].last}", // Amount
                                 minFontSize: 18,
                                 maxFontSize: 24,
                                 overflow: TextOverflow.ellipsis,
@@ -117,7 +123,7 @@ class Fees extends StatelessWidget {
                                 overflow: TextOverflow.ellipsis,
                               ),
                               AutoSizeText(
-                                data[data.keys.toList()[index]][0], // Date
+                                data[data.keys.toList()[index]][2], // Date
                                 minFontSize: 6,
                                 maxFontSize: 10,
                                 overflow: TextOverflow.ellipsis,
@@ -125,15 +131,9 @@ class Fees extends StatelessWidget {
                             ],
                           ),
                           onTap: () {
-                            // ClipboardManager.copyToClipBoard(
-                            //         "${data[data.keys.toList()[index]][2]}\nReciept no. : ${data.keys.toList()[index]}\nAmount: ${data[data.keys.toList()[index]][1]}\nDate Payed: ${data[data.keys.toList()[index]][0]}")
-                            //     .then((result) {
-                            //   Fluttertoast.showToast(
-                            //       msg: "Copied to clipboard");
-                            // });
                             Clipboard.setData(ClipboardData(
                                 text:
-                                    "${data[data.keys.toList()[index]][2]}\nReciept no. : ${data.keys.toList()[index]}\nAmount: ${data[data.keys.toList()[index]][1]}\nDate Payed: ${data[data.keys.toList()[index]][0]}"));
+                                    "${data[data.keys.toList()[index]][3]}\nReciept no. : ${data.keys.toList()[index]}\nAmount: ${data[data.keys.toList()[index]].last}\nDate Payed: ${data[data.keys.toList()[index]][2]}"));
                             Fluttertoast.showToast(msg: "Copied to clipboard");
                           },
                         ),

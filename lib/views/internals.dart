@@ -17,11 +17,10 @@ class _InternalMarksState extends State<InternalMarks> {
   String status = "";
   bool _visible = false;
   Widget table = Container();
+  String dropdownSelection;
 
   @override
   Widget build(BuildContext context) {
-    Text dropdownHint = Text("Select the Academic Term");
-
     return Scaffold(
       appBar: AppBar(
         title: Text("Internal"),
@@ -48,7 +47,7 @@ class _InternalMarksState extends State<InternalMarks> {
                         Padding(
                             padding: const EdgeInsets.all(10.0),
                             child: DropdownButton(
-                              hint: dropdownHint,
+                              hint: Text("Select the Academic Term"),
                               icon: Icon(Icons.arrow_downward),
                               iconSize: 24,
                               elevation: 16,
@@ -57,15 +56,29 @@ class _InternalMarksState extends State<InternalMarks> {
                                 height: 2,
                                 color: Colors.white,
                               ),
+                              value: dropdownSelection,
+                              items: academicTerms
+                                  .map<DropdownMenuItem<String>>(
+                                      (String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
                               onChanged: (String value) async {
                                 setState(() {
-                                  dropdownHint = Text(value);
+                                  dropdownSelection = value.toString();
+                                  table = SpinKitCubeGrid(
+                                    size: 80,
+                                    color: Colors.white,
+                                  );
                                 });
 
-                                final data = await MyHomePage.scraper.internalMarks(
-                                    academicTerm: (academicTerms.length -
-                                            academicTerms.indexOf(value))
-                                        .toString());
+                                final data = await MyHomePage.scraper
+                                    .internalMarks(
+                                        academicTerm: (academicTerms.length -
+                                                academicTerms.indexOf(value))
+                                            .toString());
 
                                 if (data == "No records to display.") {
                                   // If login required
@@ -79,7 +92,8 @@ class _InternalMarksState extends State<InternalMarks> {
                                     value.forEach((element) {
                                       temp.add(DataCell(Container(
                                         width:
-                                            MediaQuery.of(context).size.width / 3,
+                                            MediaQuery.of(context).size.width /
+                                                3,
                                         child: Text(
                                           element.trim(),
                                           style: TextStyle(fontSize: 17),
@@ -96,20 +110,16 @@ class _InternalMarksState extends State<InternalMarks> {
                                 } else {
                                   // No records available
                                   _visible = true;
-                                  setState(() => status = data);
+                                  setState(() {
+                                    status = data;
+                                    table = Container();
+                                  });
                                   Future.delayed(Duration(seconds: 2))
                                       .then((value) {
                                     setState(() => _visible = !_visible);
                                   });
                                 }
                               },
-                              items: academicTerms
-                                  .map<DropdownMenuItem<String>>((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value),
-                                );
-                              }).toList(),
                             )),
                         AnimatedOpacity(
                           duration: Duration(seconds: 1),

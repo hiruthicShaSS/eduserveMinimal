@@ -188,71 +188,24 @@ class Scraper {
     dueslist.removeWhere((element) => element == "");
 
     var soup = Beautifulsoup(page.body);
-    List td = soup
-        .find_all("td")
-        .map((e) => (e.attributes.keys.length == 0) ? e.text : "")
-        .toList();
-
-    RegExp recieptExp = new RegExp(r"[RE]\d{1,7}");
-    RegExp dateExp = new RegExp(r"\d{2} \w{3} \d{4}");
-    RegExp amountExp = new RegExp(r"\d{1,}\.\d{1,}");
-
-    List reArrangeFees(List list) {
-      String reciept = "";
-      String date = "";
-      String amount = "";
-      String title = "";
-      String currency = "";
-      list.forEach((element) {
-        if (recieptExp.hasMatch(element)) {
-          reciept = element;
-        } else if (dateExp.hasMatch(element)) {
-          date = element;
-        } else if (amountExp.hasMatch(element)) {
-          amount = element;
-        } else {
-          title = element;
-        }
-      });
-      return [reciept, date, amount, title];
-    }
+    List table = soup.find_all("tr").map((e) => e.innerHtml).toSet().toList();
 
     bool flagReached = false;
-    bool flagStop = false;
-    int flagLines = 0;
-
-    String temp = "";
-    td.forEach((element) {
-      element = element.trim();
-
-      if (recieptExp.hasMatch(element) && element.length < 40) {
+    table.forEach((element) {
+      if (element.indexOf("Total Amount") != -1) {
         flagReached = true;
+        return;
       }
-
       if (flagReached) {
-        if (element.length <= 2) {
-          // If the element is just 'A' or any stray characters, return.
-          return false;
-        }
+        element = element.trim().replaceAll("<td>", "");
+        element = element.trim().replaceAll('<td style="display:none;">', "");
+        element = element.trim().replaceAll("</td>", "<space>");
 
-        if (flagLines != 5) {
-          temp += "$element<space>";
-          flagLines++;
-        } else {
-          List splited = temp
-              .split("<space>")
-              .toSet()
-              .toList(); // Once completed parse the string to list.
-          splited.removeWhere(
-              (element) => element.toString() == ""); // Remove empty elements.
-          splited.removeWhere((element) => element == "Indian Rupee");
-          temp = "";
-          flagLines = 0;
-
-          // Somethings messing with the position of elements to be in same order
-          splited = reArrangeFees(splited);
-          feesStatement[splited[0]] = splited.sublist(1);
-        }
+        List temp = new List();
+        temp = element.split("<space>");
+        temp.removeRange(0, 3);
+        temp.removeWhere((element) => element.length == 0);
+        feesStatement[temp[1]] = temp;
       }
     });
 
@@ -384,6 +337,10 @@ class Scraper {
       Response res = await client.post("$hostname$internalsURL",
           headers: headers, body: formData);
 
+      if ((res.body.indexOf("No records to display.") != -1)) {
+        return "No records to display.";
+      }
+
       var soup = Beautifulsoup(res.body);
       List table = soup.find_all("tr").map((e) => e.innerHtml).toSet().toList();
 
@@ -397,15 +354,14 @@ class Scraper {
         if (flagReached) {
           element = element.trim().replaceAll("<td>", "");
           element = element.trim().replaceAll("</td>", "<space>");
-          
+
           data[element.split("<space>")[8]] = element.split("<space>");
-          data[element.split("<space>")[8]].removeWhere((element) => element == "");
+          data[element.split("<space>")[8]]
+              .removeWhere((element) => element == "");
         }
       });
 
-      return (res.body.indexOf("No records to display.") != -1)
-          ? "No records to display."
-          : Map.of(data);
+      return Map.of(data);
     }
   }
 
