@@ -29,3 +29,12 @@ _If you are using ios, YEET_
 
    - Append '--release' or '--debug' for release app or debug app respectively.
    - More: [Build Flutter app](https://flutter.dev/docs/deployment/android)
+
+<br />
+
+## Screenshots
+<div align="center">
+<img src="screenshots/Screenshot_1609770891.png" width=300>
+<img src="screenshots/Screenshot_1609770963.png" width=300>
+<img src="screenshots/Screenshot_1609770982.png" width=300>
+</div>
