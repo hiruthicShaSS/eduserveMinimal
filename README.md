@@ -34,7 +34,7 @@ _If you are using ios, YEET_
 
 ## Screenshots
 <div align="center">
-<img src="screenshots/Screenshot_1609770891.png" width=300>
-<img src="screenshots/Screenshot_1609770963.png" width=300>
-<img src="screenshots/Screenshot_1609770982.png" width=300>
+<img src="screenshots/Screenshot_1609770891.png" width=200>
+<img src="screenshots/Screenshot_1609770963.png" width=200>
+<img src="screenshots/Screenshot_1609770982.png" width=200>
 </div>
