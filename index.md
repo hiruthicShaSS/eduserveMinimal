@@ -54,6 +54,7 @@ Once it is installed follow these steps to compile an app from the source,
    - More: [Build Flutter app](https://flutter.dev/docs/deployment/android)
 
 ## Screenshots
+
 <div align="center">
 <img src="https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/Screenshot_1609770891.png" width=200>
 <img src="https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/Screenshot_1609770963.png" width=200>
@@ -61,6 +62,7 @@ Once it is installed follow these steps to compile an app from the source,
 </div>
 
 ## Support
+
 [![Paypal][paypal-shield]][paypal-url]
 [![Buy Me a Coffee][buymeacoffee-shield]][buymeacoffee-url]
 
@@ -68,13 +70,13 @@ Once it is installed follow these steps to compile an app from the source,
 
 [contributors-shield]: https://img.shields.io/github/contributors/hiruthicShaSS/eduserveMinimal.svg?style=for-the-badge
 [contributors-url]: https://github.com/hiruthicShaSS/eduserveMinimal/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/hiruthicShaSS/Best-README-Template.svg?style=for-the-badge
+[forks-shield]: https://img.shields.io/github/forks/hiruthicShaSS/eduserveMinimal?style=for-the-badge
 [forks-url]: https://github.com/hiruthicShaSS/eduserveMinimal/network/members
-[stars-shield]: https://img.shields.io/github/stars/hiruthicShaSS/Best-README-Template.svg?style=for-the-badge
+[stars-shield]: https://img.shields.io/github/stars/hiruthicShaSS/eduserveMinimal?style=for-the-badge
 [stars-url]: https://github.com/hiruthicShaSS/eduserveMinimal/stargazers
-[issues-shield]: https://img.shields.io/github/issues/hiruthicShaSS/Best-README-Template.svg?style=for-the-badge
+[issues-shield]: https://img.shields.io/github/issues/hiruthicShaSS/eduserveMinimal?style=for-the-badge
 [issues-url]: https://github.com/hiruthicShaSS/eduserveMinimal/issues
-[license-shield]: https://img.shields.io/github/license/hiruthicShaSS/Best-README-Template.svg?style=for-the-badge
+[license-shield]: https://img.shields.io/github/license/hiruthicShaSS/eduserveMinimal?style=for-the-badge
 [license-url]: https://github.com/hiruthicShaSS/eduserveMinimal/blob/main/LICENSE
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/hiruthicSha
