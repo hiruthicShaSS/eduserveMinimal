@@ -1,9 +1,12 @@
+[![Website][website-shield]][website-url]
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
+[![Twitter Follow][twitter-shield]][twitter-url]
+![][visitor-shield]
 
 ## Idea
 
@@ -68,6 +71,10 @@ Once it is installed follow these steps to compile an app from the source,
 
 
 
+[website-url]: https://hiruthicshass.github.io/eduserveMinimal/
+[website-shield]: https://img.shields.io/website?label=GitHub%20Pages&style=for-the-badge&url=https://hiruthicshass.github.io/eduserveMinimal/
+[twitter-url]: https://twitter.com/intent/follow?original_referer=https%3A%2F%2Fgithub.com%2F_hiruthicSha&screen_name=_hiruthicSha
+[twitter-shield]: https://img.shields.io/twitter/follow/_hiruthicSha?color=1DA1F2&logo=twitter&style=for-the-badge
 [contributors-shield]: https://img.shields.io/github/contributors/hiruthicShaSS/eduserveMinimal.svg?style=for-the-badge
 [contributors-url]: https://github.com/hiruthicShaSS/eduserveMinimal/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/hiruthicShaSS/eduserveMinimal?style=for-the-badge
@@ -85,3 +92,4 @@ Once it is installed follow these steps to compile an app from the source,
 [paypal-url]: https://paypal.me/hiruthic?locale.x=en_GB
 [buymeacoffee-shield]: https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black
 [buymeacoffee-url]: https://www.buymeacoffee.com/hiruthicSha
+[visitor-shield]: https://estruyf-github.azurewebsites.net/api/VisitorHit?user=hiruthicShaSS&repo=eduserveMinimal&countColorcountColor&countColor=%237B1E7A
