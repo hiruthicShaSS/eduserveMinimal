@@ -1,1 +1,6 @@
+title: eduserveMinimal
+logo: /assets/appIcon.png
+description: Something that is responsive
+show_downloads: true
+google_analytics:
 theme: jekyll-theme-minimal
