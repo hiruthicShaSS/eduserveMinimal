@@ -60,6 +60,10 @@ Once it is installed follow these steps to compile an app from the source,
 <img src="https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/Screenshot_1609770982.png" width=200>
 </div>
 
+## Support
+[![Paypal][paypal-shield]][paypal-url]
+[![Buy Me a Coffee][buymeacoffee-shield]][buymeacoffee-url]
+
 
 
 [contributors-shield]: https://img.shields.io/github/contributors/hiruthicShaSS/eduserveMinimal.svg?style=for-the-badge
@@ -75,3 +79,7 @@ Once it is installed follow these steps to compile an app from the source,
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/hiruthicSha
 [product-screenshot]: images/screenshot.png
+[paypal-shield]: https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white
+[paypal-url]: https://paypal.me/hiruthic?locale.x=en_GB
+[buymeacoffee-shield]: https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black
+[buymeacoffee-url]: https://www.buymeacoffee.com/hiruthicSha
