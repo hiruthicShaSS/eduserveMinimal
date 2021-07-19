@@ -6,7 +6,6 @@
 [![MIT License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
 [![Twitter Follow][twitter-shield]][twitter-url]
-![][visitor-shield]
 
 ## Idea
 
@@ -55,6 +54,9 @@ Once it is installed follow these steps to compile an app from the source,
 
    - Append '--release' or '--debug' for release app or debug app respectively.
    - More: [Build Flutter app](https://flutter.dev/docs/deployment/android)
+
+## LICENSE
+Distributed under the BSD-3-CLAUSE License. See LICENSE for more information.
 
 ## Screenshots
 
