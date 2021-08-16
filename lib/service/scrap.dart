@@ -1,20 +1,26 @@
+// 🎯 Dart imports:
 import 'dart:convert';
 import 'dart:io';
 
+// 🐦 Flutter imports:
+import 'package:eduserveMinimal/app_state.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
-import 'package:http/http.dart';
+// 📦 Package imports:
 import 'package:beautifulsoup/beautifulsoup.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Scraper {
   static BuildContext mainPageContext;
   static String status = "";
   SharedPreferences prefs;
-
+  Client client;
+  Map pages = {};
   String hostname = "https://eduserve.karunya.edu";
   String url = "";
 
@@ -48,11 +54,103 @@ class Scraper {
     "ctl00_mainContent_grdData_ClientState": "",
   };
 
-  Client client = new Client();
+  Scraper() {
+    client = new Client();
+    initAsyncMethods();
+  }
 
-  int bypassFeedbackForm(int stars) {
-    // TODO: Implement bypass code for feedback form.
-    return 0;
+  Future<void> initAsyncMethods() async {
+    prefs = await SharedPreferences.getInstance();
+  }
+
+  int totalFeedback = 0;
+
+  Future<List> getFeedbackForm([int stars]) async {
+    Response page = await client.get(
+        Uri.parse("https://eduserve.karunya.edu/MIS/IQAC/HFBCollection.aspx"),
+        headers: headers);
+
+    pages["hfb"] = page;
+
+    Beautifulsoup feedbackSoup = Beautifulsoup(page.body);
+    List feedbackList =
+        feedbackSoup.find_all("td").map((e) => e.text.trim()).toList();
+
+    List feedback = [];
+    List allFeedback = [];
+    bool feedbackStart = false;
+    feedbackList.forEach((element) {
+      if (element == "Class Not Handled") {
+        feedback.removeWhere((element) => element == "");
+        allFeedback.add(feedback);
+        feedbackStart = false;
+        feedback = [];
+
+        return;
+      }
+
+      if (element.toString().contains("Command item")) {
+        feedbackStart = true;
+        return;
+      }
+
+      feedback.add(element.toString().trim());
+    });
+
+    totalFeedback = allFeedback.length;
+    return allFeedback;
+  }
+
+  Future<void> fillFeedbackForm(Map rating) async {
+    Map feedback_data = formData;
+
+    var soup = Beautifulsoup(pages["hfb"].body);
+    final inputs = soup.find_all("input").map((e) => e.attributes).toList();
+
+    final RegExp exp = RegExp(
+        r"ctl00_mainContent_grdHFB_ctl00_ctl\d{1,2}_rtngHFB_ClientState");
+
+    List feedbackIds = feedback_data.keys
+        .map((e) => (exp.allMatches(e).length > 0) ? e : null)
+        .toList();
+    feedbackIds.removeWhere((element) => element == null);
+    // print(feedbackIds);
+
+    inputs.forEach((element) {
+      if (!element["name"].contains("ClassHandle")) {
+        feedback_data[element["name"]] = element["value"];
+      }
+    });
+
+    feedbackIds.forEach((id) async {
+      feedback_data[id] = {"value": "1", "readOnly": false}.toString();
+      Response response = await client.post(
+          Uri.parse("https://eduserve.karunya.edu/MIS/IQAC/HFBCollection.aspx"),
+          headers: headers,
+          body: jsonEncode(feedback_data));
+      // print(response.statusCode);
+      // Repopulate data with new values after each rating request
+      var soup = Beautifulsoup(response.body);
+      final inputs = soup.find_all("input").map((e) => e.attributes).toList();
+
+      inputs.forEach((element) {
+        if (!element["name"].contains("ClassHandle")) {
+          feedback_data[element["name"]] = element["value"];
+        }
+      });
+    });
+
+    feedback_data["ctl00_radMenu_ClientState"] = "";
+    feedback_data["__VIEWSTATEGENERATOR"] = ""; // More form data required
+
+    feedback_data.forEach((key, value) => print("$key => $value"));
+
+    // Response response = await client.post(
+    //     Uri.parse("https://eduserve.karunya.edu/MIS/IQAC/HFBCollection.aspx"),
+    //     headers: headers,
+    //     body: jsonEncode(feedback_data));
+    // print(response.body);
+    // print(response.statusCode);
   }
 
   Future<String> login([callback]) async {
@@ -60,8 +158,7 @@ class Scraper {
     var connection = await (Connectivity().checkConnectivity());
     if (connection == ConnectivityResult.none) {
       Fluttertoast.showToast(
-        msg:
-            "Are you a caveman? coz you didn't know that we need internet to access a webpage.😂",
+        msg: "Internet, caveman. Turn it on...",
         timeInSecForIosWeb: 10,
       );
     }
@@ -72,7 +169,6 @@ class Scraper {
 
     String loginAddress = "/Login.aspx?ReturnUrl=%2f";
 
-    prefs = await SharedPreferences.getInstance();
     String username = prefs.getString("username");
     String password = prefs.getString("password");
     int stars = prefs.getInt("stars");
@@ -102,7 +198,7 @@ class Scraper {
     // Get karunya.edu
     url = hostname;
     headers["referer"] = url;
-    var res = await client.get(url);
+    var res = await client.get(Uri.parse(url));
     var eduserveCookie = res.headers["set-cookie"]; // Set the ASP.NET_SessionId
 
     // Parse: Start
@@ -123,14 +219,13 @@ class Scraper {
     headers["referer"] = url;
 
     // Post to login.aspx
-    res = await client.post(url, headers: headers, body: login_data);
+    res = await client.post(Uri.parse(url), headers: headers, body: login_data);
 
     if (res.body.indexOf(
             "Your login attempt was not successful. Please try again.") !=
         -1) {
       Fluttertoast.showToast(
-          msg:
-              "EduServe: Your login attempt was not successful. Please try again.",
+          msg: "Your login attempt was not successful. Please try again.",
           gravity: ToastGravity.CENTER);
     }
 
@@ -138,17 +233,92 @@ class Scraper {
       status += "\nRedirecting to Home";
       headers["cookie"] += "; ${res.headers['set-cookie'].split(';')[0]}";
       res = await client.get(
-          "https://eduserve.karunya.edu${res.headers["location"]}",
+          Uri.parse("https://eduserve.karunya.edu${res.headers["location"]}"),
           headers: headers);
     }
 
     loginData
         .writeAsString(jsonEncode({"headers": headers, "login": login_data}));
 
+    if (res.body.contains("Hourly Feedback")) {
+      return "feedback form found";
+    }
     return res.body;
   }
 
-  Future<Map> fees({bool force = false}) async {
+  Future<List> getAttendance() async {
+    Response page = await client.get(
+        Uri.parse("https://eduserve.karunya.edu/Student/Home.aspx"),
+        headers: headers);
+    pages["home"] = page;
+
+    if (page.body.indexOf("Hourly Feedback") != -1) {
+      return ["feedback form found"];
+    }
+
+    Beautifulsoup attendanceSoup = Beautifulsoup(page.body);
+    List attendenceList = attendanceSoup
+        .find_all("span")
+        .map((e) => (e.attributes["id"] == "mainContent_LBLCLASS" ||
+                e.attributes["id"] == "mainContent_LBLASSEMBLY" ||
+                e.attributes["id"] == "mainContent_LBLARREAR")
+            ? e.text
+            : null)
+        .toList();
+    attendenceList.removeWhere((element) => element == null);
+
+    return attendenceList;
+  }
+
+  Future<List<List<String>>> getLeaveInfo() async {
+    List parsePage(Response page) {
+      String page = pages["home"].body.toString().split("Leave Type")[1];
+
+      Beautifulsoup leaveSoup = Beautifulsoup(page);
+      List leaves = leaveSoup.find_all("td").map((e) => e.text).toList();
+
+      List<List<String>> allLeaves = [];
+      // leave structure [From Date, From Session, To Date, To Session, Reason, Status, Pending with, Created by, Created on, Approval by,
+      // Approval on, Availed by, Availed on]
+      List<String> leave = [];
+      RegExp dateRegExp =
+          RegExp(r"\d{1,2}\/\d{1,2}\/\d{4} \d{1,2}:\d{1,2}:\d{1,2} \w{2}");
+
+      leaves.forEach((element) {
+        final datetimesOnTable = leave
+            .map((e) =>
+                (dateRegExp.allMatches(e.toString()).length > 0) ? e : null)
+            .toList();
+        datetimesOnTable.removeWhere((element) => element == null);
+
+        if (leave.length == 13) {
+          if (leave.first == "") {
+            leave.removeAt(0);
+            leave.add(element);
+            return;
+          }
+          allLeaves.add(leave);
+          leave = [element];
+          return;
+        }
+
+        if (element.toString().trim() == "No records to display.") return;
+        leave.add(element.toString().trim());
+      });
+
+      return allLeaves;
+    }
+
+    if (pages.keys.contains("home")) return parsePage(pages["home"]);
+
+    Response page = await client.get(
+        Uri.parse("https://eduserve.karunya.edu/Student/Home.aspx"),
+        headers: headers);
+    pages["home"] = page;
+    return parsePage(page);
+  }
+
+  Future<Map> getFeesDetails({bool force = false}) async {
     // Get fees information
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String appDocPath = appDocDir.path;
@@ -166,16 +336,16 @@ class Scraper {
     String feesOverallStatement = "/Student/Fees/FeesStatement.aspx";
     Map feesStatement = new Map();
 
-    Response page =
-        await client.get("$hostname${feesDownload}", headers: headers);
+    Response page = await client.get(Uri.parse("$hostname${feesDownload}"),
+        headers: headers);
 
     if (page.body.indexOf("Login") != -1) {
       Fluttertoast.showToast(msg: "esM: Session expired. Refresh data!");
       return null;
     }
 
-    Response dues =
-        await client.get("$hostname${feesOverallStatement}", headers: headers);
+    Response dues = await client
+        .get(Uri.parse("$hostname${feesOverallStatement}"), headers: headers);
     var dueSoup = Beautifulsoup(dues.body);
     List dueslist = dueSoup
         .find_all("span")
@@ -216,7 +386,7 @@ class Scraper {
     return feesStatement;
   }
 
-  Future<Map> timetable({bool force = false}) async {
+  Future<Map> getTimetable({bool force = false}) async {
     // Get class timetable
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String appDocPath = appDocDir.path;
@@ -231,7 +401,8 @@ class Scraper {
     final String timetableURL = "/Student/TimeTable.aspx";
 
     headers["referer"] = "https://eduserve.karunya.edu/Student/TimeTable.aspx";
-    Response res = await client.get("$hostname$timetableURL", headers: headers);
+    Response res =
+        await client.get(Uri.parse("$hostname$timetableURL"), headers: headers);
 
     if (res.body.indexOf("Login") != -1) {
       Fluttertoast.showToast(msg: "esM: Session expired. Refresh data!");
@@ -257,7 +428,7 @@ class Scraper {
 
     formData["ctl00\$mainContent\$DDLACADEMICTERM"] =
         maxAcademicTerm.toString();
-    res = await client.post("$hostname$timetableURL",
+    res = await client.post(Uri.parse("$hostname$timetableURL"),
         headers: headers, body: formData);
     soup = Beautifulsoup(res.body);
     List classes = soup.find_all("td").map((e) => e.text).toList();
@@ -278,8 +449,8 @@ class Scraper {
 
   Future<Map> downloadHallTicket() async {
     final String hallticketURL = "/Student/CBCS/HallTicketDownload.aspx";
-    Response res =
-        await client.get("$hostname$hallticketURL", headers: headers);
+    Response res = await client.get(Uri.parse("$hostname$hallticketURL"),
+        headers: headers);
     if (res.body.indexOf("Login") != -1) {
       Fluttertoast.showToast(msg: "esM: Session expired. Refresh data!");
       return null;
@@ -302,12 +473,12 @@ class Scraper {
     return Map();
   }
 
-  Future<dynamic> internalMarks({String academicTerm = null}) async {
+  Future<dynamic> getInternalMarks({String academicTerm = null}) async {
     final String internalsURL = "/Student/InternalMarks.aspx";
 
     if (academicTerm == null) {
-      Response res =
-          await client.get("$hostname$internalsURL", headers: headers);
+      Response res = await client.get(Uri.parse("$hostname$internalsURL"),
+          headers: headers);
 
       if (res.body.indexOf("Login") != -1) {
         Fluttertoast.showToast(msg: "esM: Session expired. Refresh data!");
@@ -334,7 +505,7 @@ class Scraper {
       return academicTerms;
     } else {
       formData["ctl00\$mainContent\$DDLACADEMICTERM"] = academicTerm.toString();
-      Response res = await client.post("$hostname$internalsURL",
+      Response res = await client.post(Uri.parse("$hostname$internalsURL"),
           headers: headers, body: formData);
 
       if ((res.body.indexOf("No records to display.") != -1)) {

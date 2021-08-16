@@ -1,6 +1,13 @@
-import 'package:eduserveMinimal/main.dart';
+// 🐦 Flutter imports:
+import 'package:eduserveMinimal/app_state.dart';
 import 'package:flutter/material.dart';
+
+// 📦 Package imports:
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+
+// 🌎 Project imports:
+import 'package:eduserveMinimal/main.dart';
+import 'package:provider/provider.dart';
 
 class HallTicket extends StatefulWidget {
   @override
@@ -8,7 +15,7 @@ class HallTicket extends StatefulWidget {
 }
 
 class _HallTicketState extends State<HallTicket> {
-  List<String> exams = new List();
+  List<String> exams = [];
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +26,7 @@ class _HallTicketState extends State<HallTicket> {
       ),
       body: SafeArea(
         child: FutureBuilder(
-          future: MyHomePage.scraper.downloadHallTicket(),
+          future: Provider.of<AppState>(context).scraper.downloadHallTicket(),
           builder: (context, AsyncSnapshot<Map> snapshot) {
             if (snapshot.hasData) {
               return ListView(
@@ -63,7 +70,7 @@ class _HallTicketState extends State<HallTicket> {
                 ],
               );
             } else {
-              return Center(child: SpinKitCubeGrid(color: Colors.white, size: 80));
+              return Center(child: CircularProgressIndicator());
             }
           },
         ),

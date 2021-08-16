@@ -1,11 +1,18 @@
+// 🎯 Dart imports:
 import 'dart:math';
 
-import 'package:eduserveMinimal/main.dart';
+// 🐦 Flutter imports:
+import 'package:eduserveMinimal/edu_serve.dart';
 import 'package:flutter/material.dart';
+
+// 📦 Package imports:
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:auto_size_text/auto_size_text.dart';
+
+// 🌎 Project imports:
+import 'package:eduserveMinimal/main.dart';
 
 class Creds extends StatelessWidget {
   bool pushHomePage = false;
@@ -30,11 +37,11 @@ class Creds extends StatelessWidget {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20),
+      body: Padding(
+        padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+        child: SingleChildScrollView(
+          physics: NeverScrollableScrollPhysics(),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               buildTextField(
                   _usernameController, 'Enter your register number.', false),
@@ -44,20 +51,20 @@ class Creds extends StatelessWidget {
               buildTextField(_starsController,
                   'Number of stars to fill in feedback form', false),
               SizedBox(height: 20),
-              RaisedButton(
+              ElevatedButton(
                 child: Text("Save"),
                 onPressed: () async {
                   SharedPreferences prefs =
                       await SharedPreferences.getInstance();
                   prefs.setString("username", _usernameController.text);
                   prefs.setString("password", _passwordController.text);
-                  prefs.setInt("stars", min(int.parse(_starsController.text), 5));
+                  prefs.setInt(
+                      "stars", min(int.parse(_starsController.text), 5));
                   Fluttertoast.showToast(msg: "Credentials update successfuly");
-                  
+
                   if (pushHomePage ?? false) {
                     Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => MyHomePage()
-                    ));
+                        builder: (context) => EduServeMinimal()));
                   } else {
                     Navigator.pop(context);
                   }
@@ -77,21 +84,6 @@ class Creds extends StatelessWidget {
                     Expanded(
                       child: AutoSizeText(
                         "Refreshing the data too many times will result in banning in eduserve. You will need to reset your password everytime you get banned.",
-                        style: GoogleFonts.kanit(),
-                        maxFontSize: 30,
-                        minFontSize: 15,
-                        maxLines: 4,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ]),
-                  SizedBox(height: 20),
-                  Row(children: [
-                    Icon(Icons.control_point),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: AutoSizeText(
-                        "Eduserve only updates once in a day around 8PM - 10PM, I dont know. Just refresh only if you really need new data.",
                         style: GoogleFonts.kanit(),
                         maxFontSize: 30,
                         minFontSize: 15,

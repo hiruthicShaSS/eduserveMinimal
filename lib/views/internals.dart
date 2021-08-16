@@ -1,8 +1,16 @@
+// 🎯 Dart imports:
 import 'dart:collection';
 
-import 'package:eduserveMinimal/main.dart';
+// 🐦 Flutter imports:
+import 'package:eduserveMinimal/app_state.dart';
 import 'package:flutter/material.dart';
+
+// 📦 Package imports:
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+
+// 🌎 Project imports:
+import 'package:eduserveMinimal/main.dart';
+import 'package:provider/provider.dart';
 
 class InternalMarks extends StatefulWidget {
   @override
@@ -10,10 +18,6 @@ class InternalMarks extends StatefulWidget {
 }
 
 class _InternalMarksState extends State<InternalMarks> {
-  Future<dynamic> getInternals() async {
-    return await MyHomePage.scraper.internalMarks();
-  }
-
   String status = "";
   bool _visible = false;
   Widget table = Container();
@@ -27,9 +31,9 @@ class _InternalMarksState extends State<InternalMarks> {
         centerTitle: true,
       ),
       body: FutureBuilder(
-        future: getInternals(),
+        future: Provider.of<AppState>(context).scraper.getInternalMarks(),
         builder: (context, AsyncSnapshot<dynamic> snapshot) {
-          List<String> academicTerms = new List();
+          List<String> academicTerms = [];
 
           if (snapshot.hasData) {
             academicTerms =
@@ -68,27 +72,27 @@ class _InternalMarksState extends State<InternalMarks> {
                               onChanged: (String value) async {
                                 setState(() {
                                   dropdownSelection = value.toString();
-                                  table = SpinKitCubeGrid(
-                                    size: 80,
-                                    color: Colors.white,
-                                  );
+                                  table = CircularProgressIndicator();
                                 });
 
-                                final data = await MyHomePage.scraper
-                                    .internalMarks(
+                                final data = await Provider.of<AppState>(
+                                        context,
+                                        listen: false)
+                                    .scraper
+                                    .getInternalMarks(
                                         academicTerm: (academicTerms.length -
                                                 academicTerms.indexOf(value))
                                             .toString());
 
                                 if (data == "No records to display.") {
                                   // If login required
-                                  academicTerms.clear();
+                                  academicTerms = [];
                                 }
                                 if (data.runtimeType != String) {
                                   // table data
-                                  List dataCell = new List();
+                                  List dataCell = [];
                                   data.forEach((key, value) {
-                                    List<DataCell> temp = new List();
+                                    List<DataCell> temp = [];
                                     value.forEach((element) {
                                       temp.add(DataCell(Container(
                                         width:
@@ -142,7 +146,7 @@ class _InternalMarksState extends State<InternalMarks> {
             );
           } else {
             return Center(
-              child: SpinKitCubeGrid(size: 80, color: Colors.white),
+              child: CircularProgressIndicator(),
             );
           }
         },

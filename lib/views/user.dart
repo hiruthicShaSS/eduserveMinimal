@@ -1,6 +1,11 @@
-import 'package:eduserveMinimal/views/home.dart';
+// 🐦 Flutter imports:
 import 'package:flutter/material.dart';
+
+// 📦 Package imports:
 import 'package:fluttertoast/fluttertoast.dart';
+
+// 🌎 Project imports:
+import 'package:eduserveMinimal/views/home.dart';
 
 class User extends StatelessWidget {
   @override
