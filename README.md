@@ -1,16 +1,23 @@
 # eduserveMinimal
 
+[![Website][website-shield]][website-url]
+
 Minimalist app for eduserve
 
 This branch contains code for flutter app. You can modify and build the app by your own or check the releases tab for any apk's.
 
-<a href='https://play.google.com/store/apps/details?id=com.hiruthicShaBuilds.eduserveMinimal&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' style="max-width: 50%"></a>
+<div id="download">
+   
+<a href='https://play.google.com/store/apps/details?id=com.hiruthicShaBuilds.eduserveMinimal&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' width=50%></a>
 
 For non-programming iOS users, follow these steps:
 
-1. Throw your iphone out of the window and buy a android device
-2. Download and install the flutter SDK
-3. Compile it yourself. [_Process_](#compile)
+1. Throw your iphone out of the window and buy a android device then [download](#download).
+
+OR
+
+1. Download and install the flutter SDK
+2. Compile it yourself. [_Process_](#compile)
 
 ## Start Building
 
@@ -18,7 +25,7 @@ For non-programming iOS users, follow these steps:
 1. ### Clone the repo
 
    ```bash
-   git clone https://github.com/hiruthic2002/eduserveMinimal.git
+   git clone https://github.com/hiruthicShaSS/eduserveMinimal.git
    git checkout mobile_app
    ```
 
@@ -45,3 +52,7 @@ For non-programming iOS users, follow these steps:
 <img src="screenshots/Screenshot_1632722893.png" width=300>
 <img src="screenshots/Screenshot_1632722863.png" width=600>
 </div>
+
+
+[website-url]: https://hiruthicshass.github.io/eduserveMinimal/
+[website-shield]: https://img.shields.io/website?label=GitHub%20Pages&style=for-the-badge&url=https://hiruthicshass.github.io/eduserveMinimal/
