@@ -8,9 +8,12 @@ This branch contains code for flutter app. You can modify and build the app by y
 
 For non-programming iOS users, follow these steps:
 
-1. Throw your iphone out of the window and buy a android device
-2. Download and install the flutter SDK
-3. Compile it yourself. [_Process_](#compile)
+1. Throw your iphone out of the window and buy a android device then [download](#download).
+
+OR
+
+1. Download and install the flutter SDK
+2. Compile it yourself. [_Process_](#compile)
 
 ## Start Building
 
