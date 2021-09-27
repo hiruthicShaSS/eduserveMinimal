@@ -56,7 +56,7 @@ class _LeaveInformationState extends State<LeaveInformation>
       future:
           Provider.of<AppState>(context, listen: false).scraper.getLeaveInfo(),
       builder: (BuildContext context, AsyncSnapshot<List<List>> snapshot) {
-        snapshot.data.forEach((element) => print(element));
+        // snapshot.data.forEach((element) => print(element));
         Provider.of<AppState>(context, listen: false).leaveInfo = snapshot.data;
 
         if (snapshot.connectionState == ConnectionState.done) {

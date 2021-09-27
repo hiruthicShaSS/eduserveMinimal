@@ -34,7 +34,7 @@ class Settings extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: ListView(
           children: [
-            RaisedButton(
+            ElevatedButton(
               child: Text("Themes"),
               onPressed: () async {
                 CustomTheme themes = new CustomTheme();
@@ -64,7 +64,7 @@ class Settings extends StatelessWidget {
                 // Fluttertoast.showToast(msg: "Feature comming soon! ☺", fontSize: 16);
               },
             ),
-            RaisedButton(
+            ElevatedButton(
               child: Text("Open EduServe"),
               onPressed: () async {
                 if (await canLaunch(eduserveURL)) {
@@ -81,13 +81,13 @@ class Settings extends StatelessWidget {
                 }
               },
             ),
-            RaisedButton(
+            ElevatedButton(
               child: Text("Update credentials"),
               onPressed: () {
                 Navigator.pushNamed(context, "/updateCreds");
               },
             ),
-            RaisedButton(
+            ElevatedButton(
                 child: Text("Check updates"),
                 onPressed: () async {
                   if (await canLaunch(
@@ -96,7 +96,7 @@ class Settings extends StatelessWidget {
                         "https://github.com/hiruthic2002/eduserveMinimal/releases");
                   }
                 }),
-            RaisedButton(
+            ElevatedButton(
               child: Text("About"),
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -165,18 +165,19 @@ class Settings extends StatelessWidget {
                 ],
               ),
               Spacer(),
-              RaisedButton(
-                color: Colors.amberAccent,
-                splashColor: Colors.amber,
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.amberAccent,
+                ),
                 child: Text(
                   "Request Feature",
                   style: GoogleFonts.kanit(fontSize: 25, color: Colors.black),
                 ),
                 onPressed: () async {
                   if (await canLaunch(
-                      "https://github.com/hiruthic2002/eduserveMinimal/issues/new")) {
+                      "https://github.com/hiruthicShaSS/eduserveMinimal/issues/new")) {
                     launch(
-                        "https://github.com/hiruthic2002/eduserveMinimal/issues/new");
+                        "https://github.com/hiruthicShaSS/eduserveMinimal/issues/new");
                   }
                 },
               ),
@@ -215,8 +216,8 @@ class Settings extends StatelessWidget {
             color: Colors.blue,
           ),
           onPressed: () async {
-            if (await canLaunch("https://twitter.com/Hiruthic1")) {
-              launch("https://twitter.com/Hiruthic1");
+            if (await canLaunch("https://twitter.com/_hiruthicSha")) {
+              launch("https://twitter.com/_hiruthicSha");
             } else {
               Fluttertoast.showToast(msg: "Cant open Twitter at the moment");
             }
@@ -231,8 +232,8 @@ class Settings extends StatelessWidget {
             color: Colors.blueAccent,
           ),
           onPressed: () async {
-            if (await canLaunch("https://in.linkedin.com/in/hiruthic-s-s")) {
-              launch("https://in.linkedin.com/in/hiruthic-s-s/");
+            if (await canLaunch("https://in.linkedin.com/in/hiruthicsha")) {
+              launch("https://in.linkedin.com/in/hiruthicsha/");
             } else {
               Fluttertoast.showToast(msg: "Cant open LinkedIn at the moment");
             }
@@ -247,8 +248,8 @@ class Settings extends StatelessWidget {
             color: Colors.white38,
           ),
           onPressed: () async {
-            if (await canLaunch("https://github.com/hiruthic2002")) {
-              launch("https://github.com/hiruthic2002");
+            if (await canLaunch("https://github.com/hiruthicShaSS")) {
+              launch("https://github.com/hiruthicShaSS");
             } else {
               Fluttertoast.showToast(msg: "Cant open GitHub at the moment");
             }

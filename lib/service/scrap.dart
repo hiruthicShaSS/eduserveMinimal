@@ -274,39 +274,44 @@ class Scraper {
     List parsePage(Response page) {
       String page = pages["home"].body.toString().split("Leave Type")[1];
 
+      String page1 = pages["home"].body.toString().split("Medical Leave")[1];
+      Beautifulsoup t = Beautifulsoup(page1);
+      t.find_all("td").map((e) => e.text).toList().forEach((element) {
+        print(element);
+      });
       Beautifulsoup leaveSoup = Beautifulsoup(page);
       List leaves = leaveSoup.find_all("td").map((e) => e.text).toList();
 
-      List<List<String>> allLeaves = [];
-      // leave structure [From Date, From Session, To Date, To Session, Reason, Status, Pending with, Created by, Created on, Approval by,
+      List<List<String>> allOnDuty = [];
+      // onDuty structure [From Date, From Session, To Date, To Session, Reason, Status, Pending with, Created by, Created on, Approval by,
       // Approval on, Availed by, Availed on]
-      List<String> leave = [];
+      List<String> onDuty = [];
       RegExp dateRegExp =
           RegExp(r"\d{1,2}\/\d{1,2}\/\d{4} \d{1,2}:\d{1,2}:\d{1,2} \w{2}");
 
       leaves.forEach((element) {
-        final datetimesOnTable = leave
+        final datetimesOnTable = onDuty
             .map((e) =>
                 (dateRegExp.allMatches(e.toString()).length > 0) ? e : null)
             .toList();
         datetimesOnTable.removeWhere((element) => element == null);
 
-        if (leave.length == 13) {
-          if (leave.first == "") {
-            leave.removeAt(0);
-            leave.add(element);
+        if (onDuty.length == 13) {
+          if (onDuty.first == "") {
+            onDuty.removeAt(0);
+            onDuty.add(element);
             return;
           }
-          allLeaves.add(leave);
-          leave = [element];
+          allOnDuty.add(onDuty);
+          onDuty = [element];
           return;
         }
 
         if (element.toString().trim() == "No records to display.") return;
-        leave.add(element.toString().trim());
+        onDuty.add(element.toString().trim());
       });
 
-      return allLeaves;
+      return allOnDuty;
     }
 
     if (pages.keys.contains("home")) return parsePage(pages["home"]);
@@ -565,12 +570,12 @@ class Scraper {
         }
 
         if (leaveTypeExp.hasMatch(element)) {
-          // if leave applications found set the flag to true.
+          // if onDuty applications found set the flag to true.
           flagReached = true;
         }
 
         if (flagReached) {
-          // Wait untill the leave applications found.
+          // Wait untill the onDuty applications found.
           if (flagLines != 8) {
             // 7 items in the application section -> [Leave Type, Reason, From Date, From Session, To Date, To Session, Status, Pending with]
             temp +=

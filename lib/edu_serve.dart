@@ -5,7 +5,9 @@ import 'package:eduserveMinimal/views/fees.dart';
 import 'package:eduserveMinimal/views/hallticket.dart';
 import 'package:eduserveMinimal/views/home_page.dart';
 import 'package:eduserveMinimal/views/internals.dart';
+import 'package:eduserveMinimal/views/settings.dart';
 import 'package:eduserveMinimal/views/timetable.dart';
+import 'package:eduserveMinimal/views/user.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -29,10 +31,16 @@ class EduServeMinimal extends StatelessWidget {
                   children: [
                     Text("Hola amigo!", style: TextStyle(fontSize: 25)),
                     Spacer(),
-                    CircleAvatar(
-                      maxRadius: 50,
-                      backgroundImage: AssetImage("assets/appIcon.png"),
-                      backgroundColor: Colors.transparent,
+                    GestureDetector(
+                      child: CircleAvatar(
+                        maxRadius: 50,
+                        backgroundImage: AssetImage("assets/appIcon.png"),
+                        backgroundColor: Colors.transparent,
+                      ),
+                      onTap: () {
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (_) => User()));
+                      },
                     ),
                   ],
                 ),
@@ -53,11 +61,16 @@ class EduServeMinimal extends StatelessWidget {
               onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => InternalMarks())),
             ),
-            // ListTile(
-            //   title: Text("Hallticket"),
-            //   onTap: () => Navigator.of(context)
-            //       .push(MaterialPageRoute(builder: (context) => HallTicket())),
-            // ),
+            ListTile(
+              title: Text("Hallticket"),
+              onTap: () => Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => HallTicket())),
+            ),
+            ListTile(
+              title: Text("Settings"),
+              onTap: () => Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => Settings())),
+            ),
           ],
         ),
       ),
