@@ -1,5 +1,7 @@
 # eduserveMinimal
 
+[![Website][website-shield]][website-url]
+
 Minimalist app for eduserve
 
 This branch contains code for flutter app. You can modify and build the app by your own or check the releases tab for any apk's.
@@ -50,3 +52,7 @@ OR
 <img src="screenshots/Screenshot_1632722893.png" width=300>
 <img src="screenshots/Screenshot_1632722863.png" width=600>
 </div>
+
+
+[website-url]: https://hiruthicshass.github.io/eduserveMinimal/
+[website-shield]: https://img.shields.io/website?label=GitHub%20Pages&style=for-the-badge&url=https://hiruthicshass.github.io/eduserveMinimal/
