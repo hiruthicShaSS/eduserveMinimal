@@ -3,10 +3,18 @@
 Minimalist app for eduserve
 
 This branch contains code for flutter app. You can modify and build the app by your own or check the releases tab for any apk's.
-_If you are using ios, YEET_
+
+<a href='https://play.google.com/store/apps/details?id=com.hiruthicShaBuilds.eduserveMinimal&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
+
+For non-programming iOS users, follow these steps:
+
+1. Throw your iphone out of the window and buy a android device
+2. Download and install the flutter SDK
+3. Compile it yourself. [_Process_](#compile)
 
 ## Start Building
 
+<div id="compile">
 1. ### Clone the repo
 
    ```bash
@@ -30,11 +38,10 @@ _If you are using ios, YEET_
    - Append '--release' or '--debug' for release app or debug app respectively.
    - More: [Build Flutter app](https://flutter.dev/docs/deployment/android)
 
-<br />
-
 ## Screenshots
+
 <div align="center">
-<img src="screenshots/Screenshot_1609770891.png" width=200>
-<img src="screenshots/Screenshot_1609770963.png" width=200>
-<img src="screenshots/Screenshot_1609770982.png" width=200>
+<img src="screenshots/Screenshot_1632722836.png" width=300>
+<img src="screenshots/Screenshot_1632722893.png" width=300>
+<img src="screenshots/Screenshot_1632722863.png" width=600>
 </div>
