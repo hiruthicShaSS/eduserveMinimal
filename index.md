@@ -1,4 +1,3 @@
-[![Website][website-shield]][website-url]
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
@@ -34,7 +33,7 @@ Once it is installed follow these steps to compile an app from the source,
 ### Clone the repo
 
    ```bash
-   git clone https://github.com/hiruthic2002/eduserveMinimal.git
+   git clone https://github.com/hiruthicShaSS/eduserveMinimal.git
    git checkout mobile_app
    ```
    You don't have to check out to the mobile_app branch, the main branch will contain the code for stable version. Although you can always update your [mobile_app](https://github.com/hiruthicShaSS/eduserveMinimal/tree/mobile_app) branch to your local repo for dev versions of the app.
@@ -56,7 +55,7 @@ Once it is installed follow these steps to compile an app from the source,
    - More: [Build Flutter app](https://flutter.dev/docs/deployment/android)
 
 ## LICENSE
-Distributed under the BSD-3-CLAUSE License. See LICENSE for more information.
+Distributed under the BSD-3-CLAUSE License. See [LICENSE](https://github.com/hiruthicShaSS/eduserveMinimal/blob/main/LICENSE) for more information.
 
 ## Screenshots
 
