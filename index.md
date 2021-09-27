@@ -10,7 +10,7 @@
 ## Idea
 
 This is a mobile app for karunyans to help get their student information without going to [Eduserve portal](https://eduserve.karunya.edu/Login.aspx?ReturnUrl=%2f) every time.
-The reason to create this app is to view the student data in a good way unlike the website that is not a mobile resposive and to eliminate the need to login every single god-damn time. 
+The reason to create this app is to view the student data in a good way unlike the website that is not a mobile responsive and to eliminate the need to login every single god-damn time.
 
 ## Contribution
 
@@ -22,8 +22,21 @@ Contributions are what make the open source community such an amazing place to b
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-Anyone with intermediate experience with flutter can contribute to the project without any guidance, but If you need any assistance on how the project is structured please create an [issue](https://github.com/hiruthicShaSS/eduserveMinimal/issues) and I will explain. UI designers are really in need and even if you dont know flutter you are welsome to [discuss](https://github.com/hiruthicShaSS/eduserveMinimal/discussions) with us with wireframes or mockups.
+Anyone with intermediate experience with flutter can contribute to the project without any guidance, but If you need any assistance on how the project is structured please create an [issue](https://github.com/hiruthicShaSS/eduserveMinimal/issues) and I will explain. UI designers are really in need and even if you don't know flutter you are welcome to [discuss](https://github.com/hiruthicShaSS/eduserveMinimal/discussions) with us with wireframes or mockups.
 
+<div id="download">
+
+## Download
+<a href='https://play.google.com/store/apps/details?id=com.hiruthicShaBuilds.eduserveMinimal&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' width=50%></a>
+
+For non-programming iOS users, follow these steps:
+
+1. Throw your iphone out of the window and buy a android device then [download](#download).
+
+OR
+
+1. Download and install the flutter SDK
+2. Compile it yourself. [_Process_](#compile)
 ## Getting started
 
 You can download the latest app from the [releases](https://github.com/hiruthicShaSS/eduserveMinimal/releases) tab.
@@ -31,13 +44,15 @@ You can download the latest app from the [releases](https://github.com/hiruthicS
 If you want to build the app for yourself then you will need flutter installed on your device. [Install flutter](https://flutter.dev/docs/get-started/install)
 Once it is installed follow these steps to compile an app from the source,
 
+<div id="compile">
+
 ### Clone the repo
 
    ```bash
    git clone https://github.com/hiruthic2002/eduserveMinimal.git
    git checkout mobile_app
    ```
-   You dont have to check out to the mobile_app branch, the main branch will contain the code for stable version. Although you can always update your [mobile_app](https://github.com/hiruthicShaSS/eduserveMinimal/tree/mobile_app) branch to your local repo for dev versions of the app.
+   You don't have to check out to the mobile_app branch, the main branch will contain the code for stable version. Although you can always update your [mobile_app](https://github.com/hiruthicShaSS/eduserveMinimal/tree/mobile_app) branch to your local repo for dev versions of the app.
 
 ### Build app
 
@@ -61,9 +76,9 @@ Distributed under the BSD-3-CLAUSE License. See LICENSE for more information.
 ## Screenshots
 
 <div align="center">
-<img src="https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/Screenshot_1609770891.png" width=200>
-<img src="https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/Screenshot_1609770963.png" width=200>
-<img src="https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/Screenshot_1609770982.png" width=200>
+<img src="https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/Screenshot_1632722838.png" width=300>
+<img src="https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/Screenshot_1632722893.png" width=300>
+<img src="https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/Screenshot_1632722863.png" width=600>
 </div>
 
 ## Support
