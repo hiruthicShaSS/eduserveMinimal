@@ -23,7 +23,7 @@ OR
 1. ### Clone the repo
 
    ```bash
-   git clone https://github.com/hiruthic2002/eduserveMinimal.git
+   git clone https://github.com/hiruthicShaSS/eduserveMinimal.git
    git checkout mobile_app
    ```
 
