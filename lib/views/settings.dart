@@ -1,14 +1,14 @@
-// 🐦 Flutter imports:
+// Flutter imports:
 import 'package:flutter/material.dart';
 
-// 📦 Package imports:
+// Package imports:
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-// 🌎 Project imports:
+// Project imports:
 import 'package:eduserveMinimal/themes/themes.dart';
 
 class Settings extends StatelessWidget {

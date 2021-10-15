@@ -1,8 +1,13 @@
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:provider/provider.dart';
+
+// Project imports:
 import 'package:eduserveMinimal/app_state.dart';
 import 'package:eduserveMinimal/service/scrap.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class AttendanceContainer extends StatelessWidget {
   const AttendanceContainer({Key key}) : super(key: key);

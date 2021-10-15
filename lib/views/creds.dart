@@ -1,17 +1,17 @@
-// 🎯 Dart imports:
+// Dart imports:
 import 'dart:math';
 
-// 🐦 Flutter imports:
-import 'package:eduserveMinimal/edu_serve.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
 
-// 📦 Package imports:
+// Package imports:
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// 🌎 Project imports:
+// Project imports:
+import 'package:eduserveMinimal/edu_serve.dart';
 import 'package:eduserveMinimal/main.dart';
 
 class Creds extends StatelessWidget {
@@ -47,9 +47,6 @@ class Creds extends StatelessWidget {
                   _usernameController, 'Enter your register number.', false),
               SizedBox(height: 20),
               buildTextField(_passwordController, 'Enter your password.', true),
-              SizedBox(height: 20),
-              buildTextField(_starsController,
-                  'Number of stars to fill in feedback form', false),
               SizedBox(height: 20),
               ElevatedButton(
                 child: Text("Save"),

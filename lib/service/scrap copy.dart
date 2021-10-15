@@ -272,19 +272,48 @@ class Scraper {
     return attendenceList;
   }
 
-  Future<Map<String, List<List<String>>>> getLeaveInfo() async {
-    Map<String, List<List<String>>> parsePage(Response page) {
-      String onDutySection =
-          pages["home"].body.toString().split("Leave Type")[1];
-
-      Beautifulsoup onDutySoup = Beautifulsoup(onDutySection);
-      List onDuties = onDutySoup.find_all("td").map((e) => e.text).toList();
-
-      Beautifulsoup leaveSoup = Beautifulsoup(page.body.toString());
-      List leavest = leaveSoup.find_all("td").map((e) => e.text).toList();
+  Future<List<List<String>>> getLeaveInfo() async {
+    List parsePage(Response page) {
+      Beautifulsoup bs = Beautifulsoup(page.body.toString());
+      List leavest = bs.find_all("td").map((e) => e.text).toList();
       leavest = leavest.sublist(leavest.indexOf("Medical Leave"));
 
-      List<List<String>> allLeave = [];
+      List leave = [];
+      List<List> allLeaves = [];
+      int leaveEntryCount = 0;
+      for (int i = 0; i < leavest.length; i++) {
+        if (int.tryParse(leavest[i]) == null) {
+          leave.add(leavest[i]);
+          leaveEntryCount++;
+          if (leaveEntryCount > 8) {
+            allLeaves.add(leave);
+            break;
+          }
+        } else {
+          allLeaves.add(leave);
+          leave = [];
+          leaveEntryCount = 0;
+        }
+      }
+
+      String page0 = "";
+      pages["home"]
+          .body
+          .toString()
+          .split("Medical Leave")
+          .sublist(2)
+          .forEach((element) => page0 += element);
+      page0 = page0.split(
+          '<div id="ctl00_mainContent_grdData_SharedCalendarContainer" style="display:none;">')[0];
+
+      String page1 = pages["home"].body.toString().split("Medical Leave")[1];
+      Beautifulsoup t = Beautifulsoup(page1);
+      t.find_all("td").map((e) => e.text).toList().forEach((element) {
+        print(element);
+      });
+      Beautifulsoup leaveSoup = Beautifulsoup(page.body);
+      List leaves = leaveSoup.find_all("td").map((e) => e.text).toList();
+
       List<List<String>> allOnDuty = [];
       // onDuty structure [From Date, From Session, To Date, To Session, Reason, Status, Pending with, Created by, Created on, Approval by,
       // Approval on, Availed by, Availed on]
@@ -292,24 +321,7 @@ class Scraper {
       RegExp dateRegExp =
           RegExp(r"\d{1,2}\/\d{1,2}\/\d{4} \d{1,2}:\d{1,2}:\d{1,2} \w{2}");
 
-      List<String> leave = [];
-      int leaveEntryCount = 0;
-      for (int i = 0; i < leavest.length; i++) {
-        if (int.tryParse(leavest[i]) == null) {
-          leave.add(leavest[i]);
-          leaveEntryCount++;
-          if (leaveEntryCount > 8) {
-            allLeave.add(leave);
-            break;
-          }
-        } else {
-          allLeave.add(leave);
-          leave = [];
-          leaveEntryCount = 0;
-        }
-      }
-
-      onDuties.forEach((element) {
+      leaves.forEach((element) {
         final datetimesOnTable = onDuty
             .map((e) =>
                 (dateRegExp.allMatches(e.toString()).length > 0) ? e : null)
@@ -331,16 +343,16 @@ class Scraper {
         onDuty.add(element.toString().trim());
       });
 
-      return {"onDuty": allOnDuty, "leave": allLeave};
+      return allOnDuty;
     }
 
     if (pages.keys.contains("home")) return parsePage(pages["home"]);
 
-    Response home_page = await client.get(
+    Response page = await client.get(
         Uri.parse("https://eduserve.karunya.edu/Student/Home.aspx"),
         headers: headers);
-    pages["home"] = home_page;
-    return parsePage(home_page);
+    pages["home"] = page;
+    return parsePage(page);
   }
 
   Future<Map> getFeesDetails({bool force = false}) async {
@@ -493,7 +505,7 @@ class Scraper {
         .toSet()
         .toList();
 
-    print(eligibilities);
+    // print(eligibilities);
 
     return Map();
   }
@@ -658,37 +670,13 @@ class Scraper {
     return data;
   }
 
+  Map cachedData = {};
   Future<Map> getInfo() async {
-    // Getter method for basic info
-    status += "Done.";
+    if (cachedData.containsKey("user")) return cachedData["user"];
 
-    Directory appDocDir = await getApplicationDocumentsDirectory();
-    String appDocPath = appDocDir.path;
-    File cacheData = File("$appDocPath/cacheData.json");
-
-    Future<Map> getFreshData() async {
-      Map data = await parse();
-      data["dateScraped"] = DateTime.now().toString();
-      cacheData.writeAsString(jsonEncode(data));
-      Fluttertoast.showToast(msg: "New data cached!");
-      return data;
-    }
-
-    try {
-      Map data = jsonDecode(await cacheData.readAsString());
-      int lastScraped = DateTime.now()
-          .difference(DateTime.parse(data["dateScraped"]))
-          .inHours;
-      if (lastScraped >= 12) {
-        return getFreshData();
-      }
-      data.remove("dateScraped");
-
-      Fluttertoast.showToast(
-          msg: "You're viewing a cached copy, refresh to get new copy");
-      return data;
-    } catch (e) {
-      return getFreshData();
-    }
+    Map data = await parse();
+    data["dateScraped"] = DateTime.now().toString();
+    cachedData["user"] = data;
+    return data;
   }
 }

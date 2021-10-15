@@ -1,13 +1,13 @@
-// 🐦 Flutter imports:
-import 'package:eduserveMinimal/app_state.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
 
-// 📦 Package imports:
+// Package imports:
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-
-// 🌎 Project imports:
-import 'package:eduserveMinimal/main.dart';
 import 'package:provider/provider.dart';
+
+// Project imports:
+import 'package:eduserveMinimal/app_state.dart';
+import 'package:eduserveMinimal/main.dart';
 
 class HallTicket extends StatefulWidget {
   @override

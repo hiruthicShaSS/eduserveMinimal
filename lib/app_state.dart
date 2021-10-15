@@ -1,13 +1,18 @@
-import 'package:eduserveMinimal/service/scrap.dart';
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
+
+// Package imports:
 import 'package:shared_preferences/shared_preferences.dart';
+
+// Project imports:
+import 'package:eduserveMinimal/service/scrap.dart';
 
 class AppState extends ChangeNotifier {
   Scraper scraper = Scraper();
   SharedPreferences prefs;
 
   List attendance = [];
-  List<List<String>> leaveInfo = [];
+  Map leaveInfo = {};
 
   AppState() {
     initPlatformState();

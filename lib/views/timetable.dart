@@ -1,10 +1,12 @@
-// 🐦 Flutter imports:
-import 'package:eduserveMinimal/app_state.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-// 🌎 Project imports:
+// Package imports:
 import 'package:provider/provider.dart';
+
+// Project imports:
+import 'package:eduserveMinimal/app_state.dart';
 
 class TimeTable extends StatelessWidget {
   List days = [];

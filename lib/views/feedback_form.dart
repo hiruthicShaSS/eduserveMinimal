@@ -1,7 +1,12 @@
-import 'package:eduserveMinimal/app_state.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
+
+// Project imports:
+import 'package:eduserveMinimal/app_state.dart';
 
 class FeedbackForm extends StatefulWidget {
   FeedbackForm({Key key}) : super(key: key);
