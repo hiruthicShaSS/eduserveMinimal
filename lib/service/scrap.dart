@@ -11,11 +11,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-// Project imports:
-import 'package:eduserveMinimal/app_state.dart';
 
 class Scraper {
   static BuildContext mainPageContext;
@@ -25,6 +21,7 @@ class Scraper {
   Map pages = {};
   String hostname = "https://eduserve.karunya.edu";
   String url = "";
+  Map cache = {};
 
   Map<String, String> headers = {
     "user-agent":
@@ -344,18 +341,7 @@ class Scraper {
   }
 
   Future<Map> getFeesDetails({bool force = false}) async {
-    // Get fees information
-    Directory appDocDir = await getApplicationDocumentsDirectory();
-    String appDocPath = appDocDir.path;
-    File fees = File("$appDocPath/fees.json");
-
-    if (force) {
-      try {
-        if (await fees.readAsString() != null) {
-          return jsonDecode(await fees.readAsString());
-        }
-      } catch (e) {}
-    }
+    if (cache.containsKey("fees")) return cache["fees"];
 
     String feesDownload = "/Student/Fees/DownloadReceipt.aspx";
     String feesOverallStatement = "/Student/Fees/FeesStatement.aspx";
@@ -405,9 +391,7 @@ class Scraper {
     });
 
     feesStatement["dues"] = dueslist;
-
-    fees.writeAsString(jsonEncode(feesStatement));
-
+    cache["fees"] = feesStatement;
     return feesStatement;
   }
 
@@ -472,30 +456,84 @@ class Scraper {
     return data;
   }
 
-  Future<Map> downloadHallTicket() async {
+  Future<List> downloadHallTicket({String term, bool download = false}) async {
     final String hallticketURL = "/Student/CBCS/HallTicketDownload.aspx";
-    Response res = await client.get(Uri.parse("$hostname$hallticketURL"),
-        headers: headers);
-    if (res.body.indexOf("Login") != -1) {
-      Fluttertoast.showToast(msg: "esM: Session expired. Refresh data!");
-      return null;
+
+    if (term == null) {
+      Response res = await client.get(Uri.parse("$hostname$hallticketURL"),
+          headers: headers);
+      if (res.body.indexOf("Login") != -1) {
+        Fluttertoast.showToast(msg: "esM: Session expired. Refresh data!");
+        return null;
+      }
+
+      var soup = Beautifulsoup(res.body);
+      final inputs = soup.find_all("input").map((e) => e.attributes).toList();
+
+      inputs.forEach((element) {
+        // Populate form data
+        if (formData[element["name"]] == "") {
+          formData[element["name"]] =
+              (element["value"] == "Clear" || element["value"] == null)
+                  ? ""
+                  : element["value"];
+        }
+      });
+
+      final examination = soup
+          .find_all("option")
+          .map((e) => {e.text.trim(): e.attributes})
+          .toSet()
+          .toList();
+
+      return examination;
+    } else {
+      formData["ctl00\$mainContent\$DDLEXAM"] = term;
+
+      if (download) {
+        Map formDataCopy = formData;
+        formDataCopy["ctl00\$mainContent\$BTNDOWNLOAD"] = "Download";
+        formDataCopy["__EVENTTARGET"] = "";
+        formDataCopy.remove("ctl00\$mainContent\$DDLACADEMICTERM");
+        Response res = await client.post(Uri.parse("$hostname$hallticketURL"),
+            headers: headers, body: formDataCopy);
+        formData.remove("ctl00\$mainContent\$BTNDOWNLOAD");
+
+        print(res.body);
+      }
+
+      Response res = await client.post(Uri.parse("$hostname$hallticketURL"),
+          headers: headers, body: formData);
+
+      Beautifulsoup hallticketSoup = Beautifulsoup(res.body);
+      List eligibility =
+          hallticketSoup.find_all("td").map((e) => e.text.trim()).toList();
+
+      List endFlag = eligibility.map((e) => e.length > 80 ? e : null).toList();
+      endFlag.removeWhere((element) => element == null);
+      int end = eligibility.indexOf(endFlag.first);
+
+      List mainEligibility = eligibility.sublist(
+          eligibility.indexOf("Attendance Eligibility?:"), end);
+      eligibility = eligibility.sublist(end + 1);
+
+      Map hallTicketdata = {};
+      for (int i = 0; i < mainEligibility.length; i++) {
+        hallTicketdata[mainEligibility[i]] = mainEligibility[i];
+      }
+
+      List subjectData = [];
+      List allEligibility = [];
+      for (int i = 0; i < eligibility.length; i++) {
+        subjectData.add(eligibility[i]);
+
+        if (subjectData.length == 3) {
+          allEligibility.add(subjectData);
+          subjectData = [];
+        }
+      }
+      return [mainEligibility, allEligibility];
     }
-
-    var soup = Beautifulsoup(res.body);
-
-    final examination =
-        soup.find_all("option").map((e) => e.text.trim()).toSet().toList();
-    final eligibilities = soup
-        .find_all("span")
-        .map((e) => (e.attributes["id"] == "mainContent_LBLATTENDANCE")
-            ? e.outerHtml
-            : "")
-        .toSet()
-        .toList();
-
-    print(eligibilities);
-
-    return Map();
   }
 
   Future<dynamic> getInternalMarks({String academicTerm = null}) async {
@@ -529,9 +567,11 @@ class Scraper {
 
       return academicTerms;
     } else {
-      formData["ctl00\$mainContent\$DDLACADEMICTERM"] = academicTerm.toString();
+      Map formDataCopy = formData;
+      formDataCopy["ctl00\$mainContent\$DDLACADEMICTERM"] =
+          academicTerm.toString();
       Response res = await client.post(Uri.parse("$hostname$internalsURL"),
-          headers: headers, body: formData);
+          headers: headers, body: formDataCopy);
 
       if ((res.body.indexOf("No records to display.") != -1)) {
         return "No records to display.";
@@ -659,36 +699,11 @@ class Scraper {
   }
 
   Future<Map> getInfo() async {
-    // Getter method for basic info
-    status += "Done.";
+    if (cache.containsKey("user")) return cache["user"];
 
-    Directory appDocDir = await getApplicationDocumentsDirectory();
-    String appDocPath = appDocDir.path;
-    File cacheData = File("$appDocPath/cacheData.json");
-
-    Future<Map> getFreshData() async {
-      Map data = await parse();
-      data["dateScraped"] = DateTime.now().toString();
-      cacheData.writeAsString(jsonEncode(data));
-      Fluttertoast.showToast(msg: "New data cached!");
-      return data;
-    }
-
-    try {
-      Map data = jsonDecode(await cacheData.readAsString());
-      int lastScraped = DateTime.now()
-          .difference(DateTime.parse(data["dateScraped"]))
-          .inHours;
-      if (lastScraped >= 12) {
-        return getFreshData();
-      }
-      data.remove("dateScraped");
-
-      Fluttertoast.showToast(
-          msg: "You're viewing a cached copy, refresh to get new copy");
-      return data;
-    } catch (e) {
-      return getFreshData();
-    }
+    Map data = await parse();
+    data["dateScraped"] = DateTime.now().toString();
+    cache["user"] = data;
+    return data;
   }
 }

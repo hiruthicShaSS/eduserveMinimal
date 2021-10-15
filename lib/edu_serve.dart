@@ -7,7 +7,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
 import 'package:eduserveMinimal/app_state.dart';
-import 'package:eduserveMinimal/service/scrap.dart';
 import 'package:eduserveMinimal/views/creds.dart';
 import 'package:eduserveMinimal/views/feedback_form.dart';
 import 'package:eduserveMinimal/views/fees.dart';
@@ -31,10 +30,13 @@ class EduServeMinimal extends StatelessWidget {
               Text("Hola amigo!", style: TextStyle(fontSize: 25)),
               Spacer(),
               GestureDetector(
-                child: CircleAvatar(
-                  maxRadius: 50,
-                  backgroundImage: AssetImage("assets/appIcon.png"),
-                  backgroundColor: Colors.transparent,
+                child: Hero(
+                  tag: "hero-userImage",
+                  child: CircleAvatar(
+                    maxRadius: 50,
+                    backgroundImage: AssetImage("assets/appIcon.png"),
+                    backgroundColor: Colors.transparent,
+                  ),
                 ),
                 onTap: () {
                   Navigator.of(context)

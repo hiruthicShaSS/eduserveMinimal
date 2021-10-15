@@ -8,8 +8,6 @@ import 'package:provider/provider.dart';
 
 // Project imports:
 import 'package:eduserveMinimal/app_state.dart';
-import 'package:eduserveMinimal/service/scrap.dart';
-import 'package:eduserveMinimal/views/home.dart';
 
 class User extends StatelessWidget {
   @override
@@ -29,14 +27,17 @@ class User extends StatelessWidget {
                     children: [
                       SizedBox(height: 10.0),
                       Center(
-                        child: CircleAvatar(
-                          radius: 80,
-                          backgroundImage: AssetImage("assets/appIcon.png"),
-                          backgroundColor: Colors.transparent,
-                          onBackgroundImageError: (_, __) {
-                            return Image.asset(
-                                "assets/placeholder_profile.png");
-                          },
+                        child: Hero(
+                          tag: "hero-userImage",
+                          child: CircleAvatar(
+                            radius: 80,
+                            backgroundImage: AssetImage("assets/appIcon.png"),
+                            backgroundColor: Colors.transparent,
+                            onBackgroundImageError: (_, __) {
+                              return Image.asset(
+                                  "assets/placeholder_profile.png");
+                            },
+                          ),
                         ),
                       ),
                       Padding(

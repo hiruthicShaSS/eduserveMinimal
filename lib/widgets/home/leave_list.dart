@@ -14,6 +14,8 @@ class LeaveList extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       child: Container(
         child: ListView.builder(
+          physics:
+              BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
           itemCount: data.length,
           itemBuilder: (BuildContext context, int index) {
             return Padding(
@@ -75,7 +77,7 @@ class LeaveList extends StatelessWidget {
                             borderRadius: BorderRadius.circular(5),
                           ),
                           child: Text(
-                            data[index][5],
+                            data[index][6],
                             style: TextStyle(color: Colors.black),
                           ),
                         ),

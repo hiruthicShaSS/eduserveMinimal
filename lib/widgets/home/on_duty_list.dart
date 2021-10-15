@@ -14,6 +14,8 @@ class OnDutyList extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       child: Container(
         child: ListView.builder(
+          physics:
+              BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
           itemCount: data.length,
           itemBuilder: (BuildContext context, int index) {
             // print(data.length);

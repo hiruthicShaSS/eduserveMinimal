@@ -1,16 +1,11 @@
-// Dart imports:
-import 'dart:collection';
-
 // Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
 import 'package:eduserveMinimal/app_state.dart';
-import 'package:eduserveMinimal/main.dart';
 
 class InternalMarks extends StatefulWidget {
   @override
@@ -39,7 +34,7 @@ class _InternalMarksState extends State<InternalMarks> {
             academicTerms =
                 (snapshot.data.runtimeType == academicTerms.runtimeType)
                     ? snapshot.data
-                    : List();
+                    : [];
             academicTerms.remove("Select the Academic Term");
 
             return SafeArea(

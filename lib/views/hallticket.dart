@@ -16,6 +16,11 @@ class HallTicket extends StatefulWidget {
 
 class _HallTicketState extends State<HallTicket> {
   List<String> exams = [];
+  String selectedTerm = "Select the Examination";
+  Widget table = Container();
+  Widget mainDataWidget = Container();
+  bool dataLoaded = false;
+  String selectedTermValue = "";
 
   @override
   Widget build(BuildContext context) {
@@ -23,56 +28,156 @@ class _HallTicketState extends State<HallTicket> {
       appBar: AppBar(
         title: Text("Download Hall Ticket"),
         centerTitle: true,
+        actions: [
+          Visibility(
+              visible: dataLoaded,
+              child: IconButton(
+                  onPressed: () async {
+                    await Provider.of<AppState>(context, listen: false)
+                        .scraper
+                        .downloadHallTicket(
+                            term: selectedTermValue, download: true);
+                  },
+                  icon: Icon(Icons.save)))
+        ],
       ),
       body: SafeArea(
-        child: FutureBuilder(
-          future: Provider.of<AppState>(context).scraper.downloadHallTicket(),
-          builder: (context, AsyncSnapshot<Map> snapshot) {
-            if (snapshot.hasData) {
-              return ListView(
-                children: [
-                  Container(
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: Row(
-                            children: [
-                              Text("Select the Examination"),
-                              Spacer(),
-                              DropdownButton(
-                                hint: Text("Select the Examination"),
-                                icon: Icon(Icons.arrow_downward),
-                                iconSize: 24,
-                                elevation: 16,
-                                style: TextStyle(color: Colors.deepPurple),
-                                underline: Container(
-                                  height: 2,
-                                  color: Colors.deepPurpleAccent,
-                                ),
-                                onChanged: (String value) {
-                                  print(value);
-                                },
-                                items: exams.map<DropdownMenuItem<String>>(
-                                    (String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                }).toList(),
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              );
-            } else {
-              return Center(child: CircularProgressIndicator());
-            }
-          },
+        child: Column(
+          children: [
+            dropDown(context),
+            Visibility(visible: dataLoaded, child: mainDataWidget),
+            Expanded(
+              child: table,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  FutureBuilder<List<dynamic>> dropDown(BuildContext context) {
+    return FutureBuilder(
+        future: Provider.of<AppState>(context).scraper.downloadHallTicket(),
+        builder: (context, AsyncSnapshot<List> snapshot) {
+          if (!snapshot.hasData)
+            exams = ["Select the Examination"];
+          else
+            exams = List<String>.from(
+                snapshot.data.map((e) => e.keys.first).toList());
+
+          return Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: DropdownButton(
+              hint: Text("Select the Examination"),
+              icon: Icon(Icons.arrow_downward),
+              value: selectedTerm,
+              iconSize: 24,
+              elevation: 16,
+              style: TextStyle(color: Colors.white),
+              underline: Container(
+                height: 2,
+                color: Colors.deepPurpleAccent,
+              ),
+              onChanged: (String value) async {
+                setState(() {
+                  selectedTerm = value;
+                  table = Center(child: CircularProgressIndicator());
+                });
+                if (value == "Select the Examination") {
+                  setState(() {
+                    table = mainDataWidget = Container();
+                  });
+                  return;
+                }
+
+                final terms = snapshot.data
+                    .map((e) => e.containsKey(value) ? e[value] : null)
+                    .toList();
+                terms.removeWhere((element) => element == null);
+
+                selectedTermValue = terms.first["value"];
+
+                final data = await Provider.of<AppState>(context, listen: false)
+                    .scraper
+                    .downloadHallTicket(term: terms.first["value"]);
+
+                List mainData = [];
+
+                for (int i = 0; i < data[0].length; i += 2) {
+                  mainData.add(data[0][i] + " " + data[0][i + 1]);
+                }
+                mainDataWidget = Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: List.generate(
+                      mainData.length,
+                      (index) => Text(mainData[index],
+                          style: TextStyle(fontSize: 17))),
+                );
+
+                setState(() {
+                  table = buildTable(data);
+                  dataLoaded = true;
+                });
+              },
+              items: exams.map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+            ),
+          );
+        });
+  }
+
+  Widget buildTable(List data) {
+    List header = [
+      "Subject Code",
+      "Subject Name",
+      // "Eligibile",
+    ];
+
+    List subjectData = data[1];
+
+    return Container(
+      margin: EdgeInsets.only(top: 2, left: 5, right: 5),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: DataTable(
+                dataRowHeight: MediaQuery.of(context).size.height / 5,
+                columnSpacing: MediaQuery.of(context).size.width / 20,
+                headingRowColor: MaterialStateProperty.all(Colors.white70),
+                dividerThickness: 2,
+                columns: List.generate(
+                    header.length,
+                    (index) => DataColumn(
+                            label: Text(
+                          header[index].toString(),
+                          style: TextStyle(color: Colors.black),
+                        ))),
+                rows: List.generate(
+                    subjectData.length,
+                    (index) => DataRow(
+                        color: MaterialStateProperty.resolveWith<Color>(
+                            (Set<MaterialState> states) {
+                          return subjectData[index].last == 'Y'
+                              ? Colors.green
+                              : Colors.orangeAccent;
+                        }),
+                        cells: List.generate(
+                            subjectData[index].length - 1,
+                            (index1) => DataCell(Container(
+                                  child: Text(
+                                    subjectData[index][index1].trim(),
+                                    style: TextStyle(fontSize: 17),
+                                  ),
+                                ))))),
+              ),
+            ),
+          ],
         ),
       ),
     );
