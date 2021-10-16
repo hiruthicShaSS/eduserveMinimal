@@ -56,8 +56,8 @@ class LeaveList extends StatelessWidget {
                           ),
                           Text(
                             data![index][3],
-                            style:
-                                TextStyle(color: Theme.of(context).accentColor),
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.secondary),
                           ),
                         ],
                       ),

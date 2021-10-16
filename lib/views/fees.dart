@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:eduserveMinimal/providers/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -41,7 +42,8 @@ class Fees extends StatelessWidget {
                             height: 50,
                             width: _width / 2.2,
                             decoration: BoxDecoration(
-                              color: Colors.red,
+                              color:
+                                  ThemeProvider.currentThemeData!.primaryColor,
                               borderRadius: BorderRadius.circular(15),
                             ),
                             child: Center(
@@ -59,7 +61,8 @@ class Fees extends StatelessWidget {
                             height: 50,
                             width: _width / 2.2,
                             decoration: BoxDecoration(
-                              color: Colors.red,
+                              color:
+                                  ThemeProvider.currentThemeData!.primaryColor,
                               borderRadius: BorderRadius.circular(15),
                             ),
                             child: Center(
@@ -89,7 +92,8 @@ class Fees extends StatelessWidget {
                         return Padding(
                           padding: const EdgeInsets.all(5.0),
                           child: ListTile(
-                            tileColor: Colors.black,
+                            tileColor:
+                                ThemeProvider.currentThemeData!.cardColor,
                             title: AutoSizeText(
                                 data[data.keys.toList()[index]][3]),
                             trailing: Column(

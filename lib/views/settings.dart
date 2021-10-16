@@ -1,8 +1,7 @@
 // Flutter imports:
+import 'package:eduserveMinimal/views/settings/themes.dart';
 import 'package:flutter/material.dart';
 
-// Package imports:
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // Project imports:
@@ -26,7 +25,8 @@ class Settings extends StatelessWidget {
           children: [
             ElevatedButton(
               child: Text("Themes"),
-              onPressed: () async {},
+              onPressed: () => Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (_) => Themes())),
             ),
             ElevatedButton(
               child: Text("Open EduServe"),

@@ -59,8 +59,8 @@ class OnDutyList extends StatelessWidget {
                             (data![index][1] == "FULL DAY")
                                 ? "FD"
                                 : data![index][1],
-                            style:
-                                TextStyle(color: Theme.of(context).accentColor),
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.secondary),
                           ),
                         ],
                       ),
@@ -117,7 +117,8 @@ class OnDutyList extends StatelessWidget {
                                               "From Session: ${data![index][1]}"),
                                           Text("Status: ${data![index][5]}"),
                                           SizedBox(height: 10),
-                                          Text("Created by: ${data![index][7]}"),
+                                          Text(
+                                              "Created by: ${data![index][7]}"),
                                           Text(
                                               "Approval by: ${data![index][9]}"),
                                           Text(

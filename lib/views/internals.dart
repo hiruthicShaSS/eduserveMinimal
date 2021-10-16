@@ -40,14 +40,14 @@ class _InternalMarksState extends State<InternalMarks> {
     return FutureBuilder(
       future: Provider.of<AppState>(context).scraper.getInternalMarks(),
       builder: (context, AsyncSnapshot<dynamic> snapshot) {
-        List<String?>? academicTerms = [];
+        List<String> academicTerms = [];
 
         if (snapshot.hasData) {
           academicTerms =
               (snapshot.data.runtimeType == academicTerms.runtimeType)
                   ? snapshot.data
                   : [];
-          academicTerms!.remove("Select the Academic Term");
+          academicTerms.remove("Select the Academic Term");
 
           return Column(
             children: [
@@ -81,8 +81,8 @@ class _InternalMarksState extends State<InternalMarks> {
                           await Provider.of<AppState>(context, listen: false)
                               .scraper
                               .getInternalMarks(
-                                  academicTerm: (academicTerms!.length -
-                                          academicTerms!.indexOf(value))
+                                  academicTerm: (academicTerms.length -
+                                          academicTerms.indexOf(value!))
                                       .toString());
 
                       if (data == "No records to display.") {
@@ -92,8 +92,13 @@ class _InternalMarksState extends State<InternalMarks> {
                       if (data.runtimeType != String) {
                         // table data
                         List dataCell = [];
+                        List failedSubjectsIndex = [];
                         data.forEach((key, value) {
                           List<DataCell> temp = [];
+                          if ((double.tryParse(value[4]) ?? 21) < 20) {
+                            failedSubjectsIndex.add(dataCell.length);
+                          }
+
                           value.forEach((element) {
                             temp.add(DataCell(Container(
                               color:
@@ -111,7 +116,8 @@ class _InternalMarksState extends State<InternalMarks> {
                         });
 
                         setState(() {
-                          table = buildTable(data, dataCell);
+                          table =
+                              buildTable(data, dataCell, failedSubjectsIndex);
                         });
                         return;
                       } else {
@@ -143,7 +149,7 @@ class _InternalMarksState extends State<InternalMarks> {
     );
   }
 
-  Widget buildTable(Map? data, List dataCell) {
+  Widget buildTable(Map? data, List dataCell, List failedSubjectsIndex) {
     List header = [
       "Subject Code",
       "Subject Name",
@@ -177,8 +183,17 @@ class _InternalMarksState extends State<InternalMarks> {
                           header[index].toString(),
                           style: TextStyle(color: Colors.black),
                         ))),
-                rows: List.generate(dataCell.length,
-                    (index) => DataRow(cells: dataCell[index])),
+                rows: List.generate(
+                    dataCell.length,
+                    (index) => DataRow(
+                          cells: dataCell[index],
+                          color: MaterialStateProperty.resolveWith<Color>(
+                              (Set<MaterialState> states) {
+                            return failedSubjectsIndex.contains(index)
+                                ? Colors.red.withOpacity(0.2)
+                                : Colors.transparent;
+                          }),
+                        )),
               ),
             ),
           ],

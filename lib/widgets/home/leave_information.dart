@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:eduserveMinimal/providers/theme.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -33,14 +34,19 @@ class _LeaveInformationState extends State<LeaveInformation>
     return Expanded(
       child: Column(
         children: [
-          TabBar(controller: _tabController, tabs: [
-            Tab(
-              text: "Leave",
-            ),
-            Tab(
-              text: "On-Duty Details",
-            ),
-          ]),
+          TabBar(
+            controller: _tabController,
+            tabs: [
+              Tab(
+                text: "Leave",
+              ),
+              Tab(
+                text: "On-Duty Details",
+              ),
+            ],
+            labelColor:
+                ThemeProvider.currentThemeData!.textTheme.bodyText1!.color,
+          ),
           Expanded(
             child: FutureBuilder(
               future: Provider.of<AppState>(context, listen: false)

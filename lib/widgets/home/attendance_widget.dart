@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:eduserveMinimal/providers/theme.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -31,7 +32,13 @@ class AttendanceContainer extends StatelessWidget {
 
   Container containerWithData(double _height, double _width, List data) {
     return Container(
-      color: Colors.purple,
+      decoration: BoxDecoration(
+        color: (ThemeProvider.currentThemeMode == ThemeMode.dark
+                ? Colors.deepPurple
+                : Colors.blue)
+            .withOpacity(0.1),
+        borderRadius: BorderRadius.circular(20),
+      ),
       child: Column(
         children: [
           Text(
@@ -42,56 +49,82 @@ class AttendanceContainer extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  padding: EdgeInsets.all(20),
-                  height: _height * 0.15,
-                  width: _width * 0.45,
-                  decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Column(
-                    children: [
-                      AutoSizeText(
-                        "Class",
-                        minFontSize: 20,
-                        maxFontSize: 50,
+                child: Stack(
+                  alignment: Alignment.topRight,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(20),
+                      height: _height * 0.15,
+                      width: _width * 0.45,
+                      decoration: BoxDecoration(
+                        color: ThemeProvider.currentThemeData!.primaryColor,
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      Spacer(),
-                      AutoSizeText(
-                        data[0].toString(),
-                        minFontSize: 30,
-                        maxFontSize: 40,
+                      child: Column(
+                        children: [
+                          AutoSizeText(
+                            "Class",
+                            minFontSize: 20,
+                            maxFontSize: 50,
+                          ),
+                          Spacer(),
+                          AutoSizeText(
+                            data[0].toString(),
+                            minFontSize: 30,
+                            maxFontSize: 40,
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                    Visibility(
+                      visible: double.parse(data[0].split("%")[0]) < 85,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Icon(Icons.warning_amber_outlined,
+                            color: Colors.red),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  padding: EdgeInsets.all(20),
-                  height: _height * 0.15,
-                  width: _width * 0.45,
-                  decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Column(
-                    children: [
-                      AutoSizeText(
-                        "Assembly",
-                        minFontSize: 20,
-                        maxFontSize: 50,
+                child: Stack(
+                  alignment: Alignment.topRight,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(20),
+                      height: _height * 0.15,
+                      width: _width * 0.45,
+                      decoration: BoxDecoration(
+                        color: ThemeProvider.currentThemeData!.primaryColor,
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      Spacer(),
-                      AutoSizeText(
-                        data[1].toString(),
-                        minFontSize: 30,
-                        maxFontSize: 40,
+                      child: Column(
+                        children: [
+                          AutoSizeText(
+                            "Assembly",
+                            minFontSize: 20,
+                            maxFontSize: 50,
+                          ),
+                          Spacer(),
+                          AutoSizeText(
+                            data[1].toString(),
+                            minFontSize: 30,
+                            maxFontSize: 40,
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                    Visibility(
+                      visible: double.parse(data[1].split("%")[0]) < 85,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Icon(Icons.warning_amber_outlined,
+                            color: Colors.red),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],

@@ -537,7 +537,7 @@ class Scraper {
     }
   }
 
-  Future<dynamic> getInternalMarks({String? academicTerm = null}) async {
+  Future getInternalMarks({String? academicTerm = null}) async {
     final String internalsURL = "/Student/InternalMarks.aspx";
 
     if (academicTerm == null) {
