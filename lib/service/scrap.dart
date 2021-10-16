@@ -170,7 +170,6 @@ class Scraper {
 
     String username = prefs.getString("username");
     String password = prefs.getString("password");
-    int stars = prefs.getInt("stars");
 
     Map<String, String> login_data = {
       "RadScriptManager1_TSM": "",
@@ -382,7 +381,7 @@ class Scraper {
         element = element.trim().replaceAll('<td style="display:none;">', "");
         element = element.trim().replaceAll("</td>", "<space>");
 
-        List temp = new List();
+        List temp = [];
         temp = element.split("<space>");
         temp.removeRange(0, 3);
         temp.removeWhere((element) => element.length == 0);
@@ -443,7 +442,7 @@ class Scraper {
     List classes = soup.find_all("td").map((e) => e.text).toList();
 
     List days = ["MON", "TUE", "WED", "THU", "FRI"];
-    List tempList = new List();
+    List tempList = [];
     Map data = new Map();
     days.forEach((day) {
       int dayIndex = classes.indexOf(day);

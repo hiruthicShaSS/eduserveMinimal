@@ -4,15 +4,12 @@ import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
 import 'package:eduserveMinimal/app_state.dart';
-import 'package:eduserveMinimal/main.dart';
-import 'package:eduserveMinimal/service/scrap.dart';
 
 class Fees extends StatelessWidget {
   @override

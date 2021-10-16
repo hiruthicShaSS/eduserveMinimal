@@ -12,7 +12,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
 import 'package:eduserveMinimal/edu_serve.dart';
-import 'package:eduserveMinimal/main.dart';
 
 class Creds extends StatelessWidget {
   bool pushHomePage = false;
@@ -37,76 +36,80 @@ class Creds extends StatelessWidget {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
-        child: SingleChildScrollView(
-          physics: NeverScrollableScrollPhysics(),
-          child: Column(
-            children: [
-              buildTextField(
-                  _usernameController, 'Enter your register number.', false),
-              SizedBox(height: 20),
-              buildTextField(_passwordController, 'Enter your password.', true),
-              SizedBox(height: 20),
-              ElevatedButton(
-                child: Text("Save"),
-                onPressed: () async {
-                  SharedPreferences prefs =
-                      await SharedPreferences.getInstance();
-                  prefs.setString("username", _usernameController.text);
-                  prefs.setString("password", _passwordController.text);
-                  prefs.setInt(
-                      "stars", min(int.parse(_starsController.text), 5));
-                  Fluttertoast.showToast(msg: "Credentials update successfuly");
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+          child: SingleChildScrollView(
+            physics: NeverScrollableScrollPhysics(),
+            child: Column(
+              children: [
+                buildTextField(
+                    _usernameController, 'Enter your register number.', false),
+                SizedBox(height: 20),
+                buildTextField(
+                    _passwordController, 'Enter your password.', true),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  child: Text("Save"),
+                  onPressed: () async {
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    prefs.setString("username", _usernameController.text);
+                    prefs.setString("password", _passwordController.text);
+                    prefs.setInt(
+                        "stars", min(int.parse(_starsController.text), 5));
+                    Fluttertoast.showToast(
+                        msg: "Credentials update successfuly");
 
-                  if (pushHomePage ?? false) {
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => EduServeMinimal()));
-                  } else {
-                    Navigator.pop(context);
-                  }
-                },
-              ),
-              SizedBox(height: 30.0),
-              Text("Caution!",
-                  style: GoogleFonts.kanit(
-                    fontSize: 20,
-                    color: Colors.red,
-                  )),
-              Column(
-                children: [
-                  Row(children: [
-                    Icon(Icons.control_point),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: AutoSizeText(
-                        "Refreshing the data too many times will result in banning in eduserve. You will need to reset your password everytime you get banned.",
-                        style: GoogleFonts.kanit(),
-                        maxFontSize: 30,
-                        minFontSize: 15,
-                        maxLines: 4,
-                        overflow: TextOverflow.ellipsis,
+                    if (pushHomePage ?? false) {
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (context) => EduServeMinimal()));
+                    } else {
+                      Navigator.pop(context);
+                    }
+                  },
+                ),
+                SizedBox(height: 30.0),
+                Text("Caution!",
+                    style: GoogleFonts.kanit(
+                      fontSize: 20,
+                      color: Colors.red,
+                    )),
+                Column(
+                  children: [
+                    Row(children: [
+                      Icon(Icons.control_point),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: AutoSizeText(
+                          "Refreshing the data too many times will result in banning in eduserve. You will need to reset your password everytime you get banned.",
+                          style: GoogleFonts.kanit(),
+                          maxFontSize: 30,
+                          minFontSize: 15,
+                          maxLines: 4,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
-                    ),
-                  ]),
-                  SizedBox(height: 20),
-                  Row(children: [
-                    Icon(Icons.control_point),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: AutoSizeText(
-                        "If you feel the app doesn't work properly hard restart the app. If that doesnt help file a issue on github.\nSettings -> About -> Request Feature",
-                        style: GoogleFonts.kanit(),
-                        maxFontSize: 30,
-                        minFontSize: 15,
-                        maxLines: 4,
-                        overflow: TextOverflow.ellipsis,
+                    ]),
+                    SizedBox(height: 20),
+                    Row(children: [
+                      Icon(Icons.control_point),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: AutoSizeText(
+                          "If you feel the app doesn't work properly hard restart the app. If that doesnt help file a issue on github.\nSettings -> About -> Request Feature",
+                          style: GoogleFonts.kanit(),
+                          maxFontSize: 30,
+                          minFontSize: 15,
+                          maxLines: 4,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
-                    ),
-                  ])
-                ],
-              )
-            ],
+                    ])
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),

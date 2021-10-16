@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 
 // Project imports:
 import 'package:eduserveMinimal/app_state.dart';
-import 'package:eduserveMinimal/service/scrap.dart';
 
 class AttendanceContainer extends StatelessWidget {
   const AttendanceContainer({Key key}) : super(key: key);

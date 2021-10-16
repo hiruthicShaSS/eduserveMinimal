@@ -2,8 +2,6 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:

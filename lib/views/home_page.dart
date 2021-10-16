@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 
 // Project imports:
-import 'package:eduserveMinimal/widgets/home/additional_info.dart';
 import 'package:eduserveMinimal/widgets/home/attendance_widget.dart';
 import 'package:eduserveMinimal/widgets/home/leave_information.dart';
 

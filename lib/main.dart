@@ -25,7 +25,6 @@ void main(List<String> args) {
       },
       darkTheme: ThemeData(
         brightness: Brightness.dark,
-        accentColor: Colors.amberAccent,
       ),
       themeMode: ThemeMode.dark,
     ),
