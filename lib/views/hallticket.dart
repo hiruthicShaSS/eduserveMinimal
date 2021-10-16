@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -14,11 +16,11 @@ class HallTicket extends StatefulWidget {
 
 class _HallTicketState extends State<HallTicket> {
   List<String> exams = [];
-  String selectedTerm = "Select the Examination";
+  String? selectedTerm = "Select the Examination";
   Widget table = Container();
   Widget mainDataWidget = Container();
   bool dataLoaded = false;
-  String selectedTermValue = "";
+  String? selectedTermValue = "";
 
   @override
   Widget build(BuildContext context) {
@@ -53,15 +55,15 @@ class _HallTicketState extends State<HallTicket> {
     );
   }
 
-  FutureBuilder<List<dynamic>> dropDown(BuildContext context) {
+  FutureBuilder<List<dynamic>?> dropDown(BuildContext context) {
     return FutureBuilder(
         future: Provider.of<AppState>(context).scraper.downloadHallTicket(),
-        builder: (context, AsyncSnapshot<List> snapshot) {
+        builder: (context, AsyncSnapshot<List?> snapshot) {
           if (!snapshot.hasData)
             exams = ["Select the Examination"];
           else
             exams = List<String>.from(
-                snapshot.data.map((e) => e.keys.first).toList());
+                snapshot.data!.map((e) => e.keys.first).toList());
 
           return Padding(
             padding: const EdgeInsets.all(20.0),
@@ -76,7 +78,7 @@ class _HallTicketState extends State<HallTicket> {
                 height: 2,
                 color: Colors.deepPurpleAccent,
               ),
-              onChanged: (String value) async {
+              onChanged: (String? value) async {
                 setState(() {
                   selectedTerm = value;
                   table = Center(child: CircularProgressIndicator());
@@ -88,16 +90,21 @@ class _HallTicketState extends State<HallTicket> {
                   return;
                 }
 
-                final terms = snapshot.data
+                final terms = snapshot.data!
                     .map((e) => e.containsKey(value) ? e[value] : null)
                     .toList();
                 terms.removeWhere((element) => element == null);
 
                 selectedTermValue = terms.first["value"];
 
-                final data = await Provider.of<AppState>(context, listen: false)
-                    .scraper
-                    .downloadHallTicket(term: terms.first["value"]);
+                List<dynamic>? data =
+                    await Provider.of<AppState>(context, listen: false)
+                        .scraper
+                        .downloadHallTicket(term: terms.first["value"]);
+
+                if (data == null) {
+                  return;
+                }
 
                 List mainData = [];
 

@@ -10,7 +10,7 @@ import 'package:eduserveMinimal/widgets/home/leave_list.dart';
 import 'package:eduserveMinimal/widgets/home/on_duty_list.dart';
 
 class LeaveInformation extends StatefulWidget {
-  const LeaveInformation({Key key}) : super(key: key);
+  const LeaveInformation({Key? key}) : super(key: key);
 
   @override
   _LeaveInformationState createState() => _LeaveInformationState();
@@ -18,7 +18,7 @@ class LeaveInformation extends StatefulWidget {
 
 class _LeaveInformationState extends State<LeaveInformation>
     with SingleTickerProviderStateMixin {
-  TabController _tabController;
+  TabController? _tabController;
 
   @override
   void initState() {
@@ -46,13 +46,14 @@ class _LeaveInformationState extends State<LeaveInformation>
               future: Provider.of<AppState>(context, listen: false)
                   .scraper
                   .getLeaveInfo(),
-              builder: (context, snapshot) {
+              builder: (context,
+                  AsyncSnapshot<Map<String, List<List<String>>>> snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   Provider.of<AppState>(context, listen: false).leaveInfo =
                       snapshot.data;
 
-                  List leave = snapshot.data["leave"];
-                  List onDuty = snapshot.data["onDuty"];
+                  List? leave = snapshot.data!["leave"];
+                  List? onDuty = snapshot.data!["onDuty"];
 
                   return TabBarView(
                     controller: _tabController,

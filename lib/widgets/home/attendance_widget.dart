@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:eduserveMinimal/app_state.dart';
 
 class AttendanceContainer extends StatelessWidget {
-  const AttendanceContainer({Key key}) : super(key: key);
+  const AttendanceContainer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class AttendanceContainer extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.done) {
           Provider.of<AppState>(context, listen: false).attendance =
               snapshot.data;
-          return containerWithData(_height, _width, snapshot.data);
+          return containerWithData(_height, _width, snapshot.data!);
         }
         return Center(child: CircularProgressIndicator());
       },

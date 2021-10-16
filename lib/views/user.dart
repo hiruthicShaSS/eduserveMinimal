@@ -14,10 +14,10 @@ class User extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder(
         future: Provider.of<AppState>(context).scraper.getInfo(),
-        builder: (context, snapshot) {
+        builder: (context, AsyncSnapshot<Map> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             print(snapshot.data);
-            Map data = snapshot.data;
+            Map data = snapshot.data!;
 
             return Scaffold(
               body: SafeArea(
@@ -33,10 +33,8 @@ class User extends StatelessWidget {
                             radius: 80,
                             backgroundImage: AssetImage("assets/appIcon.png"),
                             backgroundColor: Colors.transparent,
-                            onBackgroundImageError: (_, __) {
-                              return Image.asset(
-                                  "assets/placeholder_profile.png");
-                            },
+                            onBackgroundImageError: (_, __) =>
+                                Image.asset("assets/placeholder_profile.png"),
                           ),
                         ),
                       ),
@@ -146,8 +144,8 @@ class User extends StatelessWidget {
 
 class UserDetailWidget extends StatelessWidget {
   const UserDetailWidget({
-    Key key,
-    @required this.child,
+    Key? key,
+    required this.child,
   }) : super(key: key);
   final Widget child;
 
@@ -170,13 +168,13 @@ class UserDetailWidget extends StatelessWidget {
 
 class MainContainer extends StatelessWidget {
   const MainContainer({
-    Key key,
-    @required this.title,
-    @required this.data,
+    Key? key,
+    required this.title,
+    required this.data,
   }) : super(key: key);
 
   final String title;
-  final String data;
+  final String? data;
 
   @override
   Widget build(BuildContext context) {
@@ -193,7 +191,7 @@ class MainContainer extends StatelessWidget {
           children: [
             Text(title, style: TextStyle(fontSize: 20)),
             SizedBox(height: 10),
-            Text(data),
+            Text(data!),
           ],
         ),
       ),

@@ -18,7 +18,7 @@ import 'package:eduserveMinimal/views/timetable.dart';
 import 'package:eduserveMinimal/views/user.dart';
 
 class EduServeMinimal extends StatelessWidget {
-  const EduServeMinimal({Key key}) : super(key: key);
+  const EduServeMinimal({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +88,7 @@ class EduServeMinimal extends StatelessWidget {
           builder: (BuildContext context,
               AsyncSnapshot<SharedPreferences> snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              return (snapshot.data.containsKey("username"))
+              return (snapshot.data!.containsKey("username"))
                   ? FutureBuilder(
                       future: Provider.of<AppState>(context).scraper.login(),
                       builder: (BuildContext context,

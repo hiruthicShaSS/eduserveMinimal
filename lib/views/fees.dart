@@ -20,9 +20,9 @@ class Fees extends StatelessWidget {
       body: SafeArea(
         child: FutureBuilder(
           future: Provider.of<AppState>(context).scraper.getFeesDetails(),
-          builder: (context, AsyncSnapshot<Map> snapshot) {
+          builder: (context, AsyncSnapshot<Map?> snapshot) {
             if (snapshot.hasData) {
-              Map data = snapshot.data;
+              Map data = snapshot.data!;
               List dues = (data["dues"] == null || data["dues"].length < 2)
                   ? [0, 0]
                   : data["dues"];

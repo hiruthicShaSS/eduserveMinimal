@@ -13,10 +13,10 @@ class InternalMarks extends StatefulWidget {
 }
 
 class _InternalMarksState extends State<InternalMarks> {
-  String status = "";
+  String? status = "";
   bool _visible = false;
   Widget table = Container();
-  String dropdownSelection;
+  String? dropdownSelection;
 
   @override
   Widget build(BuildContext context) {
@@ -40,14 +40,14 @@ class _InternalMarksState extends State<InternalMarks> {
     return FutureBuilder(
       future: Provider.of<AppState>(context).scraper.getInternalMarks(),
       builder: (context, AsyncSnapshot<dynamic> snapshot) {
-        List<String> academicTerms = [];
+        List<String?>? academicTerms = [];
 
         if (snapshot.hasData) {
           academicTerms =
               (snapshot.data.runtimeType == academicTerms.runtimeType)
                   ? snapshot.data
                   : [];
-          academicTerms.remove("Select the Academic Term");
+          academicTerms!.remove("Select the Academic Term");
 
           return Column(
             children: [
@@ -65,13 +65,13 @@ class _InternalMarksState extends State<InternalMarks> {
                     ),
                     value: dropdownSelection,
                     items: academicTerms
-                        .map<DropdownMenuItem<String>>((String value) {
+                        .map<DropdownMenuItem<String>>((String? value) {
                       return DropdownMenuItem<String>(
                         value: value,
-                        child: Text(value),
+                        child: Text(value!),
                       );
                     }).toList(),
-                    onChanged: (String value) async {
+                    onChanged: (String? value) async {
                       setState(() {
                         dropdownSelection = value.toString();
                         table = Center(child: CircularProgressIndicator());
@@ -81,8 +81,8 @@ class _InternalMarksState extends State<InternalMarks> {
                           await Provider.of<AppState>(context, listen: false)
                               .scraper
                               .getInternalMarks(
-                                  academicTerm: (academicTerms.length -
-                                          academicTerms.indexOf(value))
+                                  academicTerm: (academicTerms!.length -
+                                          academicTerms!.indexOf(value))
                                       .toString());
 
                       if (data == "No records to display.") {
@@ -143,7 +143,7 @@ class _InternalMarksState extends State<InternalMarks> {
     );
   }
 
-  Widget buildTable(Map data, List dataCell) {
+  Widget buildTable(Map? data, List dataCell) {
     List header = [
       "Subject Code",
       "Subject Name",

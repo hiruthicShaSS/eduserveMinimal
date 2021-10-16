@@ -14,7 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:eduserveMinimal/edu_serve.dart';
 
 class Creds extends StatelessWidget {
-  bool pushHomePage = false;
+  bool? pushHomePage = false;
   Creds({this.pushHomePage});
 
   @override
@@ -25,8 +25,8 @@ class Creds extends StatelessWidget {
 
     void setDefaults() async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      _usernameController.text = prefs.getString("username");
-      _passwordController.text = prefs.getString("password");
+      _usernameController.text = prefs.getString("username")!;
+      _passwordController.text = prefs.getString("password")!;
       _starsController.text = (prefs.getInt("stars") == null)
           ? "1"
           : prefs.getInt("stars").toString();

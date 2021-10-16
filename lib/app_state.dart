@@ -9,10 +9,10 @@ import 'package:eduserveMinimal/service/scrap.dart';
 
 class AppState extends ChangeNotifier {
   Scraper scraper = Scraper();
-  SharedPreferences prefs;
+  SharedPreferences? prefs;
 
-  List attendance = [];
-  Map leaveInfo = {};
+  List? attendance = [];
+  Map? leaveInfo = {};
 
   AppState() {
     initPlatformState();

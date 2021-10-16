@@ -14,10 +14,10 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Scraper {
-  static BuildContext mainPageContext;
+  static BuildContext? mainPageContext;
   static String status = "";
-  SharedPreferences prefs;
-  Client client;
+  late SharedPreferences prefs;
+  late Client client;
   Map pages = {};
   String hostname = "https://eduserve.karunya.edu";
   String url = "";
@@ -64,7 +64,7 @@ class Scraper {
 
   int totalFeedback = 0;
 
-  Future<List> getFeedbackForm([int stars]) async {
+  Future<List> getFeedbackForm([int? stars]) async {
     Response page = await client.get(
         Uri.parse("https://eduserve.karunya.edu/MIS/IQAC/HFBCollection.aspx"),
         headers: headers);
@@ -116,7 +116,7 @@ class Scraper {
     // print(feedbackIds);
 
     inputs.forEach((element) {
-      if (!element["name"].contains("ClassHandle")) {
+      if (!element["name"]!.contains("ClassHandle")) {
         feedback_data[element["name"]] = element["value"];
       }
     });
@@ -133,7 +133,7 @@ class Scraper {
       final inputs = soup.find_all("input").map((e) => e.attributes).toList();
 
       inputs.forEach((element) {
-        if (!element["name"].contains("ClassHandle")) {
+        if (!element["name"]!.contains("ClassHandle")) {
           feedback_data[element["name"]] = element["value"];
         }
       });
@@ -162,16 +162,12 @@ class Scraper {
       );
     }
 
-    Directory appDocDir = await getApplicationDocumentsDirectory();
-    String appDocPath = appDocDir.path;
-    File loginData = File("$appDocPath/loginData.json");
-
     String loginAddress = "/Login.aspx?ReturnUrl=%2f";
 
-    String username = prefs.getString("username");
-    String password = prefs.getString("password");
+    String? username = prefs.getString("username");
+    String? password = prefs.getString("password");
 
-    Map<String, String> login_data = {
+    Map<String?, String?>? login_data = {
       "RadScriptManager1_TSM": "",
       "__EVENTTARGET": "",
       "__EVENTARGUMENT": "",
@@ -183,21 +179,14 @@ class Scraper {
       "ctl00\$mainContent\$Login1\$LoginButton": "Log In"
     };
 
-    try {
-      if (await loginData.readAsString() != null) {
-        Map data = jsonDecode(await loginData.readAsString());
-        login_data = data["login"];
-        headers = data["headers"];
-      }
-    } catch (e) {}
-
     status = "Get EduServe...";
 
     // Get karunya.edu
     url = hostname;
     headers["referer"] = url;
     var res = await client.get(Uri.parse(url));
-    var eduserveCookie = res.headers["set-cookie"]; // Set the ASP.NET_SessionId
+    var eduserveCookie =
+        res.headers["set-cookie"]!; // Set the ASP.NET_SessionId
 
     // Parse: Start
     var soup = Beautifulsoup(res.body);
@@ -229,14 +218,12 @@ class Scraper {
 
     if (res.statusCode == 302) {
       status += "\nRedirecting to Home";
-      headers["cookie"] += "; ${res.headers['set-cookie'].split(';')[0]}";
+      headers["cookie"] =
+          headers["cookie"]! + "; ${res.headers['set-cookie']!.split(';')[0]}";
       res = await client.get(
           Uri.parse("https://eduserve.karunya.edu${res.headers["location"]}"),
           headers: headers);
     }
-
-    loginData
-        .writeAsString(jsonEncode({"headers": headers, "login": login_data}));
 
     if (res.body.contains("Hourly Feedback")) {
       return "feedback form found";
@@ -339,7 +326,7 @@ class Scraper {
     return parsePage(home_page);
   }
 
-  Future<Map> getFeesDetails({bool force = false}) async {
+  Future<Map?> getFeesDetails({bool force = false}) async {
     if (cache.containsKey("fees")) return cache["fees"];
 
     String feesDownload = "/Student/Fees/DownloadReceipt.aspx";
@@ -381,9 +368,9 @@ class Scraper {
         element = element.trim().replaceAll('<td style="display:none;">', "");
         element = element.trim().replaceAll("</td>", "<space>");
 
-        List temp = [];
+        List? temp = [];
         temp = element.split("<space>");
-        temp.removeRange(0, 3);
+        temp!.removeRange(0, 3);
         temp.removeWhere((element) => element.length == 0);
         feesStatement[temp[1]] = temp;
       }
@@ -394,7 +381,7 @@ class Scraper {
     return feesStatement;
   }
 
-  Future<Map> getTimetable({bool force = false}) async {
+  Future<Map?> getTimetable({bool force = false}) async {
     // Get class timetable
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String appDocPath = appDocDir.path;
@@ -455,7 +442,8 @@ class Scraper {
     return data;
   }
 
-  Future<List> downloadHallTicket({String term, bool download = false}) async {
+  Future<List?> downloadHallTicket(
+      {String? term, bool download = false}) async {
     final String hallticketURL = "/Student/CBCS/HallTicketDownload.aspx";
 
     if (term == null) {
@@ -508,12 +496,13 @@ class Scraper {
         formDataCopy["__EVENTTARGET"] = "";
         formDataCopy.remove("ctl00\$mainContent\$DDLACADEMICTERM");
         Response res = await client.post(Uri.parse("$hostname$hallticketURL"),
-            headers: headersCopy, body: formDataCopy);
+            headers: headersCopy as Map<String, String>?, body: formDataCopy);
 
         print(res.headers);
         return [];
       }
 
+      headers["ctl00\$mainContent\$DDLACADEMICTERM"] = "";
       Response res = await client.post(Uri.parse("$hostname$hallticketURL"),
           headers: headers, body: formData);
 
@@ -548,7 +537,7 @@ class Scraper {
     }
   }
 
-  Future<dynamic> getInternalMarks({String academicTerm = null}) async {
+  Future<dynamic> getInternalMarks({String? academicTerm = null}) async {
     final String internalsURL = "/Student/InternalMarks.aspx";
 
     if (academicTerm == null) {
@@ -622,7 +611,7 @@ class Scraper {
     var soup = Beautifulsoup(studentHomePage);
     List basicInfo =
         soup.find_all("span").map((e) => (e.innerHtml)).toList().sublist(54);
-    String studentImage =
+    String? studentImage =
         soup.find_all("img").map((e) => (e.attributes["src"])).toList()[2];
     List td = soup.find_all("td").map((e) => (e.text)).toList();
 

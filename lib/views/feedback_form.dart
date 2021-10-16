@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:eduserveMinimal/app_state.dart';
 
 class FeedbackForm extends StatefulWidget {
-  FeedbackForm({Key key}) : super(key: key);
+  FeedbackForm({Key? key}) : super(key: key);
 
   @override
   _FeedbackFormState createState() => _FeedbackFormState();
@@ -25,7 +25,7 @@ class _FeedbackFormState extends State<FeedbackForm> {
       builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           return ListView(
-            children: List.generate(snapshot.data.length + 2, (index) {
+            children: List.generate(snapshot.data!.length + 2, (index) {
               if (index == 0)
                 return Column(
                   children: [
@@ -35,7 +35,7 @@ class _FeedbackFormState extends State<FeedbackForm> {
                     Divider(),
                   ],
                 );
-              if (index == snapshot.data.length + 1)
+              if (index == snapshot.data!.length + 1)
                 return ElevatedButton(
                     onPressed: () {
                       Provider.of<AppState>(context, listen: false)
@@ -46,12 +46,12 @@ class _FeedbackFormState extends State<FeedbackForm> {
                     },
                     child: Text("Submit"));
 
-              feedbackRating[snapshot.data[index - 1][1].toString()] = 1;
+              feedbackRating[snapshot.data![index - 1][1].toString()] = 1;
 
               return ExpansionTile(
-                title: Text(snapshot.data[index - 1][1].toString()),
+                title: Text(snapshot.data![index - 1][1].toString()),
                 subtitle:
-                    Text("Hour ${snapshot.data[index - 1][0].toString()}"),
+                    Text("Hour ${snapshot.data![index - 1][0].toString()}"),
                 children: [
                   RatingBar.builder(
                     initialRating: 1,
@@ -65,7 +65,7 @@ class _FeedbackFormState extends State<FeedbackForm> {
                       color: Colors.amber,
                     ),
                     onRatingUpdate: (rating) {
-                      feedbackRating[snapshot.data[index - 1][1].toString()] =
+                      feedbackRating[snapshot.data![index - 1][1].toString()] =
                           rating.toInt();
                     },
                   )

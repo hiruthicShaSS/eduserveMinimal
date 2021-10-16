@@ -16,12 +16,12 @@ class TimeTable extends StatelessWidget {
     return Scaffold(
       body: FutureBuilder(
         future: Provider.of<AppState>(context).scraper.getTimetable(),
-        builder: (context, AsyncSnapshot<Map> snapshot) {
+        builder: (context, AsyncSnapshot<Map?> snapshot) {
           if (snapshot.hasData) {
-            days = snapshot.data.keys.toList();
+            days = snapshot.data!.keys.toList();
 
             List dataCell = [];
-            snapshot.data.forEach((key, value) {
+            snapshot.data!.forEach((key, value) {
               List<DataCell> temp = [];
               value.forEach((element) {
                 temp.add(
@@ -58,7 +58,7 @@ class TimeTable extends StatelessWidget {
   }
 
   SafeArea buildTimeTable(BuildContext context, List dataCell) {
-    String currentDay;
+    String? currentDay;
     switch (DateTime.now().weekday) {
       case 1:
         currentDay = "MON";

@@ -8,7 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Developer extends StatelessWidget {
-  Developer({Key key}) : super(key: key);
+  Developer({Key? key}) : super(key: key);
 
   final Shader linearGradient = LinearGradient(
     colors: <Color>[Colors.blueAccent, Colors.lightBlueAccent],
@@ -35,7 +35,7 @@ class Developer extends StatelessWidget {
                         "https://avatars1.githubusercontent.com/u/56349092?s=400&u=bd905296ec34d032c6c6d87f5b89e0f7dc5f0956&v=4"),
                     backgroundColor: Colors.transparent,
                     onBackgroundImageError: (_, __) {
-                      return Image.asset("assets/placeholder_profile.png");
+                      Image.asset("assets/placeholder_profile.png");
                     },
                   ),
                 ),
@@ -54,11 +54,7 @@ class Developer extends StatelessWidget {
                 children: [
                   IconButton(
                     icon: Icon(Icons.email),
-                    onPressed: () async {
-                      if (await canLaunch("mailto:hiruthic@karunya.edu")) {
-                        launch("mailto:hiruthic@karunya.edu");
-                      }
-                    },
+                    onPressed: () => launch("mailto:hiruthic@karunya.edu"),
                   ),
                   SizedBox(width: 10),
                   Text(
@@ -78,13 +74,8 @@ class Developer extends StatelessWidget {
                   "Request Feature",
                   style: GoogleFonts.kanit(fontSize: 25, color: Colors.black),
                 ),
-                onPressed: () async {
-                  if (await canLaunch(
-                      "https://github.com/hiruthicShaSS/eduserveMinimal/issues/new")) {
-                    launch(
-                        "https://github.com/hiruthicShaSS/eduserveMinimal/issues/new");
-                  }
-                },
+                onPressed: () => launch(
+                    "https://github.com/hiruthicShaSS/eduserveMinimal/issues/new"),
               ),
               Spacer(),
               buildSocialIcons()
@@ -105,13 +96,7 @@ Row buildSocialIcons() {
           size: 40,
           color: Colors.blue,
         ),
-        onPressed: () async {
-          if (await canLaunch("https://twitter.com/_hiruthicSha")) {
-            launch("https://twitter.com/_hiruthicSha");
-          } else {
-            Fluttertoast.showToast(msg: "Cant open Twitter at the moment");
-          }
-        },
+        onPressed: () => launch("https://twitter.com/_hiruthicSha"),
         tooltip: "Twitter",
       ),
       Spacer(),
@@ -121,13 +106,7 @@ Row buildSocialIcons() {
           size: 40,
           color: Colors.blueAccent,
         ),
-        onPressed: () async {
-          if (await canLaunch("https://in.linkedin.com/in/hiruthicsha")) {
-            launch("https://in.linkedin.com/in/hiruthicsha/");
-          } else {
-            Fluttertoast.showToast(msg: "Cant open LinkedIn at the moment");
-          }
-        },
+        onPressed: () => launch("https://in.linkedin.com/in/hiruthicsha/"),
         tooltip: "LinkedIn",
       ),
       Spacer(),
@@ -137,13 +116,7 @@ Row buildSocialIcons() {
           size: 40,
           color: Colors.white38,
         ),
-        onPressed: () async {
-          if (await canLaunch("https://github.com/hiruthicShaSS")) {
-            launch("https://github.com/hiruthicShaSS");
-          } else {
-            Fluttertoast.showToast(msg: "Cant open GitHub at the moment");
-          }
-        },
+        onPressed: () => launch("https://github.com/hiruthicShaSS"),
         tooltip: "GitHub",
       ),
       Spacer(),
@@ -153,13 +126,7 @@ Row buildSocialIcons() {
           size: 40,
           color: Colors.white38,
         ),
-        onPressed: () async {
-          if (await canLaunch("http://sha-resume.herokuapp.com/")) {
-            launch("http://sha-resume.herokuapp.com/");
-          } else {
-            Fluttertoast.showToast(msg: "Cant open site at the moment");
-          }
-        },
+        onPressed: () => launch("http://sha-resume.herokuapp.com/"),
         tooltip: "GitHub",
       ),
     ],

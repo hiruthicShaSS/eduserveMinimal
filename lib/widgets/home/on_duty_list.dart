@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
 class OnDutyList extends StatelessWidget {
-  const OnDutyList({Key key, @required this.data}) : super(key: key);
-  final List data;
+  const OnDutyList({Key? key, required this.data}) : super(key: key);
+  final List? data;
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class OnDutyList extends StatelessWidget {
         child: ListView.builder(
           physics:
               BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-          itemCount: data.length,
+          itemCount: data!.length,
           itemBuilder: (BuildContext context, int index) {
             // print(data.length);
             return Padding(
@@ -27,8 +27,8 @@ class OnDutyList extends StatelessWidget {
                     border: Border.all(
                       color: Theme.of(context)
                           .textTheme
-                          .bodyText1
-                          .color
+                          .bodyText1!
+                          .color!
                           .withOpacity(0.2),
                       width: 2,
                     ),
@@ -41,24 +41,24 @@ class OnDutyList extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           AutoSizeText(
-                            data[index][4].toString(),
+                            data![index][4].toString(),
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                                 color: Theme.of(context)
                                     .textTheme
-                                    .bodyText1
-                                    .color
+                                    .bodyText1!
+                                    .color!
                                     .withOpacity(0.3)),
                           ),
                           Text(
-                            "${data[index][0]} - ${data[index][2]}",
+                            "${data![index][0]} - ${data![index][2]}",
                             style: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            (data[index][1] == "FULL DAY")
+                            (data![index][1] == "FULL DAY")
                                 ? "FD"
-                                : data[index][1],
+                                : data![index][1],
                             style:
                                 TextStyle(color: Theme.of(context).accentColor),
                           ),
@@ -72,15 +72,15 @@ class OnDutyList extends StatelessWidget {
                         Container(
                           padding: EdgeInsets.all(2),
                           decoration: BoxDecoration(
-                            color: data[index][5].contains("AVAILED")
+                            color: data![index][5].contains("AVAILED")
                                 ? Colors.greenAccent.withOpacity(0.8)
-                                : data[index][5].contains("REJECTED")
+                                : data![index][5].contains("REJECTED")
                                     ? Colors.redAccent.withOpacity(0.8)
                                     : Colors.orangeAccent.withOpacity(0.8),
                             borderRadius: BorderRadius.circular(5),
                           ),
                           child: Text(
-                            data[index][5],
+                            data![index][5],
                             style: TextStyle(color: Colors.black),
                           ),
                         ),
@@ -98,34 +98,34 @@ class OnDutyList extends StatelessWidget {
                             showDialog(
                                 context: context,
                                 builder: (_) => AlertDialog(
-                                      title: Text(data[index][4].toString()),
+                                      title: Text(data![index][4].toString()),
                                       content: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           Text(
-                                            "Duration: ${data[index][0]} - ${data[index][2]}",
+                                            "Duration: ${data![index][0]} - ${data![index][2]}",
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
                                           SizedBox(height: 10),
                                           Text(
-                                              "Created on: ${data[index][8].toString()}"),
+                                              "Created on: ${data![index][8].toString()}"),
                                           Text(
-                                              "From Session: ${data[index][1]}"),
-                                          Text("Status: ${data[index][5]}"),
+                                              "From Session: ${data![index][1]}"),
+                                          Text("Status: ${data![index][5]}"),
                                           SizedBox(height: 10),
-                                          Text("Created by: ${data[index][7]}"),
+                                          Text("Created by: ${data![index][7]}"),
                                           Text(
-                                              "Approval by: ${data[index][9]}"),
+                                              "Approval by: ${data![index][9]}"),
                                           Text(
-                                              "Approval on: ${data[index][10]}"),
+                                              "Approval on: ${data![index][10]}"),
                                           Text(
-                                              "Availed by: ${data[index][11]}"),
+                                              "Availed by: ${data![index][11]}"),
                                           Text(
-                                              "Availed on: ${data[index][12]}"),
+                                              "Availed on: ${data![index][12]}"),
                                           Center(
                                             child: TextButton(
                                                 onPressed: () =>
