@@ -33,7 +33,7 @@ class AttendanceContainer extends StatelessWidget {
   Container containerWithData(double _height, double _width, List data) {
     return Container(
       decoration: BoxDecoration(
-        color: (ThemeProvider.currentThemeMode == ThemeMode.dark
+        color: (ThemeProvider.platformBrightness == Brightness.dark
                 ? Colors.deepPurple
                 : Colors.blue)
             .withOpacity(0.1),

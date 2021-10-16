@@ -21,15 +21,11 @@ class Creds extends StatelessWidget {
   Widget build(BuildContext context) {
     TextEditingController _usernameController = new TextEditingController();
     TextEditingController _passwordController = new TextEditingController();
-    TextEditingController _starsController = new TextEditingController();
 
     void setDefaults() async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       _usernameController.text = prefs.getString("username")!;
       _passwordController.text = prefs.getString("password")!;
-      _starsController.text = (prefs.getInt("stars") == null)
-          ? "1"
-          : prefs.getInt("stars").toString();
     }
 
     setDefaults();
@@ -56,8 +52,6 @@ class Creds extends StatelessWidget {
                         await SharedPreferences.getInstance();
                     prefs.setString("username", _usernameController.text);
                     prefs.setString("password", _passwordController.text);
-                    prefs.setInt(
-                        "stars", min(int.parse(_starsController.text), 5));
                     Fluttertoast.showToast(
                         msg: "Credentials update successfuly");
 

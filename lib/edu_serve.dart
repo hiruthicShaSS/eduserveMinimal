@@ -21,6 +21,7 @@ class EduServeMinimal extends StatelessWidget {
         "/home": (BuildContext context) => HomePage(),
       },
       darkTheme: ThemeProvider.dark,
+      title: "eduserveMinimal",
       themeMode: Provider.of<ThemeProvider>(context).themeMode,
     );
   }
