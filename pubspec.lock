@@ -32,9 +32,9 @@ packages:
   beautifulsoup:
     dependency: "direct main"
     description:
-      name: beautifulsoup
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "beautifulsoup.dart"
+      relative: true
+    source: path
     version: "0.0.1"
   boolean_selector:
     dependency: transitive
@@ -112,7 +112,7 @@ packages:
       name: csslib
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.15.0"
+    version: "0.17.1"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -197,7 +197,7 @@ packages:
       name: html
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.13.4+2"
+    version: "0.15.0"
   http:
     dependency: "direct main"
     description:
@@ -476,13 +476,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.2"
-  utf:
-    dependency: transitive
-    description:
-      name: utf
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.9.0+5"
   vector_math:
     dependency: transitive
     description:
