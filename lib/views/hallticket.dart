@@ -28,18 +28,18 @@ class _HallTicketState extends State<HallTicket> {
       appBar: AppBar(
         title: Text("Download Hall Ticket"),
         centerTitle: true,
-        actions: [
-          Visibility(
-              visible: dataLoaded,
-              child: IconButton(
-                  onPressed: () async {
-                    await Provider.of<AppState>(context, listen: false)
-                        .scraper
-                        .downloadHallTicket(
-                            term: selectedTermValue, download: true);
-                  },
-                  icon: Icon(Icons.save)))
-        ],
+        // actions: [
+        //   Visibility(
+        //       visible: dataLoaded,
+        //       child: IconButton(
+        //           onPressed: () async {
+        //             await Provider.of<AppState>(context, listen: false)
+        //                 .scraper
+        //                 .downloadHallTicket(
+        //                     term: selectedTermValue, download: true);
+        //           },
+        //           icon: Icon(Icons.save)))
+        // ],
       ),
       body: SafeArea(
         child: Column(
@@ -164,8 +164,8 @@ class _HallTicketState extends State<HallTicket> {
                         color: MaterialStateProperty.resolveWith<Color>(
                             (Set<MaterialState> states) {
                           return subjectData[index].last == 'Y'
-                              ? Colors.green
-                              : Colors.orangeAccent;
+                              ? Colors.green.withOpacity(0.2)
+                              : Colors.orange.withOpacity(0.2);
                         }),
                         cells: List.generate(
                             subjectData[index].length - 1,

@@ -492,14 +492,27 @@ class Scraper {
 
       if (download) {
         Map formDataCopy = formData;
+        Map headersCopy = headers;
+
+        headersCopy["referer"] =
+            "https://eduserve.karunya.edu/Student/CBCS/HallTicketDownload.aspx";
+        headersCopy["Sec-Fetch-Dest"] = "document";
+        headersCopy["sec-ch-ua"] = ';Not A Brand";v="99", "Chromium";v="94"';
+        headersCopy["sec-ch-ua-mobile"] = "?0";
+        headersCopy["sec-ch-ua-platform"] = "Windows";
+        headersCopy["sec-fetch-dest"] = "document";
+        headersCopy["sec-fetch-mode"] = "navigate";
+        headersCopy["sec-fetch-site"] = "same-origin";
+        headersCopy["sec-fetch-user"] = "?1";
+
         formDataCopy["ctl00\$mainContent\$BTNDOWNLOAD"] = "Download";
         formDataCopy["__EVENTTARGET"] = "";
         formDataCopy.remove("ctl00\$mainContent\$DDLACADEMICTERM");
         Response res = await client.post(Uri.parse("$hostname$hallticketURL"),
-            headers: headers, body: formDataCopy);
-        formData.remove("ctl00\$mainContent\$BTNDOWNLOAD");
+            headers: headersCopy, body: formDataCopy);
 
-        print(res.body);
+        print(res.headers);
+        return [];
       }
 
       Response res = await client.post(Uri.parse("$hostname$hallticketURL"),
