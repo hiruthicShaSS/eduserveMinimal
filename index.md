@@ -33,7 +33,7 @@ Once it is installed follow these steps to compile an app from the source,
 ### Clone the repo
 
    ```bash
-   git clone https://github.com/hiruthicShaSS/eduserveMinimal.git
+   git clone --recurse-submodules https://github.com/hiruthicShaSS/eduserveMinimal.git
    git checkout mobile_app
    ```
    You don't have to check out to the mobile_app branch, the main branch will contain the code for stable version. Although you can always update your [mobile_app](https://github.com/hiruthicShaSS/eduserveMinimal/tree/mobile_app) branch to your local repo for dev versions of the app.
