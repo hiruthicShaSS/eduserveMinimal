@@ -22,10 +22,11 @@ OR
 ## Start Building
 
 <div id="compile">
+   
 1. ### Clone the repo
 
    ```bash
-   git clone https://github.com/hiruthicShaSS/eduserveMinimal.git
+   git clone --recurse-submodules https://github.com/hiruthicShaSS/eduserveMinimal.git
    git checkout mobile_app
    ```
 
