@@ -62,6 +62,18 @@ class Scraper {
     prefs = await SharedPreferences.getInstance();
   }
 
+  Future<Map> fetchAllData() async {
+    await this.getFeesDetails();
+    await this.getInfo();
+    List? hallTicketData = await this.downloadHallTicket();
+    if (hallTicketData != null) {
+      await this.downloadHallTicket(
+          term: hallTicketData[1].values.toList()[0]["value"]);
+    }
+
+    return cache;
+  }
+
   int totalFeedback = 0;
 
   Future<List> getFeedbackForm([int? stars]) async {
@@ -152,7 +164,8 @@ class Scraper {
     // print(response.statusCode);
   }
 
-  Future<String> login([callback]) async {
+  Future<String> login(
+      [String? username, String? password, Function? callback]) async {
     // Login
     var connection = await (Connectivity().checkConnectivity());
     if (connection == ConnectivityResult.none) {
@@ -164,9 +177,6 @@ class Scraper {
 
     String loginAddress = "/Login.aspx?ReturnUrl=%2f";
 
-    String? username = prefs.getString("username");
-    String? password = prefs.getString("password");
-
     Map<String?, String?>? login_data = {
       "RadScriptManager1_TSM": "",
       "__EVENTTARGET": "",
@@ -174,8 +184,10 @@ class Scraper {
       "__VIEWSTATE": "",
       "__VIEWSTATEGENERATOR": "",
       "__EVENTVALIDATION": "",
-      "ctl00\$mainContent\$Login1\$UserName": username,
-      "ctl00\$mainContent\$Login1\$Password": password,
+      "ctl00\$mainContent\$Login1\$UserName":
+          prefs.getString("username") ?? username,
+      "ctl00\$mainContent\$Login1\$Password":
+          prefs.getString("password") ?? password,
       "ctl00\$mainContent\$Login1\$LoginButton": "Log In"
     };
 
@@ -214,6 +226,8 @@ class Scraper {
       Fluttertoast.showToast(
           msg: "Your login attempt was not successful. Please try again.",
           gravity: ToastGravity.CENTER);
+
+      return "Login error";
     }
 
     if (res.statusCode == 302) {
@@ -502,6 +516,8 @@ class Scraper {
         return [];
       }
 
+      if (cache.containsKey("hallticket")) return cache["hallticket"];
+
       headers["ctl00\$mainContent\$DDLACADEMICTERM"] = "";
       Response res = await client.post(Uri.parse("$hostname$hallticketURL"),
           headers: headers, body: formData);
@@ -533,6 +549,8 @@ class Scraper {
           subjectData = [];
         }
       }
+
+      cache["hallticket"] = [mainEligibility, allEligibility];
       return [mainEligibility, allEligibility];
     }
   }

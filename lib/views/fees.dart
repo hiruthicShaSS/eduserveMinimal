@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 // Project imports:
 import 'package:eduserveMinimal/app_state.dart';
 
-class Fees extends StatelessWidget {
+class FeesView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;

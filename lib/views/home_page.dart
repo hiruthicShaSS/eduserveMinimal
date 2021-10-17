@@ -5,6 +5,7 @@ import 'package:eduserveMinimal/views/feedback_form.dart';
 import 'package:eduserveMinimal/views/fees.dart';
 import 'package:eduserveMinimal/views/hallticket.dart';
 import 'package:eduserveMinimal/views/internals.dart';
+import 'package:eduserveMinimal/views/issues.dart';
 import 'package:eduserveMinimal/views/settings.dart';
 import 'package:eduserveMinimal/views/timetable.dart';
 import 'package:eduserveMinimal/views/user.dart';
@@ -13,6 +14,7 @@ import 'package:flutter/material.dart';
 // Project imports:
 import 'package:eduserveMinimal/widgets/home/attendance_widget.dart';
 import 'package:eduserveMinimal/widgets/home/leave_information.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -54,7 +56,7 @@ class HomePage extends StatelessWidget {
       ListTile(
         title: Text("Fees"),
         onTap: () => Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => Fees())),
+            .push(MaterialPageRoute(builder: (context) => FeesView())),
       ),
       ListTile(
         title: Text("Internal"),
@@ -64,7 +66,7 @@ class HomePage extends StatelessWidget {
       ListTile(
         title: Text("Hallticket"),
         onTap: () => Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => HallTicket())),
+            .push(MaterialPageRoute(builder: (context) => HallTicketView())),
       ),
       ListTile(
         title: Text("Settings"),
@@ -90,11 +92,15 @@ class HomePage extends StatelessWidget {
               return (snapshot.data!.containsKey("username"))
                   ? FutureBuilder(
                       future: Provider.of<AppState>(context).scraper.login(),
-                      builder: (BuildContext context,
-                          AsyncSnapshot<String> snapshot) {
+                      builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.done) {
                           if (snapshot.data == "feedback form found")
                             return FeedbackForm();
+                          if (snapshot.data == "Login error")
+                            return Creds(pushHomePage: true);
+
+                          processExcessInfo(context);
+
                           return Column(
                             children: [
                               AttendanceContainer(),
@@ -122,5 +128,44 @@ class HomePage extends StatelessWidget {
             return CircularProgressIndicator();
           }),
     );
+  }
+
+  Future<void> processExcessInfo(BuildContext context) async {
+    Map dataCache = await Provider.of<AppState>(context).scraper.fetchAllData();
+
+    bool feesDue = (double.tryParse(dataCache["fees"]["dues"].first) ?? 0) > 0;
+    bool hallTicketUnEligile =
+        dataCache["hallticket"].first.where((e) => e == "Eligible").length < 3;
+
+    print(feesDue);
+    print(hallTicketUnEligile);
+
+    if (feesDue || hallTicketUnEligile) {
+      ScaffoldMessenger.of(context).showMaterialBanner(MaterialBanner(
+        backgroundColor: Colors.redAccent,
+        leading: Icon(Icons.error_outline),
+        content: TextButton(
+            onPressed: () {
+              SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => IssuesView(
+                        outstandingDue: feesDue,
+                        hallTicketUnEligible: hallTicketUnEligile)));
+                ScaffoldMessenger.of(context).removeCurrentMaterialBanner();
+              });
+            },
+            child: Text("Action required!",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold))),
+        actions: [
+          IconButton(
+              onPressed: () =>
+                  ScaffoldMessenger.of(context).removeCurrentMaterialBanner(),
+              icon: Icon(Icons.close)),
+        ],
+      ));
+    }
   }
 }

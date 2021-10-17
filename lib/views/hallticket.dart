@@ -6,12 +6,12 @@ import 'package:provider/provider.dart';
 // Project imports:
 import 'package:eduserveMinimal/app_state.dart';
 
-class HallTicket extends StatefulWidget {
+class HallTicketView extends StatefulWidget {
   @override
-  _HallTicketState createState() => _HallTicketState();
+  _HallTicketViewState createState() => _HallTicketViewState();
 }
 
-class _HallTicketState extends State<HallTicket> {
+class _HallTicketViewState extends State<HallTicketView> {
   List<String> exams = [];
   String? selectedTerm = "Select the Examination";
   Widget table = Container();
@@ -70,7 +70,6 @@ class _HallTicketState extends State<HallTicket> {
               value: selectedTerm,
               iconSize: 24,
               elevation: 16,
-              style: TextStyle(color: Colors.white),
               underline: Container(
                 height: 2,
                 color: Colors.deepPurpleAccent,

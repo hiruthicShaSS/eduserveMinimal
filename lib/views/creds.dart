@@ -2,12 +2,15 @@
 import 'dart:math';
 
 // Flutter imports:
+import 'package:eduserveMinimal/app_state.dart';
+import 'package:eduserveMinimal/views/feedback_form.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
@@ -39,6 +42,8 @@ class Creds extends StatelessWidget {
             physics: NeverScrollableScrollPhysics(),
             child: Column(
               children: [
+                Text("Enter Credentials", style: TextStyle(fontSize: 30)),
+                SizedBox(height: 20),
                 buildTextField(
                     _usernameController, 'Enter your register number.', false),
                 SizedBox(height: 20),
@@ -50,11 +55,46 @@ class Creds extends StatelessWidget {
                   onPressed: () async {
                     SharedPreferences prefs =
                         await SharedPreferences.getInstance();
+
+                    showDialog(
+                        context: context,
+                        builder: (_) => AlertDialog(
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      "Logging In...",
+                                      style: TextStyle(fontSize: 25),
+                                    ),
+                                  ),
+                                  CircularProgressIndicator(),
+                                ],
+                              ),
+                            ));
+                    String loginStatus = await Provider.of<AppState>(context,
+                            listen: false)
+                        .scraper
+                        .login(
+                            _usernameController.text, _passwordController.text);
+                    Navigator.of(context).pop();
+
+                    if (loginStatus == "Login error") {
+                      Fluttertoast.showToast(msg: "Login error");
+                      return;
+                    }
+
                     prefs.setString("username", _usernameController.text);
                     prefs.setString("password", _passwordController.text);
                     Fluttertoast.showToast(
-                        msg: "Credentials update successfuly");
+                        msg: "Credentials updated successfully");
 
+                    if (loginStatus == "feedback form found") {
+                      Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (_) => FeedbackForm()));
+                    }
                     if (pushHomePage ?? false) {
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
                           builder: (context) => EduServeMinimal()));
