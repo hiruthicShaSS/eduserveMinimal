@@ -6,6 +6,8 @@
 [![LinkedIn][linkedin-shield]][linkedin-url]
 [![Twitter Follow][twitter-shield]][twitter-url]
 
+![Preview](https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/preview.png)
+
 ## Idea
 
 This is a mobile app for karunyans to help get their student information without going to [Eduserve portal](https://eduserve.karunya.edu/Login.aspx?ReturnUrl=%2f) every time.
@@ -59,18 +61,18 @@ Distributed under the BSD-3-CLAUSE License. See [LICENSE](https://github.com/hir
 
 ## Screenshots
 
-<div align="center">
-<img src="https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/Screenshot_1632722838.png" width=250>
-<img src="https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/Screenshot_1632722893.png" width=250>
-<img src="https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/Screenshot_1632722863.png" width=500>
-</div>
+![Home Page](https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/screenshot1.png)
+![Student Page](https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/screenshot2.png)
+![Fees Page](https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/screenshot3.png)
+![Hall Ticket Page](https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/screenshot4.png)
+![Dark Theme](https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/screenshot5.png)
 
 ## Support
 
 [![Paypal][paypal-shield]][paypal-url]
 [![Buy Me a Coffee][buymeacoffee-shield]][buymeacoffee-url]
-
-
+[![Ko-fi](https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white)](https://ko-fi.com/hiruthicsha)
+[![Liberapay](https://img.shields.io/badge/Liberapay-F6C915?style=for-the-badge&logo=liberapay&logoColor=black)](https://liberapay.com/hiruthicSha/)
 
 [website-url]: https://hiruthicshass.github.io/eduserveMinimal/
 [website-shield]: https://img.shields.io/website?label=GitHub%20Pages&style=for-the-badge&url=https://hiruthicshass.github.io/eduserveMinimal/
