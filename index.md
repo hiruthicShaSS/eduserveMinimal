@@ -61,11 +61,13 @@ Distributed under the BSD-3-CLAUSE License. See [LICENSE](https://github.com/hir
 
 ## Screenshots
 
-![Home Page](https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/screenshot1.png)
-![Student Page](https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/screenshot2.png)
-![Fees Page](https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/screenshot3.png)
-![Hall Ticket Page](https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/screenshot4.png)
-![Dark Theme](https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/screenshot5.png)
+<div align=center>
+<img src=https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/screenshot1.png width=200px>
+<img src=https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/screenshot2.png width=200px>
+<img src=https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/screenshot3.png width=200px>
+<img src=https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/screenshot4.png width=200px>
+<img src=https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/screenshot5.png width=200px>
+</div>
 
 ## Support
 
