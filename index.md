@@ -61,20 +61,20 @@ Distributed under the BSD-3-CLAUSE License. See [LICENSE](https://github.com/hir
 
 ## Screenshots
 
-<div align=center>
-<img src=https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/screenshot1.png width=200px>
-<img src=https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/screenshot2.png width=200px>
-<img src=https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/screenshot3.png width=200px>
-<img src=https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/screenshot4.png width=200px>
-<img src=https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/screenshot5.png width=200px>
+<div align="center">
+<img src="https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/screenshot1.png" width=200px>
+<img src="https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/screenshot2.png" width=200px>
+<img src="https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/screenshot3.png" width=200px>
+<img src="https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/screenshot4.png" width=200px>
+<img src="https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/screenshot5.png" width=200px>
 </div>
 
 ## Support
 
 [![Paypal][paypal-shield]][paypal-url]
 [![Buy Me a Coffee][buymeacoffee-shield]][buymeacoffee-url]
-[![Ko-fi](https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white)](https://ko-fi.com/hiruthicsha)
-[![Liberapay](https://img.shields.io/badge/Liberapay-F6C915?style=for-the-badge&logo=liberapay&logoColor=black)](https://liberapay.com/hiruthicSha/)
+[![Ko-fi][ko-fi-shield]][ko-fi-url]
+[![Liberapay][liberapay-shield]][liberapay-url]
 
 [website-url]: https://hiruthicshass.github.io/eduserveMinimal/
 [website-shield]: https://img.shields.io/website?label=GitHub%20Pages&style=for-the-badge&url=https://hiruthicshass.github.io/eduserveMinimal/
@@ -97,4 +97,8 @@ Distributed under the BSD-3-CLAUSE License. See [LICENSE](https://github.com/hir
 [paypal-url]: https://paypal.me/hiruthic?locale.x=en_GB
 [buymeacoffee-shield]: https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black
 [buymeacoffee-url]: https://www.buymeacoffee.com/hiruthicSha
+[ko-fi-shield]: https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white
+[ko-fi-url]: https://ko-fi.com/hiruthicsha
+[liberapay-shield]: https://img.shields.io/badge/Liberapay-F6C915?style=for-the-badge&logo=liberapay&logoColor=black
+[liberapay-url]: https://liberapay.com/hiruthicSha/
 [visitor-shield]: https://estruyf-github.azurewebsites.net/api/VisitorHit?user=hiruthicShaSS&repo=eduserveMinimal&countColorcountColor&countColor=%237B1E7A
