@@ -9,8 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
 import 'package:eduserveMinimal/edu_serve.dart';
+import 'package:eduserveMinimal/screens/home/pages/feedback_form.dart';
 import 'package:eduserveMinimal/service/login.dart';
-import 'package:eduserveMinimal/views/feedback_form.dart';
 
 class Creds extends StatelessWidget {
   bool? pushHomePage = false;

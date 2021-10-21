@@ -7,9 +7,9 @@ import 'package:provider/provider.dart';
 // Project imports:
 import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:eduserveMinimal/providers/theme.dart';
+import 'package:eduserveMinimal/screens/home/widgets/leave_list.dart';
+import 'package:eduserveMinimal/screens/home/widgets/on_duty_list.dart';
 import 'package:eduserveMinimal/service/leaveInfo.dart';
-import 'package:eduserveMinimal/widgets/home/leave_list.dart';
-import 'package:eduserveMinimal/widgets/home/on_duty_list.dart';
 
 class LeaveInformation extends StatefulWidget {
   const LeaveInformation({Key? key}) : super(key: key);

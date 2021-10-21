@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 
 // Project imports:
-import 'package:eduserveMinimal/views/fees.dart';
-import 'package:eduserveMinimal/views/hallticket.dart';
+import 'package:eduserveMinimal/screens/home/pages/fees.dart';
+import 'package:eduserveMinimal/screens/home/pages/hallticket.dart';
 
 class IssuesView extends StatelessWidget {
   const IssuesView(

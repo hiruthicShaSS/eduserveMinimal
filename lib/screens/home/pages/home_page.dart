@@ -6,22 +6,22 @@ import 'package:flutter/scheduler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
+import 'package:eduserveMinimal/screens/home/pages/creds.dart';
+import 'package:eduserveMinimal/screens/home/pages/feedback_form.dart';
+import 'package:eduserveMinimal/screens/home/pages/fees.dart';
+import 'package:eduserveMinimal/screens/home/pages/hallticket.dart';
+import 'package:eduserveMinimal/screens/home/pages/internals.dart';
+import 'package:eduserveMinimal/screens/home/pages/issues.dart';
+import 'package:eduserveMinimal/screens/home/pages/settings.dart';
+import 'package:eduserveMinimal/screens/home/pages/timetable.dart';
+import 'package:eduserveMinimal/screens/home/widgets/attendance_widget.dart';
+import 'package:eduserveMinimal/screens/home/widgets/leave_information.dart';
+import 'package:eduserveMinimal/screens/settings/pages/user.dart';
 import 'package:eduserveMinimal/service/downloadHallTicket.dart';
 import 'package:eduserveMinimal/service/feesDetails.dart';
 import 'package:eduserveMinimal/service/login.dart';
 import 'package:eduserveMinimal/service/scrap.dart';
 import 'package:eduserveMinimal/service/studentInfo.dart';
-import 'package:eduserveMinimal/views/creds.dart';
-import 'package:eduserveMinimal/views/feedback_form.dart';
-import 'package:eduserveMinimal/views/fees.dart';
-import 'package:eduserveMinimal/views/hallticket.dart';
-import 'package:eduserveMinimal/views/internals.dart';
-import 'package:eduserveMinimal/views/issues.dart';
-import 'package:eduserveMinimal/views/settings.dart';
-import 'package:eduserveMinimal/views/settings/user.dart';
-import 'package:eduserveMinimal/views/timetable.dart';
-import 'package:eduserveMinimal/widgets/home/attendance_widget.dart';
-import 'package:eduserveMinimal/widgets/home/leave_information.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);

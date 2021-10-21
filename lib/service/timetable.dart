@@ -3,11 +3,11 @@ import 'dart:convert';
 
 // Package imports:
 import 'package:beautifulsoup/beautifulsoup.dart';
-import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:http/http.dart';
 
 // Project imports:
 import 'package:eduserveMinimal/global/gloabls.dart';
+import 'package:eduserveMinimal/providers/app_state.dart';
 
 Future<Map?> getTimetable({bool force = false}) async {
   Map<String, String> headers = httpHeaders;

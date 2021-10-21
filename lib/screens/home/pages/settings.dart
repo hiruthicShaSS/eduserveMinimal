@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // Project imports:
-import 'package:eduserveMinimal/views/creds.dart';
-import 'package:eduserveMinimal/views/settings/developer.dart';
-import 'package:eduserveMinimal/views/settings/themes.dart';
+import 'package:eduserveMinimal/screens/home/pages/creds.dart';
+import 'package:eduserveMinimal/screens/settings/pages/developer.dart';
+import 'package:eduserveMinimal/screens/settings/pages/themes.dart';
 
 class Settings extends StatelessWidget {
   static final thisAppPublishDate = "2020-12-20 19:38:07.569667";
