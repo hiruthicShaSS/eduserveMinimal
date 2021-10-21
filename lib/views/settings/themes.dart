@@ -1,6 +1,11 @@
-import 'package:eduserveMinimal/providers/theme.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:provider/provider.dart';
+
+// Project imports:
+import 'package:eduserveMinimal/providers/theme.dart';
 
 class Themes extends StatelessWidget {
   const Themes({Key? key}) : super(key: key);

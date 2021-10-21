@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:eduserveMinimal/providers/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -7,10 +6,10 @@ import 'package:flutter/services.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 
 // Project imports:
-import 'package:eduserveMinimal/app_state.dart';
+import 'package:eduserveMinimal/providers/theme.dart';
+import 'package:eduserveMinimal/service/feesDetails.dart';
 
 class FeesView extends StatelessWidget {
   @override
@@ -20,7 +19,7 @@ class FeesView extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: FutureBuilder(
-          future: Provider.of<AppState>(context).scraper.getFeesDetails(),
+          future: getFeesDetails(),
           builder: (context, AsyncSnapshot<Map?> snapshot) {
             if (snapshot.hasData) {
               Map data = snapshot.data!;

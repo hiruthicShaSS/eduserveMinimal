@@ -1,11 +1,8 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
 
-// Package imports:
-import 'package:provider/provider.dart';
-
 // Project imports:
-import 'package:eduserveMinimal/app_state.dart';
+import 'package:eduserveMinimal/service/internalMarks.dart';
 
 class InternalMarks extends StatefulWidget {
   @override
@@ -38,7 +35,7 @@ class _InternalMarksState extends State<InternalMarks> {
 
   FutureBuilder<dynamic> dropDown(BuildContext context) {
     return FutureBuilder(
-      future: Provider.of<AppState>(context).scraper.getInternalMarks(),
+      future: getInternalMarks(),
       builder: (context, AsyncSnapshot<dynamic> snapshot) {
         List<String> academicTerms = [];
 
@@ -76,13 +73,10 @@ class _InternalMarksState extends State<InternalMarks> {
                         table = Center(child: CircularProgressIndicator());
                       });
 
-                      final data =
-                          await Provider.of<AppState>(context, listen: false)
-                              .scraper
-                              .getInternalMarks(
-                                  academicTerm: (academicTerms.length -
-                                          academicTerms.indexOf(value!))
-                                      .toString());
+                      final data = await getInternalMarks(
+                          academicTerm: (academicTerms.length -
+                                  academicTerms.indexOf(value!))
+                              .toString());
 
                       if (data == "No records to display.") {
                         // If login required
@@ -127,7 +121,7 @@ class _InternalMarksState extends State<InternalMarks> {
                           table = Container();
                         });
                         Future.delayed(Duration(seconds: 2)).then((value) {
-                          setState(() => _visible = !_visible);
+                          if (mounted) setState(() => _visible = !_visible);
                         });
                       }
                     },

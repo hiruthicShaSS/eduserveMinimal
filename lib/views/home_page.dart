@@ -1,5 +1,16 @@
 // Flutter imports:
-import 'package:eduserveMinimal/app_state.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+
+// Package imports:
+import 'package:shared_preferences/shared_preferences.dart';
+
+// Project imports:
+import 'package:eduserveMinimal/service/downloadHallTicket.dart';
+import 'package:eduserveMinimal/service/feesDetails.dart';
+import 'package:eduserveMinimal/service/login.dart';
+import 'package:eduserveMinimal/service/scrap.dart';
+import 'package:eduserveMinimal/service/studentInfo.dart';
 import 'package:eduserveMinimal/views/creds.dart';
 import 'package:eduserveMinimal/views/feedback_form.dart';
 import 'package:eduserveMinimal/views/fees.dart';
@@ -7,16 +18,10 @@ import 'package:eduserveMinimal/views/hallticket.dart';
 import 'package:eduserveMinimal/views/internals.dart';
 import 'package:eduserveMinimal/views/issues.dart';
 import 'package:eduserveMinimal/views/settings.dart';
+import 'package:eduserveMinimal/views/settings/user.dart';
 import 'package:eduserveMinimal/views/timetable.dart';
-import 'package:eduserveMinimal/views/user.dart';
-import 'package:flutter/material.dart';
-
-// Project imports:
 import 'package:eduserveMinimal/widgets/home/attendance_widget.dart';
 import 'package:eduserveMinimal/widgets/home/leave_information.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -91,7 +96,7 @@ class HomePage extends StatelessWidget {
             if (snapshot.connectionState == ConnectionState.done) {
               return (snapshot.data!.containsKey("username"))
                   ? FutureBuilder(
-                      future: Provider.of<AppState>(context).scraper.login(),
+                      future: login(),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.done) {
                           if (snapshot.data == "feedback form found")
@@ -131,7 +136,7 @@ class HomePage extends StatelessWidget {
   }
 
   Future<void> processExcessInfo(BuildContext context) async {
-    Map dataCache = await Provider.of<AppState>(context).scraper.fetchAllData();
+    Map dataCache = await fetchAllData();
 
     bool feesDue = (double.tryParse(dataCache["fees"]["dues"].first) ?? 0) > 0;
     bool hallTicketUnEligile =
@@ -167,5 +172,17 @@ class HomePage extends StatelessWidget {
         ],
       ));
     }
+  }
+
+  Future<Map> fetchAllData() async {
+    await getFeesDetails();
+    await getInfo();
+    List? hallTicketData = await downloadHallTicket();
+    if (hallTicketData != null) {
+      await downloadHallTicket(
+          term: hallTicketData[1].values.toList()[0]["value"]);
+    }
+
+    return Scraper.cache;
   }
 }

@@ -9,7 +9,8 @@ import 'package:eduserveMinimal/service/scrap.dart';
 
 class AppState extends ChangeNotifier {
   Scraper scraper = Scraper();
-  SharedPreferences? prefs;
+  static SharedPreferences? prefs;
+  Map cache = {};
 
   List? attendance = [];
   Map? leaveInfo = {};
@@ -19,6 +20,6 @@ class AppState extends ChangeNotifier {
   }
 
   Future<void> initPlatformState() async {
-    this.prefs = await SharedPreferences.getInstance();
+    prefs = await SharedPreferences.getInstance();
   }
 }

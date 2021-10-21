@@ -1,12 +1,13 @@
 // Flutter imports:
-import 'package:eduserveMinimal/providers/theme.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:provider/provider.dart';
 
 // Project imports:
-import 'package:eduserveMinimal/app_state.dart';
+import 'package:eduserveMinimal/providers/app_state.dart';
+import 'package:eduserveMinimal/providers/theme.dart';
+import 'package:eduserveMinimal/service/leaveInfo.dart';
 import 'package:eduserveMinimal/widgets/home/leave_list.dart';
 import 'package:eduserveMinimal/widgets/home/on_duty_list.dart';
 
@@ -49,14 +50,15 @@ class _LeaveInformationState extends State<LeaveInformation>
           ),
           Expanded(
             child: FutureBuilder(
-              future: Provider.of<AppState>(context, listen: false)
-                  .scraper
-                  .getLeaveInfo(),
+              future: getLeaveInfo(),
               builder: (context,
                   AsyncSnapshot<Map<String, List<List<String>>>> snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   Provider.of<AppState>(context, listen: false).leaveInfo =
                       snapshot.data;
+
+                  if (snapshot.data == null)
+                    return Text("No records to display.");
 
                   List? leave = snapshot.data!["leave"];
                   List? onDuty = snapshot.data!["onDuty"];

@@ -2,11 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-// Package imports:
-import 'package:provider/provider.dart';
-
 // Project imports:
-import 'package:eduserveMinimal/app_state.dart';
+import 'package:eduserveMinimal/service/timetable.dart';
 
 class TimeTable extends StatelessWidget {
   List days = [];
@@ -15,10 +12,17 @@ class TimeTable extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder(
-        future: Provider.of<AppState>(context).scraper.getTimetable(),
+        future: getTimetable(),
         builder: (context, AsyncSnapshot<Map?> snapshot) {
           if (snapshot.hasData) {
             days = snapshot.data!.keys.toList();
+
+            if (days.isEmpty)
+              return Center(
+                child: Container(
+                  child: Text("No records to display."),
+                ),
+              );
 
             List dataCell = [];
             snapshot.data!.forEach((key, value) {

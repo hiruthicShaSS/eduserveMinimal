@@ -1,10 +1,8 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
 
-// Package imports:
-import 'package:provider/provider.dart';
-
 // Project imports:
-import 'package:eduserveMinimal/app_state.dart';
+import 'package:eduserveMinimal/service/downloadHallTicket.dart';
 
 class HallTicketView extends StatefulWidget {
   @override
@@ -54,7 +52,7 @@ class _HallTicketViewState extends State<HallTicketView> {
 
   FutureBuilder<List<dynamic>?> dropDown(BuildContext context) {
     return FutureBuilder(
-        future: Provider.of<AppState>(context).scraper.downloadHallTicket(),
+        future: downloadHallTicket(),
         builder: (context, AsyncSnapshot<List?> snapshot) {
           if (!snapshot.hasData)
             exams = ["Select the Examination"];
@@ -94,9 +92,7 @@ class _HallTicketViewState extends State<HallTicketView> {
                 selectedTermValue = terms.first["value"];
 
                 List<dynamic>? data =
-                    await Provider.of<AppState>(context, listen: false)
-                        .scraper
-                        .downloadHallTicket(term: terms.first["value"]);
+                    await downloadHallTicket(term: terms.first["value"]);
 
                 if (data == null) {
                   return;

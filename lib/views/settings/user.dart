@@ -4,16 +4,15 @@ import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:provider/provider.dart';
 
 // Project imports:
-import 'package:eduserveMinimal/app_state.dart';
+import 'package:eduserveMinimal/service/studentInfo.dart';
 
 class User extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: Provider.of<AppState>(context).scraper.getInfo(),
+        future: getInfo(),
         builder: (context, AsyncSnapshot<Map> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             print(snapshot.data);

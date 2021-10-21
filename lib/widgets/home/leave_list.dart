@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:auto_size_text/auto_size_text.dart';
 
+// Project imports:
+import 'package:eduserveMinimal/global/enum.dart';
+import 'package:eduserveMinimal/views/apply_leave.dart';
+
 class LeaveList extends StatelessWidget {
   const LeaveList({Key? key, required this.data}) : super(key: key);
   final List? data;
@@ -16,8 +20,23 @@ class LeaveList extends StatelessWidget {
         child: ListView.builder(
           physics:
               BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-          itemCount: data!.length,
+          itemCount: data!.length + 1,
           itemBuilder: (BuildContext context, int index) {
+            if (index == 0)
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton.icon(
+                    icon: Icon(Icons.add),
+                    label: Text("Apply leave"),
+                    onPressed: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (_) =>
+                                ApplyLeaveView(leaveType: LeaveType.Medical))),
+                  ),
+                ],
+              );
+
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 5),
               child: Container(
@@ -40,7 +59,7 @@ class LeaveList extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           AutoSizeText(
-                            data![index][1].toString(),
+                            data![index - 1][1].toString(),
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                                 color: Theme.of(context)
@@ -50,12 +69,12 @@ class LeaveList extends StatelessWidget {
                                     .withOpacity(0.3)),
                           ),
                           Text(
-                            "${data![index][2]} - ${data![index][4]}",
+                            "${data![index - 1][2]} - ${data![index - 1][4]}",
                             style: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            data![index][3],
+                            data![index - 1][3],
                             style: TextStyle(
                                 color: Theme.of(context).colorScheme.secondary),
                           ),
@@ -69,15 +88,15 @@ class LeaveList extends StatelessWidget {
                         Container(
                           padding: EdgeInsets.all(2),
                           decoration: BoxDecoration(
-                            color: data![index][6].contains("Active")
+                            color: data![index - 1][6].contains("Active")
                                 ? Colors.greenAccent.withOpacity(0.8)
-                                : data![index][6].contains("Rejected")
+                                : data![index - 1][6].contains("Rejected")
                                     ? Colors.redAccent.withOpacity(0.8)
                                     : Colors.orangeAccent.withOpacity(0.8),
                             borderRadius: BorderRadius.circular(5),
                           ),
                           child: Text(
-                            data![index][6],
+                            data![index - 1][6],
                             style: TextStyle(color: Colors.black),
                           ),
                         ),
@@ -95,22 +114,24 @@ class LeaveList extends StatelessWidget {
                             showDialog(
                                 context: context,
                                 builder: (_) => AlertDialog(
-                                      title: Text(data![index][0].toString()),
+                                      title:
+                                          Text(data![index - 1][0].toString()),
                                       content: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           Text(
-                                            "Duration: ${data![index][2]} - ${data![index][4]}",
+                                            "Duration: ${data![index - 1][2]} - ${data![index - 1][4]}",
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
                                           SizedBox(height: 10),
                                           Text(
-                                              "From Session: ${data![index][5]}"),
-                                          Text("Status: ${data![index][6]}"),
+                                              "From Session: ${data![index - 1][5]}"),
+                                          Text(
+                                              "Status: ${data![index - 1][6]}"),
                                           SizedBox(height: 10),
                                           Center(
                                             child: TextButton(

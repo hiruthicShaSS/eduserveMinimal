@@ -6,7 +6,8 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
-import 'package:eduserveMinimal/app_state.dart';
+import 'package:eduserveMinimal/providers/app_state.dart';
+import 'package:eduserveMinimal/service/feedbackform.dart';
 
 class FeedbackForm extends StatefulWidget {
   FeedbackForm({Key? key}) : super(key: key);
@@ -21,7 +22,7 @@ class _FeedbackFormState extends State<FeedbackForm> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: Provider.of<AppState>(context).scraper.getFeedbackForm(),
+      future: getFeedbackForm(),
       builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           return ListView(

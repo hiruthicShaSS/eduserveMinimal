@@ -1,20 +1,16 @@
-// Dart imports:
-import 'dart:math';
-
 // Flutter imports:
-import 'package:eduserveMinimal/app_state.dart';
-import 'package:eduserveMinimal/views/feedback_form.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
 import 'package:eduserveMinimal/edu_serve.dart';
+import 'package:eduserveMinimal/service/login.dart';
+import 'package:eduserveMinimal/views/feedback_form.dart';
 
 class Creds extends StatelessWidget {
   bool? pushHomePage = false;
@@ -27,8 +23,8 @@ class Creds extends StatelessWidget {
 
     void setDefaults() async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      _usernameController.text = prefs.getString("username")!;
-      _passwordController.text = prefs.getString("password")!;
+      _usernameController.text = prefs.getString("username") ?? "";
+      _passwordController.text = prefs.getString("password") ?? "";
     }
 
     setDefaults();
@@ -58,6 +54,7 @@ class Creds extends StatelessWidget {
 
                     showDialog(
                         context: context,
+                        barrierDismissible: false,
                         builder: (_) => AlertDialog(
                               content: Column(
                                 mainAxisSize: MainAxisSize.min,
@@ -74,11 +71,8 @@ class Creds extends StatelessWidget {
                                 ],
                               ),
                             ));
-                    String loginStatus = await Provider.of<AppState>(context,
-                            listen: false)
-                        .scraper
-                        .login(
-                            _usernameController.text, _passwordController.text);
+                    String loginStatus = await login(
+                        _usernameController.text, _passwordController.text);
                     Navigator.of(context).pop();
 
                     if (loginStatus == "Login error") {
