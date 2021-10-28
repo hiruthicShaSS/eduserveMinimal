@@ -32,6 +32,44 @@ class _LeaveInformationState extends State<LeaveInformation>
   Widget build(BuildContext context) {
     // Provider.of<AppState>(context, listen: false).scraper.getLeaveInfo();
     // return Container();
+
+    List<List<String>> fakeLeaveData = [
+      ["", "", "", "", "", "", "      "],
+      ["", "", "", "", "", "", "      "],
+      ["", "", "", "", "", "", "      "]
+    ];
+    List<List<String>> fakeOnDutyData = [
+      [
+        "           ",
+        "        ",
+        "           ",
+        "           ",
+        "                    ",
+        "           ",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      [
+        "           ",
+        "        ",
+        "           ",
+        "           ",
+        "                    ",
+        "           ",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    ];
     return Expanded(
       child: Column(
         children: [
@@ -71,7 +109,13 @@ class _LeaveInformationState extends State<LeaveInformation>
                     ],
                   );
                 }
-                return Center(child: CircularProgressIndicator());
+                return TabBarView(
+                  controller: _tabController,
+                  children: [
+                    LeaveList(data: fakeLeaveData, isLoading: true),
+                    OnDutyList(data: fakeOnDutyData, isLoading: true),
+                  ],
+                );
               },
             ),
           ),
