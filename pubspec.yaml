@@ -49,6 +49,7 @@ dependencies:
 
   beautifulsoup:
     path: beautifulsoup.dart
+  package_info: ^2.0.2
 
 dev_dependencies:
   flutter_test:

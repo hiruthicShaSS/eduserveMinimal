@@ -1,5 +1,7 @@
 // Flutter imports:
+import 'package:eduserveMinimal/screens/settings/pages/attribution.dart';
 import 'package:flutter/material.dart';
+import 'package:package_info/package_info.dart';
 
 // Package imports:
 import 'package:url_launcher/url_launcher.dart';
@@ -49,12 +51,35 @@ class Settings extends StatelessWidget {
                       "https://github.com/hiruthic2002/eduserveMinimal/releases");
                 }),
             ElevatedButton(
-              child: Text("About"),
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Developer()));
-              },
-            )
+                child: Text("Attributions"),
+                onPressed: () => Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (_) => Attribution()))),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                      child: Text("About"),
+                      onPressed: () async {
+                        PackageInfo info = await PackageInfo.fromPlatform();
+
+                        showAboutDialog(
+                            context: context,
+                            applicationVersion: info.version,
+                            applicationLegalese: "Yo, nice!");
+                      }),
+                ),
+                Spacer(),
+                Expanded(
+                  child: ElevatedButton(
+                    child: Text("Author"),
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Developer()));
+                    },
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),
