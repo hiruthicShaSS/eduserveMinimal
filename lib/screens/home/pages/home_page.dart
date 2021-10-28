@@ -1,6 +1,7 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:lottie/lottie.dart';
 
 // Package imports:
 import 'package:shared_preferences/shared_preferences.dart';
@@ -117,6 +118,7 @@ class HomePage extends StatelessWidget {
                             child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            Lottie.asset("assets/lottie/log_in.json"),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
@@ -124,7 +126,6 @@ class HomePage extends StatelessWidget {
                                 style: TextStyle(fontSize: 25),
                               ),
                             ),
-                            CircularProgressIndicator(),
                           ],
                         ));
                       })
