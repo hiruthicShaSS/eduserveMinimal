@@ -10,13 +10,16 @@ import 'package:provider/provider.dart';
 import 'package:eduserveMinimal/screens/home/pages/pages.dart';
 
 class EduServeMinimal extends StatelessWidget {
-  const EduServeMinimal({Key? key}) : super(key: key);
+  const EduServeMinimal({Key? key, this.flavor = "production"})
+      : super(key: key);
+  final String flavor;
 
   @override
   Widget build(BuildContext context) {
     Provider.of<AppState>(context)..initPlatformState();
 
     return MaterialApp(
+      debugShowCheckedModeBanner: flavor == "development",
       home: HomePage(),
       routes: {
         "/feedbackForm": (BuildContext context) => FeedbackForm(),

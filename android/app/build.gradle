@@ -23,7 +23,7 @@ if (flutterVersionName == null) {
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'com.google.gms.google-services'
+// apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.firebase-perf'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
@@ -68,6 +68,25 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.release
+        }
+    }
+
+    flavorDimensions "default"
+    productFlavors {
+        production {
+            dimension "default"
+            resValue "string", "app_name", "eduserveMinimal"
+            applicationIdSuffix ""
+        }
+        staging {
+            dimension "default"
+            resValue "string", "app_name", "esm-staging"
+            applicationIdSuffix ".stg"
+        }
+        development {
+            dimension "default"
+            resValue "string", "app_name", "esm-development"
+            applicationIdSuffix ".dev"
         }
     }
 }
