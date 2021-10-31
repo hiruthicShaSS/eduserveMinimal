@@ -1,5 +1,8 @@
+// Flutter imports:
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:url_launcher/url_launcher.dart';
 
 class Attribution extends StatelessWidget {

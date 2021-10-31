@@ -1,13 +1,13 @@
 // Flutter imports:
-import 'package:eduserveMinimal/screens/settings/pages/attribution.dart';
 import 'package:flutter/material.dart';
-import 'package:package_info/package_info.dart';
 
 // Package imports:
+import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // Project imports:
 import 'package:eduserveMinimal/screens/home/pages/creds.dart';
+import 'package:eduserveMinimal/screens/settings/pages/attribution.dart';
 import 'package:eduserveMinimal/screens/settings/pages/developer.dart';
 import 'package:eduserveMinimal/screens/settings/pages/themes.dart';
 

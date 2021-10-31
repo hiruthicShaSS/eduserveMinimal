@@ -1,12 +1,12 @@
 // Flutter imports:
-import 'package:eduserveMinimal/providers/app_state.dart';
-import 'package:eduserveMinimal/providers/theme.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:provider/provider.dart';
 
 // Project imports:
+import 'package:eduserveMinimal/providers/app_state.dart';
+import 'package:eduserveMinimal/providers/theme.dart';
 import 'package:eduserveMinimal/screens/home/pages/pages.dart';
 
 class EduServeMinimal extends StatelessWidget {

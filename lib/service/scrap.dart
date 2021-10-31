@@ -14,8 +14,6 @@ import 'package:eduserveMinimal/service/login.dart';
 
 // Flutter importimport 'package:flutter/material.dart';
 
-
-
 class Scraper {
   static BuildContext? mainPageContext;
   static String status = "";

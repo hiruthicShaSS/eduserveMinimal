@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 // Project imports:
 import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:eduserveMinimal/providers/theme.dart';
 import 'package:eduserveMinimal/screens/home/pages/attendence_summary.dart';
 import 'package:eduserveMinimal/service/attendence.dart';
-import 'package:shimmer/shimmer.dart';
 
 class AttendanceContainer extends StatelessWidget {
   const AttendanceContainer({Key? key}) : super(key: key);

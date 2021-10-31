@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:shimmer/shimmer.dart';
 
 // Project imports:
 import 'package:eduserveMinimal/global/enum.dart';
 import 'package:eduserveMinimal/screens/home/pages/apply_leave.dart';
-import 'package:shimmer/shimmer.dart';
 
 class OnDutyList extends StatelessWidget {
   const OnDutyList({Key? key, required this.data, this.isLoading = false})
