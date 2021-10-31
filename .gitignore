@@ -3,6 +3,7 @@
 client_secrets.json
 env/
 avoid_me/
+/.env
 
 # Miscellaneous
 *.class
