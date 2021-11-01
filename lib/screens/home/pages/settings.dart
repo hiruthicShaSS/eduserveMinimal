@@ -1,5 +1,7 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:new_version/new_version.dart';
 
 // Package imports:
 import 'package:package_info/package_info.dart';
@@ -24,36 +26,64 @@ class Settings extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: ListView(
+        child: Column(
           children: [
-            ElevatedButton(
-              child: Text("Themes"),
-              onPressed: () => Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (_) => Themes())),
-            ),
-            ElevatedButton(
-              child: Text("Open EduServe"),
-              onPressed: () async {
-                await launch(eduserveURL);
-              },
-            ),
-            ElevatedButton(
-              child: Text("Update credentials"),
-              onPressed: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (_) => Creds()));
-              },
-            ),
-            ElevatedButton(
-                child: Text("Check updates"),
-                onPressed: () async {
-                  launch(
-                      "https://github.com/hiruthic2002/eduserveMinimal/releases");
-                }),
-            ElevatedButton(
-                child: Text("Attributions"),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                child: Text("Themes"),
                 onPressed: () => Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (_) => Attribution()))),
+                    .push(MaterialPageRoute(builder: (_) => Themes())),
+              ),
+            ),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                child: Text("Open EduServe"),
+                onPressed: () async {
+                  await launch(eduserveURL);
+                },
+              ),
+            ),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                child: Text("Update credentials"),
+                onPressed: () {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (_) => Creds()));
+                },
+              ),
+            ),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                  child: Text("Check updates"),
+                  onPressed: () async {
+                    PackageInfo info = await PackageInfo.fromPlatform();
+                    if (info.packageName.contains("dev") ||
+                        info.packageName.contains("stg"))
+                      Fluttertoast.showToast(
+                          msg: "You are running a non-production build!");
+
+                    final newVersion = NewVersion(androidId: info.packageName);
+                    newVersion.showAlertIfNecessary(context: context);
+                    bool? canUpdate =
+                        (await newVersion.getVersionStatus())?.canUpdate;
+                    if (canUpdate ?? false)
+                      Fluttertoast.showToast(
+                          msg: "You are already on latest version!");
+                    // launch(
+                    //     "https://github.com/hiruthic2002/eduserveMinimal/releases");
+                  }),
+            ),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                  child: Text("Attributions"),
+                  onPressed: () => Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (_) => Attribution()))),
+            ),
             Row(
               children: [
                 Expanded(
@@ -78,6 +108,21 @@ class Settings extends StatelessWidget {
                     },
                   ),
                 ),
+              ],
+            ),
+            Spacer(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  child: Text("Contribute ",
+                      style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          color: Colors.blue)),
+                  onTap: () =>
+                      launch("https://github.com/hiruthic2002/eduserveMinimal"),
+                ),
+                Text("to this project"),
               ],
             ),
           ],

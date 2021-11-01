@@ -1,9 +1,12 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 // Package imports:
 import 'package:lottie/lottie.dart';
+import 'package:new_version/new_version.dart';
+import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
@@ -137,6 +140,7 @@ class HomePage extends StatelessWidget {
   }
 
   Future<void> processExcessInfo(BuildContext context) async {
+    _checkUpdates(context);
     Map dataCache = await fetchAllData();
 
     bool feesDue = (double.tryParse(dataCache["fees"]["dues"].first) ?? 0) > 0;
@@ -185,5 +189,17 @@ class HomePage extends StatelessWidget {
     }
 
     return Scraper.cache;
+  }
+
+  void _checkUpdates(BuildContext context) async {
+    PackageInfo info = await PackageInfo.fromPlatform();
+    if (info.packageName.contains("dev") || info.packageName.contains("stg"))
+      return;
+
+    final newVersion = NewVersion(androidId: info.packageName);
+    newVersion.showAlertIfNecessary(context: context);
+    bool? canUpdate = (await newVersion.getVersionStatus())?.canUpdate;
+    if (canUpdate ?? false)
+      Fluttertoast.showToast(msg: "You are already on latest version!");
   }
 }
