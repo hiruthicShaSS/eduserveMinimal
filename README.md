@@ -6,7 +6,8 @@ Minimalist app for eduserve
 
 [![Website][website-shield]][website-url]
 
-<div id="download">
+## Download
+
 <a href='https://play.google.com/store/apps/details?id=com.hiruthicShaBuilds.eduserveMinimal&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' width=50%></a>
 
 For non-programming iOS users, follow these steps:
@@ -16,34 +17,55 @@ For non-programming iOS users, follow these steps:
 OR
 
 1. Download and install the flutter SDK
-2. Compile it yourself. [_Process_](#compile)
+2. Compile it yourself. [_Process_](#start-building)
 
 ## Start Building
 
-<div id="compile">
-   
-1. ### Clone the repo
+### Clone the repo
 
 ```bash
 git clone --recurse-submodules https://github.com/hiruthicShaSS/eduserveMinimal.git
-git checkout mobile_app
 ```
 
-2. ### Build app
+---
 
-   ```bash
-   flutter pub get
-   flutter build apk
-   ```
+- [Terminal (or CMD)](#terminal-or-cmd)
+- [VS Code](#vs-code)
 
-   - Platform specific:
+---
+
+- #### Terminal (or CMD)
+
+  1. #### Get packages
+
+      ```bash
+      flutter pub get
+      ```
+
+  2. #### Build app
 
      ```bash
-     flutter build apk --target-platform "your platform"
+     flutter build apk --target lib/main_production.dart \
+     --flavor production
      ```
 
-   - Append '--release' or '--debug' for release app or debug app respectively.
-   - More: [Build Flutter app](https://flutter.dev/docs/deployment/android)
+     - Platform specific:
+
+       ```bash
+       flutter build apk --target lib/main_production.dart \
+       --flavor production --target-platform "your platform"
+       ```
+
+     - Append '--release' or '--debug' for release app or debug app respectively.
+     - More: [Build Flutter app](https://flutter.dev/docs/deployment/android)
+
+- #### VS Code
+
+  1. Open Run and Debug Code tab `Cmd / Ctrl + Shift + D`
+  2. Click the dropdown and select the build type.
+  3. Start Debugging `F5`
+
+  ![Watch this example](screenshots/vs-code-example.gif)
 
 ## Screenshots
 
