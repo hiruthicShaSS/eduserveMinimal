@@ -25,10 +25,9 @@ Contributions are what make the open source community such an amazing place to b
 
 Anyone with intermediate experience with flutter can contribute to the project without any guidance, but If you need any assistance on how the project is structured please create an [issue](https://github.com/hiruthicShaSS/eduserveMinimal/issues) and I will explain. UI designers are really in need and even if you don't know flutter you are welcome to [discuss](https://github.com/hiruthicShaSS/eduserveMinimal/discussions) with us with wireframes or mockups.
 
-## Download
-
-
+<div id="download">
 <a href='https://play.google.com/store/apps/details?id=com.hiruthicShaBuilds.eduserveMinimal&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' width=50%></a>
+</div>
 
 For non-programming iOS users, follow these steps:
 
