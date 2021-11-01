@@ -63,11 +63,8 @@ Distributed under the BSD-3-CLAUSE License. See LICENSE for more information.
 
 [![Paypal][paypal-shield]][paypal-url]
 [![Buy Me a Coffee][buymeacoffee-shield]][buymeacoffee-url]
-<<<<<<< HEAD
-=======
 [![Ko-fi][ko-fi-shield]][ko-fi-url]
 [![Liberapay][liberapay-shield]][liberapay-url]
->>>>>>> 3646d97ef2e2f8bc783bc418d60bd61a3a908eed
 
 [website-url]: https://hiruthicshass.github.io/eduserveMinimal/
 [website-shield]: https://img.shields.io/website?label=GitHub%20Pages&style=for-the-badge&url=https://hiruthicshass.github.io/eduserveMinimal/
