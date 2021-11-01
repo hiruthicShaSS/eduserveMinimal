@@ -24,9 +24,8 @@ Contributions are what make the open source community such an amazing place to b
 
 Anyone with intermediate experience with flutter can contribute to the project without any guidance, but If you need any assistance on how the project is structured please create an [issue](https://github.com/hiruthicShaSS/eduserveMinimal/issues) and I will explain. UI designers are really in need and even if you don't know flutter you are welcome to [discuss](https://github.com/hiruthicShaSS/eduserveMinimal/discussions) with us with wireframes or mockups.
 
-<div id="download">
-
 ## Download
+
 <a href='https://play.google.com/store/apps/details?id=com.hiruthicShaBuilds.eduserveMinimal&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' width=50%></a>
 
 For non-programming iOS users, follow these steps:
@@ -37,40 +36,16 @@ OR
 
 1. Download and install the flutter SDK
 2. Compile it yourself. [_Process_](#compile)
+
 ## Getting started
 
 You can download the latest app from the [releases](https://github.com/hiruthicShaSS/eduserveMinimal/releases) tab.
 
 If you want to build the app for yourself then you will need flutter installed on your device. [Install flutter](https://flutter.dev/docs/get-started/install)
-Once it is installed follow these steps to compile an app from the source,
-
-<div id="compile">
-
-### Clone the repo
-
-   ```bash
-   git clone https://github.com/hiruthic2002/eduserveMinimal.git
-   git checkout mobile_app
-   ```
-   You don't have to check out to the mobile_app branch, the main branch will contain the code for stable version. Although you can always update your [mobile_app](https://github.com/hiruthicShaSS/eduserveMinimal/tree/mobile_app) branch to your local repo for dev versions of the app.
-
-### Build app
-
-   ```bash
-   flutter pub get
-   flutter build apk
-   ```
-
-   - Platform specific:
-
-     ```bash
-     flutter build apk --target-platform "your platform"
-     ```
-
-   - Append '--release' or '--debug' for release app or debug app respectively.
-   - More: [Build Flutter app](https://flutter.dev/docs/deployment/android)
+Once it is installed follow these steps in project [README](https://github.com/hiruthicShaSS/eduserveMinimal#start-building)
 
 ## LICENSE
+
 Distributed under the BSD-3-CLAUSE License. See LICENSE for more information.
 
 ## Screenshots
@@ -85,8 +60,6 @@ Distributed under the BSD-3-CLAUSE License. See LICENSE for more information.
 
 [![Paypal][paypal-shield]][paypal-url]
 [![Buy Me a Coffee][buymeacoffee-shield]][buymeacoffee-url]
-
-
 
 [website-url]: https://hiruthicshass.github.io/eduserveMinimal/
 [website-shield]: https://img.shields.io/website?label=GitHub%20Pages&style=for-the-badge&url=https://hiruthicshass.github.io/eduserveMinimal/
