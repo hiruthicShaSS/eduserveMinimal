@@ -1,4 +1,3 @@
-[![Website][website-shield]][website-url]
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
@@ -6,6 +5,8 @@
 [![MIT License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
 [![Twitter Follow][twitter-shield]][twitter-url]
+
+![Preview](https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/preview.png)
 
 ## Idea
 
@@ -39,10 +40,10 @@ OR
 
 ## Getting started
 
-You can download the latest app from the [releases](https://github.com/hiruthicShaSS/eduserveMinimal/releases) tab.
+You can download the latest app from the [releases](https://github.com/hiruthicShaSS/eduserveMinimal/releases) tab or from the [stores](#download).
 
-If you want to build the app for yourself then you will need flutter installed on your device. [Install flutter](https://flutter.dev/docs/get-started/install)
-Once it is installed follow these steps in project [README](https://github.com/hiruthicShaSS/eduserveMinimal#start-building)
+If you want to build the app for yourself then you will need flutter installed on your device. [Install flutter](https://flutter.dev/docs/get-started/install),
+once it is installed follow these steps in project [README](https://github.com/hiruthicShaSS/eduserveMinimal#start-building)
 
 ## LICENSE
 
@@ -51,15 +52,22 @@ Distributed under the BSD-3-CLAUSE License. See LICENSE for more information.
 ## Screenshots
 
 <div align="center">
-<img src="https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/Screenshot_1632722838.png" width=300>
-<img src="https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/Screenshot_1632722893.png" width=300>
-<img src="https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/Screenshot_1632722863.png" width=600>
+<img src="https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/screenshot1.png" width=200px>
+<img src="https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/screenshot2.png" width=200px>
+<img src="https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/screenshot3.png" width=200px>
+<img src="https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/screenshot4.png" width=200px>
+<img src="https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/screenshot5.png" width=200px>
 </div>
 
 ## Support
 
 [![Paypal][paypal-shield]][paypal-url]
 [![Buy Me a Coffee][buymeacoffee-shield]][buymeacoffee-url]
+<<<<<<< HEAD
+=======
+[![Ko-fi][ko-fi-shield]][ko-fi-url]
+[![Liberapay][liberapay-shield]][liberapay-url]
+>>>>>>> 3646d97ef2e2f8bc783bc418d60bd61a3a908eed
 
 [website-url]: https://hiruthicshass.github.io/eduserveMinimal/
 [website-shield]: https://img.shields.io/website?label=GitHub%20Pages&style=for-the-badge&url=https://hiruthicshass.github.io/eduserveMinimal/
@@ -82,4 +90,8 @@ Distributed under the BSD-3-CLAUSE License. See LICENSE for more information.
 [paypal-url]: https://paypal.me/hiruthic?locale.x=en_GB
 [buymeacoffee-shield]: https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black
 [buymeacoffee-url]: https://www.buymeacoffee.com/hiruthicSha
+[ko-fi-shield]: https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white
+[ko-fi-url]: https://ko-fi.com/hiruthicsha
+[liberapay-shield]: https://img.shields.io/badge/Liberapay-F6C915?style=for-the-badge&logo=liberapay&logoColor=black
+[liberapay-url]: https://liberapay.com/hiruthicSha/
 [visitor-shield]: https://estruyf-github.azurewebsites.net/api/VisitorHit?user=hiruthicShaSS&repo=eduserveMinimal&countColorcountColor&countColor=%237B1E7A
