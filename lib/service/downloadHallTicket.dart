@@ -8,7 +8,8 @@ import 'package:eduserveMinimal/global/gloabls.dart';
 import 'package:eduserveMinimal/service/login.dart';
 import 'package:eduserveMinimal/service/scrap.dart';
 
-Future<List?> downloadHallTicket({String? term, bool download = false}) async {
+Future<List?> downloadHallTicket(
+    {String? term, bool download = false, int retry = 0}) async {
   final String hallticketURL = "/Student/CBCS/HallTicketDownload.aspx";
   Map<String, String> headers = httpHeaders;
   Map formData = httpFormData;
@@ -85,9 +86,11 @@ Future<List?> downloadHallTicket({String? term, bool download = false}) async {
     List endFlag = eligibility.map((e) => e.length > 80 ? e : null).toList();
     endFlag.removeWhere((element) => element == null);
     if (endFlag.length == 0) {
-      Fluttertoast.showToast(msg: "Someting went wrong please restart the app");
+      Fluttertoast.showToast(
+          msg: "Something went wrong please restart the app");
       login();
-      return downloadHallTicket(term: term);
+      if (retry == 2) return [];
+      return downloadHallTicket(term: term, retry: retry + 1);
     }
     int end = eligibility.indexOf(endFlag.first);
 
