@@ -26,6 +26,7 @@ Future<Map?> getTimetable({bool force = false}) async {
 
   var soup = Beautifulsoup(res.body);
   final inputs = soup.find_all("input").map((e) => e.attributes).toList();
+
   final academicTerms =
       soup.find_all("option").map((e) => e.text.trim()).toSet().toList();
   int maxAcademicTerm = academicTerms.length -
@@ -46,12 +47,21 @@ Future<Map?> getTimetable({bool force = false}) async {
       headers: headers, body: formData);
   soup = Beautifulsoup(res.body);
   List classes = soup.find_all("td").map((e) => e.text).toList();
+
+  if (res.body.indexOf(
+          "You have pending dues so you cannot view timetable. Please pay your dues.") !=
+      -1)
+    return {
+      "__error__":
+          "You have pending dues so you cannot view timetable. Please pay your dues."
+    };
   if (classes.contains("No records to display.") || classes.length == 0)
-    return {};
+    return {"__error__": "No records to display."};
 
   List days = ["MON", "TUE", "WED", "THU", "FRI"];
   List tempList = [];
   Map data = new Map();
+
   days.forEach((day) {
     int dayIndex = classes.indexOf(day);
     tempList = classes.sublist(dayIndex + 1, dayIndex + 12);

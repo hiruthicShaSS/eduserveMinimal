@@ -103,16 +103,20 @@ class _HallTicketViewState extends State<HallTicketView> {
                 for (int i = 0; i < data[0].length; i += 2) {
                   mainData.add(data[0][i] + " " + data[0][i + 1]);
                 }
-                mainDataWidget = Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: List.generate(
-                      mainData.length,
-                      (index) => Text(mainData[index],
-                          style: TextStyle(fontSize: 17))),
-                );
+                mainDataWidget = data.contains("No records to display.")
+                    ? Container()
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: List.generate(
+                            mainData.length,
+                            (index) => Text(mainData[index],
+                                style: TextStyle(fontSize: 17))),
+                      );
 
                 setState(() {
-                  table = buildTable(data);
+                  table = data.contains("No records to display.")
+                      ? Text("No records to display.")
+                      : buildTable(data);
                   dataLoaded = true;
                 });
               },
@@ -134,7 +138,7 @@ class _HallTicketViewState extends State<HallTicketView> {
       // "Eligibile",
     ];
 
-    List subjectData = data[1];
+    List subjectData = data.contains("No records to display.") ? [] : data[1];
 
     return Container(
       margin: EdgeInsets.only(top: 2, left: 5, right: 5),

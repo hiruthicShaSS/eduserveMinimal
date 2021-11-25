@@ -17,10 +17,10 @@ class TimeTable extends StatelessWidget {
           if (snapshot.hasData) {
             days = snapshot.data!.keys.toList();
 
-            if (days.isEmpty)
+            if (days.contains("__error__"))
               return Center(
                 child: Container(
-                  child: Text("No records to display."),
+                  child: Text(snapshot.data!["__error__"].toString()),
                 ),
               );
 

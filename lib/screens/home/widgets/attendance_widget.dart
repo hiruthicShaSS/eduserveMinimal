@@ -88,7 +88,7 @@ class AttendanceContainer extends StatelessWidget {
                       Spacer(),
                       AutoSizeText(
                         data[0].toString(),
-                        minFontSize: 30,
+                        minFontSize: data[1] == "Out-of-rolls" ? 20 : 30,
                         maxFontSize: 40,
                       ),
                     ],
@@ -98,7 +98,7 @@ class AttendanceContainer extends StatelessWidget {
                     MaterialPageRoute(builder: (_) => AttendenceSummary())),
               ),
               Visibility(
-                visible: double.parse(data[0].split("%")[0]) < 85,
+                visible: (double.tryParse(data[0].split("%")[0]) ?? 0) < 85,
                 child: Padding(
                   padding: const EdgeInsets.all(10),
                   child: Icon(Icons.warning_amber_outlined, color: Colors.red),
@@ -130,14 +130,14 @@ class AttendanceContainer extends StatelessWidget {
                     Spacer(),
                     AutoSizeText(
                       data[1].toString(),
-                      minFontSize: 30,
+                      minFontSize: data[1] == "Out-of-rolls" ? 20 : 30,
                       maxFontSize: 40,
                     ),
                   ],
                 ),
               ),
               Visibility(
-                visible: double.parse(data[1].split("%")[0]) < 85,
+                visible: (double.tryParse(data[1].split("%")[0]) ?? 0) < 85,
                 child: Padding(
                   padding: const EdgeInsets.all(10),
                   child: Icon(Icons.warning_amber_outlined, color: Colors.red),

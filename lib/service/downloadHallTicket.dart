@@ -79,6 +79,11 @@ Future<List?> downloadHallTicket(
         headers: headers,
         body: formData);
 
+    if (res.body.indexOf("No records to display.") != -1) {
+      Scraper.cache["hallticket"] = ["No records to display."];
+      return null;
+    }
+
     Beautifulsoup hallticketSoup = Beautifulsoup(res.body);
     List eligibility =
         hallticketSoup.find_all("td").map((e) => e.text.trim()).toList();

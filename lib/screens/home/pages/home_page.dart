@@ -144,11 +144,14 @@ class HomePage extends StatelessWidget {
     Map dataCache = await fetchAllData();
 
     bool feesDue = (double.tryParse(dataCache["fees"]["dues"].first) ?? 0) > 0;
-    bool hallTicketUnEligile =
-        dataCache["hallticket"].first.where((e) => e == "Eligible").length < 3;
+    bool hallTicketUnEligile = dataCache["hallticket"]
+            .contains("No records to display.")
+        ? false
+        : dataCache["hallticket"].first.where((e) => e == "Eligible").length <
+            3;
 
-    print(feesDue);
-    print(hallTicketUnEligile);
+    print("Fees due: $feesDue");
+    print("Uneligible for exam: $hallTicketUnEligile");
 
     if (feesDue || hallTicketUnEligile) {
       ScaffoldMessenger.of(context).showMaterialBanner(MaterialBanner(
