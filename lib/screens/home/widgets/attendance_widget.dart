@@ -35,14 +35,10 @@ class AttendanceContainer extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: ThemeProvider.currentThemeData!.primaryColor.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(20),
+        // borderRadius: BorderRadius.circular(20),
       ),
       child: Column(
         children: [
-          Text(
-            "Attendance",
-            style: TextStyle(fontSize: 30),
-          ),
           isLoading
               ? Shimmer(
                   gradient: LinearGradient(colors: [
@@ -73,7 +69,7 @@ class AttendanceContainer extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.all(20),
                   height: _height * 0.15,
-                  width: _width * 0.45,
+                  width: _width * 0.47,
                   decoration: BoxDecoration(
                     color: ThemeProvider.currentThemeData!.primaryColor,
                     borderRadius: BorderRadius.circular(10),

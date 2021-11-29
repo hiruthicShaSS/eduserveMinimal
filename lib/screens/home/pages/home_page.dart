@@ -32,7 +32,78 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var drawer = [
+    return Scaffold(
+      // appBar: AppBar(
+      //   title: Text("eduserveMinimal"),
+      //   centerTitle: true,
+      // ),
+      drawer: Drawer(
+        child: Column(
+          children: buildDrawer(context),
+        ),
+      ),
+      body: FutureBuilder(
+          future: SharedPreferences.getInstance(),
+          builder: (BuildContext context,
+              AsyncSnapshot<SharedPreferences> snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return (snapshot.data!.containsKey("username"))
+                  ? FutureBuilder(
+                      future: login(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          if (snapshot.data == "feedback form found")
+                            return FeedbackForm();
+                          if (snapshot.data == "Login error")
+                            return Creds(pushHomePage: true);
+
+                          processExcessInfo(context);
+
+                          return CustomScrollView(
+                            slivers: [
+                              SliverAppBar(
+                                expandedHeight: 200,
+                                title: Text("eduserveMinimal"),
+                                pinned: true,
+                                flexibleSpace: FlexibleSpaceBar(
+                                  background: Padding(
+                                    padding: const EdgeInsets.only(top: 100),
+                                    child: AttendanceContainer(),
+                                  ),
+                                ),
+                              ),
+                              SliverList(
+                                delegate: SliverChildListDelegate([
+                                  LeaveInformation(),
+                                ]),
+                              ),
+                            ],
+                          );
+                        }
+                        return Center(
+                            child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Lottie.asset("assets/lottie/log_in.json"),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                "Logging In...",
+                                style: TextStyle(fontSize: 25),
+                              ),
+                            ),
+                          ],
+                        ));
+                      })
+                  : Creds(pushHomePage: true);
+            }
+            return CircularProgressIndicator();
+          }),
+    );
+  }
+
+  List<StatelessWidget> buildDrawer(BuildContext context) {
+    return [
       DrawerHeader(
         child: Container(
           child: Row(
@@ -83,60 +154,6 @@ class HomePage extends StatelessWidget {
             .push(MaterialPageRoute(builder: (context) => Settings())),
       ),
     ];
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("eduserveMinimal"),
-        centerTitle: true,
-      ),
-      drawer: Drawer(
-        child: Column(
-          children: drawer,
-        ),
-      ),
-      body: FutureBuilder(
-          future: SharedPreferences.getInstance(),
-          builder: (BuildContext context,
-              AsyncSnapshot<SharedPreferences> snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              return (snapshot.data!.containsKey("username"))
-                  ? FutureBuilder(
-                      future: login(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          if (snapshot.data == "feedback form found")
-                            return FeedbackForm();
-                          if (snapshot.data == "Login error")
-                            return Creds(pushHomePage: true);
-
-                          processExcessInfo(context);
-
-                          return Column(
-                            children: [
-                              AttendanceContainer(),
-                              LeaveInformation(),
-                            ],
-                          );
-                        }
-                        return Center(
-                            child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Lottie.asset("assets/lottie/log_in.json"),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                "Logging In...",
-                                style: TextStyle(fontSize: 25),
-                              ),
-                            ),
-                          ],
-                        ));
-                      })
-                  : Creds(pushHomePage: true);
-            }
-            return CircularProgressIndicator();
-          }),
-    );
   }
 
   Future<void> processExcessInfo(BuildContext context) async {

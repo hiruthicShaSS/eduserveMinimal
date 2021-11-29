@@ -29,7 +29,7 @@ class ThemeProvider extends ChangeNotifier {
   static ThemeData light = ThemeData(
     brightness: Brightness.light,
     cardColor: Colors.transparent.withOpacity(0.2),
-    primaryColor: Colors.blue,
+    primaryColor: Colors.lightBlueAccent,
     colorScheme: ColorScheme.light(secondary: Colors.blueAccent),
     textTheme: TextTheme(
       bodyText1: TextStyle(
