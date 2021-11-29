@@ -27,3 +27,5 @@ Map httpFormData = {
   "ctl00\$mainContent\$DDLACADEMICTERM": "",
   "ctl00_mainContent_grdData_ClientState": "",
 };
+
+List academicTerms = [];

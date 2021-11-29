@@ -9,7 +9,6 @@ import 'package:shimmer/shimmer.dart';
 // Project imports:
 import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:eduserveMinimal/providers/theme.dart';
-import 'package:eduserveMinimal/screens/home/pages/attendence_summary.dart';
 import 'package:eduserveMinimal/service/attendence.dart';
 
 class AttendanceContainer extends StatelessWidget {
@@ -65,33 +64,29 @@ class AttendanceContainer extends StatelessWidget {
           child: Stack(
             alignment: Alignment.topRight,
             children: [
-              InkWell(
-                child: Container(
-                  padding: EdgeInsets.all(20),
-                  height: _height * 0.15,
-                  width: _width * 0.47,
-                  decoration: BoxDecoration(
-                    color: ThemeProvider.currentThemeData!.primaryColor,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Column(
-                    children: [
-                      AutoSizeText(
-                        "Class",
-                        minFontSize: 20,
-                        maxFontSize: 50,
-                      ),
-                      Spacer(),
-                      AutoSizeText(
-                        data[0].toString(),
-                        minFontSize: data[1] == "Out-of-rolls" ? 20 : 30,
-                        maxFontSize: 40,
-                      ),
-                    ],
-                  ),
+              Container(
+                padding: EdgeInsets.all(20),
+                height: _height * 0.15,
+                width: _width * 0.47,
+                decoration: BoxDecoration(
+                  color: ThemeProvider.currentThemeData!.primaryColor,
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => AttendenceSummary())),
+                child: Column(
+                  children: [
+                    AutoSizeText(
+                      "Class",
+                      minFontSize: 20,
+                      maxFontSize: 50,
+                    ),
+                    Spacer(),
+                    AutoSizeText(
+                      data[0].toString(),
+                      minFontSize: data[1] == "Out-of-rolls" ? 20 : 30,
+                      maxFontSize: 40,
+                    ),
+                  ],
+                ),
               ),
               Visibility(
                 visible: (double.tryParse(data[0].split("%")[0]) ?? 0) < 85,

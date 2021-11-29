@@ -71,7 +71,7 @@ class _LeaveInformationState extends State<LeaveInformation>
       ]
     ];
     return Container(
-      height: MediaQuery.of(context).size.height * 0.6,
+      height: MediaQuery.of(context).size.height * 0.60,
       child: Column(
         children: [
           TabBar(
