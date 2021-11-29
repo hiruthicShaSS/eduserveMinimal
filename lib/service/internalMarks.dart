@@ -42,6 +42,7 @@ Future getInternalMarks({String? academicTerm = null}) async {
   } else {
     Map formdata = formData;
     formdata["ctl00\$mainContent\$DDLACADEMICTERM"] = academicTerm.toString();
+    formdata.remove("ctl00\$mainContent\$DDLEXAM");
     Response res = await post(
         Uri.parse("https://eduserve.karunya.edu$internalsURL"),
         headers: headers,

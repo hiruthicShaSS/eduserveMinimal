@@ -119,6 +119,7 @@ Future<List?> downloadHallTicket(
       }
     }
 
+    formData.remove("ctl00\$mainContent\$DDLEXAM");
     Scraper.cache["hallticket"] = [mainEligibility, allEligibility];
     return [mainEligibility, allEligibility];
   }
