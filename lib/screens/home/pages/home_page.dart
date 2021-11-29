@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:eduserveMinimal/screens/home/widgets/attendance_summary_basic.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -33,10 +34,6 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text("eduserveMinimal"),
-      //   centerTitle: true,
-      // ),
       drawer: Drawer(
         child: Column(
           children: buildDrawer(context),
@@ -62,7 +59,8 @@ class HomePage extends StatelessWidget {
                           return CustomScrollView(
                             slivers: [
                               SliverAppBar(
-                                expandedHeight: 200,
+                                expandedHeight:
+                                    MediaQuery.of(context).size.height * 0.25,
                                 title: Text("eduserveMinimal"),
                                 pinned: true,
                                 flexibleSpace: FlexibleSpaceBar(
@@ -75,6 +73,7 @@ class HomePage extends StatelessWidget {
                               SliverList(
                                 delegate: SliverChildListDelegate([
                                   LeaveInformation(),
+                                  AttendanceSummary(),
                                 ]),
                               ),
                             ],
