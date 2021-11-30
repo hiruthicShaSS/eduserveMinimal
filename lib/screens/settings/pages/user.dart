@@ -16,7 +16,6 @@ class User extends StatelessWidget {
         builder: (context, AsyncSnapshot<Map> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             Map data = snapshot.data!;
-            
 
             return Scaffold(
               body: SafeArea(
@@ -25,17 +24,44 @@ class User extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(height: 10.0),
-                      Center(
-                        child: Hero(
-                          tag: "hero-userImage",
-                          child: CircleAvatar(
-                            radius: 80,
-                            backgroundImage: MemoryImage(snapshot.data!["studentIMG"]),
-                            backgroundColor: Colors.transparent,
-                            onBackgroundImageError: (_, __) =>
-                                Image.asset("assets/placeholder_profile.png"),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Hero(
+                            tag: "hero-userImage",
+                            child: CircleAvatar(
+                              radius: 80,
+                              backgroundImage:
+                                  MemoryImage(snapshot.data!["studentIMG"]),
+                              backgroundColor: Colors.transparent,
+                              onBackgroundImageError: (_, __) =>
+                                  Image.asset("assets/placeholder_profile.png"),
+                            ),
                           ),
-                        ),
+                          InkWell(
+                            child: Image.memory(snapshot.data!["qrImage"]),
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => Scaffold(
+                                    body: Center(
+                                      child: InteractiveViewer(
+                                        clipBehavior: Clip.none,
+                                        minScale: 1,
+                                        maxScale: 4,
+                                        child: AspectRatio(
+                                          aspectRatio: 1,
+                                          child: Image.memory(
+                                              snapshot.data!["qrImage"]),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
                       ),
                       Padding(
                         padding: const EdgeInsets.all(20),

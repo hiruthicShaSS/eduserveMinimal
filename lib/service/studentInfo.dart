@@ -17,6 +17,8 @@ Future<Map> parse() async {
       soup.find_all("span").map((e) => (e.innerHtml)).toList().sublist(54);
   String? studentImage =
       soup.find_all("img").map((e) => (e.attributes["src"])).toList()[2];
+  String? qrImage =
+      soup.find_all("img").map((e) => (e.attributes["src"])).toList()[3];
   List td = soup.find_all("td").map((e) => (e.text)).toList();
 
   bool flagReached = false;
@@ -67,6 +69,7 @@ Future<Map> parse() async {
   });
 
   basicInfo.add(studentImage);
+  basicInfo.add(qrImage);
   basicInfo.removeWhere(
       (element) => element.toString() == ""); // Remove empty elements
   basicInfo.remove("Academic Performance Summary");
@@ -88,7 +91,8 @@ Future<Map> parse() async {
     "cgpa",
     "sgpa",
     "nonAcademicCredits",
-    "studentIMG"
+    "studentIMG",
+    "qrImage"
   ];
 
   // generate Map of infromation
@@ -99,11 +103,16 @@ Future<Map> parse() async {
 
   data["leaveApplications"] = leaveApplication;
 
-  Response image = await get(
+  Response imageResponse = await get(
       Uri.parse(
           "https://eduserve.karunya.edu/${data["studentIMG"].replaceAll("../", "")}"),
       headers: httpHeaders);
-  data["studentIMG"] = image.bodyBytes;
+  data["studentIMG"] = imageResponse.bodyBytes;
+  Response qrCodeResponse = await get(
+      Uri.parse(
+          "https://eduserve.karunya.edu/${data["qrImage"].replaceAll("../", "")}"),
+      headers: httpHeaders);
+  data["qrImage"] = qrCodeResponse.bodyBytes;
 
   return data;
 }
