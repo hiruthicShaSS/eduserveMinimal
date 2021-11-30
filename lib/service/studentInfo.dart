@@ -1,9 +1,11 @@
 // Package imports:
 import 'package:beautifulsoup/beautifulsoup.dart';
+import 'package:eduserveMinimal/global/gloabls.dart';
 
 // Project imports:
 import 'package:eduserveMinimal/service/login.dart';
 import 'package:eduserveMinimal/service/scrap.dart';
+import 'package:http/http.dart';
 
 Future<Map> parse() async {
   // Parse basic info
@@ -96,6 +98,12 @@ Future<Map> parse() async {
   });
 
   data["leaveApplications"] = leaveApplication;
+
+  Response image = await get(
+      Uri.parse(
+          "https://eduserve.karunya.edu/${data["studentIMG"].replaceAll("../", "")}"),
+      headers: httpHeaders);
+  data["studentIMG"] = image.bodyBytes;
 
   return data;
 }

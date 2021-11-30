@@ -15,8 +15,8 @@ class User extends StatelessWidget {
         future: getInfo(),
         builder: (context, AsyncSnapshot<Map> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            print(snapshot.data);
             Map data = snapshot.data!;
+            
 
             return Scaffold(
               body: SafeArea(
@@ -30,7 +30,7 @@ class User extends StatelessWidget {
                           tag: "hero-userImage",
                           child: CircleAvatar(
                             radius: 80,
-                            backgroundImage: AssetImage("assets/appIcon.png"),
+                            backgroundImage: MemoryImage(snapshot.data!["studentIMG"]),
                             backgroundColor: Colors.transparent,
                             onBackgroundImageError: (_, __) =>
                                 Image.asset("assets/placeholder_profile.png"),
@@ -43,6 +43,12 @@ class User extends StatelessWidget {
                           scrollDirection: Axis.horizontal,
                           child: Row(
                             children: [
+                              MainContainer(
+                                  title: "Arrears",
+                                  data: data["arrears"],
+                                  color: int.parse(data["arrears"]) > 0
+                                      ? Colors.red
+                                      : null),
                               MainContainer(title: "CGPA", data: data["cgpa"]),
                               MainContainer(title: "SGPA", data: data["sgpa"]),
                               MainContainer(
@@ -114,10 +120,6 @@ class User extends StatelessWidget {
                                   style: TextStyle(fontSize: 17),
                                 ),
                                 Text(
-                                  "Arrears : ${data['arrears']}",
-                                  style: TextStyle(fontSize: 17),
-                                ),
-                                Text(
                                   "Semester : ${data['semester']}",
                                   style: TextStyle(fontSize: 17),
                                 ),
@@ -170,10 +172,12 @@ class MainContainer extends StatelessWidget {
     Key? key,
     required this.title,
     required this.data,
+    this.color,
   }) : super(key: key);
 
   final String title;
   final String? data;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -183,7 +187,7 @@ class MainContainer extends StatelessWidget {
         padding: EdgeInsets.all(20),
         width: 120,
         decoration: BoxDecoration(
-          color: Colors.transparent.withOpacity(0.3),
+          color: (color ?? Colors.transparent).withOpacity(0.3),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Column(

@@ -112,11 +112,24 @@ class HomePage extends StatelessWidget {
               GestureDetector(
                 child: Hero(
                   tag: "hero-userImage",
-                  child: CircleAvatar(
-                    maxRadius: 50,
-                    backgroundImage: AssetImage("assets/appIcon.png"),
-                    backgroundColor: Colors.transparent,
-                  ),
+                  child: FutureBuilder(
+                      future: getInfo(),
+                      builder: (context, AsyncSnapshot snapshot) {
+                        return snapshot.hasData
+                            ? CircleAvatar(
+                                maxRadius: 50,
+                                backgroundImage:
+                                    MemoryImage(snapshot.data!["studentIMG"]),
+                                backgroundColor: Colors.transparent,
+                              )
+                            : Container(
+                                height: 50,
+                                width: 50,
+                                decoration:
+                                    BoxDecoration(shape: BoxShape.circle),
+                                child: CircularProgressIndicator(),
+                              );
+                      }),
                 ),
                 onTap: () {
                   Navigator.of(context)

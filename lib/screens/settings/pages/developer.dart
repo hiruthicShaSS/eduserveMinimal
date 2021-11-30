@@ -113,7 +113,7 @@ Row buildSocialIcons() {
         icon: FaIcon(
           FontAwesomeIcons.github,
           size: 40,
-          color: Colors.white38,
+          color: Colors.black,
         ),
         onPressed: () => launch("https://github.com/hiruthicShaSS"),
         tooltip: "GitHub",
@@ -123,9 +123,9 @@ Row buildSocialIcons() {
         icon: FaIcon(
           FontAwesomeIcons.globe,
           size: 40,
-          color: Colors.white38,
+          color: Colors.blueAccent,
         ),
-        onPressed: () => launch("http://sha-resume.herokuapp.com/"),
+        onPressed: () => launch("http://hiruthicsha.com"),
         tooltip: "GitHub",
       ),
     ],
