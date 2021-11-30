@@ -1,5 +1,5 @@
 export 'apply_leave.dart';
-export 'creds.dart';
+export 'credentials.dart';
 export 'feedback_form.dart';
 export 'fees.dart';
 export 'hallticket.dart';

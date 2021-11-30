@@ -12,9 +12,9 @@ import 'package:eduserveMinimal/edu_serve.dart';
 import 'package:eduserveMinimal/screens/home/pages/feedback_form.dart';
 import 'package:eduserveMinimal/service/login.dart';
 
-class Creds extends StatelessWidget {
+class Credentials extends StatelessWidget {
   bool? pushHomePage = false;
-  Creds({this.pushHomePage});
+  Credentials({this.pushHomePage});
 
   @override
   Widget build(BuildContext context) {
@@ -86,12 +86,15 @@ class Creds extends StatelessWidget {
                         msg: "Credentials updated successfully");
 
                     if (loginStatus == "feedback form found") {
-                      Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (_) => FeedbackForm()));
+                      Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(builder: (_) => FeedbackForm()),
+                          (route) => route.isFirst);
                     }
                     if (pushHomePage ?? false) {
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => EduServeMinimal()));
+                      Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                              builder: (context) => EduServeMinimal()),
+                          (route) => route.isFirst);
                     } else {
                       Navigator.pop(context);
                     }
@@ -135,7 +138,29 @@ class Creds extends StatelessWidget {
                       ),
                     ])
                   ],
-                )
+                ),
+                SizedBox(height: 50),
+                FutureBuilder(
+                    future: SharedPreferences.getInstance(),
+                    builder:
+                        (context, AsyncSnapshot<SharedPreferences> snapshot) {
+                      return snapshot.hasData
+                          ? Visibility(
+                              visible: snapshot.data!.containsKey("username"),
+                              child: ElevatedButton(
+                                onPressed: () => Fluttertoast.showToast(
+                                    msg: "Press and hold for action"),
+                                onLongPress: () => logout(context),
+                                child: Text("Logout"),
+                                style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.resolveWith<Color>(
+                                          (states) => Colors.red),
+                                ),
+                              ),
+                            )
+                          : Container();
+                    })
               ],
             ),
           ),
@@ -165,5 +190,47 @@ class Creds extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void logout(BuildContext context) {
+    bool isLogOutClicked = false;
+
+    showDialog(
+        context: context,
+        builder: (_) => StatefulBuilder(builder: (context, setState) {
+              return AlertDialog(
+                title: Text("Logout"),
+                content: Text("Are you sure you want to logout?"),
+                actions: [
+                  TextButton(
+                    onPressed: () async {
+                      setState(() => isLogOutClicked = true);
+                      SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+                      await prefs.remove("username");
+                      await prefs.remove("password");
+
+                      Fluttertoast.showToast(msg: "Logout completed");
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                          "/credentials", (route) => false);
+                    },
+                    child: isLogOutClicked
+                        ? SizedBox(width: 80, child: LinearProgressIndicator())
+                        : Text(
+                            "Logout",
+                            style: TextStyle(color: Colors.red),
+                          ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text("Cancel"),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateColor.resolveWith(
+                          (states) => Colors.green),
+                    ),
+                  ),
+                ],
+              );
+            }));
   }
 }

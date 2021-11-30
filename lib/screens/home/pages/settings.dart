@@ -8,7 +8,7 @@ import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // Project imports:
-import 'package:eduserveMinimal/screens/home/pages/creds.dart';
+import 'package:eduserveMinimal/screens/home/pages/credentials.dart';
 import 'package:eduserveMinimal/screens/settings/pages/attribution.dart';
 import 'package:eduserveMinimal/screens/settings/pages/developer.dart';
 import 'package:eduserveMinimal/screens/settings/pages/themes.dart';
@@ -51,7 +51,7 @@ class Settings extends StatelessWidget {
                 child: Text("Update credentials"),
                 onPressed: () {
                   Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (_) => Creds()));
+                      .push(MaterialPageRoute(builder: (_) => Credentials()));
                 },
               ),
             ),
@@ -114,15 +114,19 @@ class Settings extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 5),
+                  child: Text("♥️"),
+                ),
                 GestureDetector(
-                  child: Text("Contribute ",
+                  child: Text("Contribute",
                       style: TextStyle(
                           decoration: TextDecoration.underline,
                           color: Colors.blue)),
                   onTap: () =>
                       launch("https://github.com/hiruthic2002/eduserveMinimal"),
                 ),
-                Text("to this project"),
+                Text(" to this project"),
               ],
             ),
           ],

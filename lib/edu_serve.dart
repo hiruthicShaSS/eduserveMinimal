@@ -25,6 +25,7 @@ class EduServeMinimal extends StatelessWidget {
         "/feedbackForm": (BuildContext context) => FeedbackForm(),
         "/timetable": (BuildContext context) => TimeTable(),
         "/home": (BuildContext context) => HomePage(),
+        "/credentials": (BuildContext context) => Credentials(),
       },
       darkTheme: ThemeProvider.dark,
       title: "eduserveMinimal",

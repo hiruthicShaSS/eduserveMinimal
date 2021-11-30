@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:beautifulsoup/beautifulsoup.dart';
 import 'package:eduserveMinimal/global/gloabls.dart';
 import 'package:http/http.dart';

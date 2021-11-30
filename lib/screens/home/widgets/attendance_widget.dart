@@ -45,29 +45,30 @@ class AttendanceContainer extends StatelessWidget {
                     ThemeProvider.currentThemeData!.primaryColor
                         .withOpacity(0.1),
                   ]),
-                  child: attendenceContainer(data, context),
+                  child: buildAttendenceContainer(data, context),
                 )
-              : attendenceContainer(data, context),
+              : buildAttendenceContainer(data, context),
         ],
       ),
     );
   }
 
-  Row attendenceContainer(List<dynamic> data, BuildContext context) {
+  Widget buildAttendenceContainer(List<dynamic> data, BuildContext context) {
     final double _height = MediaQuery.of(context).size.height;
     final double _width = MediaQuery.of(context).size.width;
 
-    return Row(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Stack(
+    return Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Stack(
             alignment: Alignment.topRight,
             children: [
               Container(
                 padding: EdgeInsets.all(20),
                 height: _height * 0.15,
-                width: _width * 0.47,
+                width: _width * 0.45,
                 decoration: BoxDecoration(
                   color: ThemeProvider.currentThemeData!.primaryColor,
                   borderRadius: BorderRadius.circular(10),
@@ -97,10 +98,7 @@ class AttendanceContainer extends StatelessWidget {
               ),
             ],
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Stack(
+          Stack(
             alignment: Alignment.topRight,
             children: [
               Container(
@@ -136,8 +134,8 @@ class AttendanceContainer extends StatelessWidget {
               ),
             ],
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

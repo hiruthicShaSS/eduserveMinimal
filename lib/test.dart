@@ -11,6 +11,8 @@ class TestPage extends StatefulWidget {
 class _TestPageState extends State<TestPage> {
   @override
   Widget build(BuildContext context) {
-    return Center(child: ElevatedButton(onPressed: () => getAttendanceSummary(), child: Text("Fuck")));
+    return Center(
+        child: ElevatedButton(
+            onPressed: () => getAttendanceSummary(), child: Text("Fuck")));
   }
 }

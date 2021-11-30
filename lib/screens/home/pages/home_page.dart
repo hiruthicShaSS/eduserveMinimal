@@ -11,7 +11,7 @@ import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
-import 'package:eduserveMinimal/screens/home/pages/creds.dart';
+import 'package:eduserveMinimal/screens/home/pages/credentials.dart';
 import 'package:eduserveMinimal/screens/home/pages/feedback_form.dart';
 import 'package:eduserveMinimal/screens/home/pages/fees.dart';
 import 'package:eduserveMinimal/screens/home/pages/hallticket.dart';
@@ -52,7 +52,7 @@ class HomePage extends StatelessWidget {
                           if (snapshot.data == "feedback form found")
                             return FeedbackForm();
                           if (snapshot.data == "Login error")
-                            return Creds(pushHomePage: true);
+                            return Credentials(pushHomePage: true);
 
                           processExcessInfo(context);
 
@@ -94,7 +94,7 @@ class HomePage extends StatelessWidget {
                           ],
                         ));
                       })
-                  : Creds(pushHomePage: true);
+                  : Credentials(pushHomePage: true);
             }
             return CircularProgressIndicator();
           }),
