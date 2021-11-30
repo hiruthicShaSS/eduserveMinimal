@@ -1,5 +1,6 @@
 // Flutter imports:
 import 'package:eduserveMinimal/screens/home/widgets/attendance_summary_basic.dart';
+import 'package:eduserveMinimal/screens/home/widgets/birthday.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -115,49 +116,8 @@ class HomePage extends StatelessWidget {
         DateTime today = DateTime.now();
 
         if (birthDay.month == today.month && birthDay.day == today.day) {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (_) => Scaffold(
-                    body: SafeArea(
-                      child: Container(
-                        child: Stack(
-                          alignment: Alignment.topRight,
-                          children: [
-                            Lottie.asset("assets/lottie/confetti.json",
-                                repeat: false),
-                            Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                    child: Lottie.asset(
-                                        "assets/lottie/happy_birthday.json",
-                                        repeat: false),
-                                  ),
-                                  Expanded(
-                                    child: Lottie.asset(
-                                        "assets/lottie/gifts.json",
-                                        fit: BoxFit.fill),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(30),
-                                    child: Text(
-                                      "Hope you get more gifts and party all day!!! 😊",
-                                      style: TextStyle(
-                                          fontSize: 25,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            IconButton(
-                                onPressed: () => Navigator.of(context).pop(),
-                                icon: Icon(Icons.close)),
-                          ],
-                        ),
-                      ),
-                    ),
-                  )));
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (_) => BirthDayWidget()));
         }
       }
     }
