@@ -61,9 +61,10 @@ git clone --recurse-submodules https://github.com/hiruthicShaSS/eduserveMinimal.
 
 - #### VS Code
 
-  1. Open Run and Debug Code tab `Cmd / Ctrl + Shift + D`
-  2. Click the dropdown and select the build type.
-  3. Start Debugging `F5`
+  1. Download this [file](https://gist.github.com/hiruthicShaSS/b8398a7ebb6ead5e1b7b3a357cdafa95) and place this under .vscode/ inside your project 
+  3. Open Run and Debug Code tab `Cmd / Ctrl + Shift + D`
+  4. Click the dropdown and select the build type.
+  5. Start Debugging `F5`
 
   ![Watch this example](screenshots/vs-code-example.gif)
 
