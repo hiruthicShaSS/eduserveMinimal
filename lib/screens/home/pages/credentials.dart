@@ -1,14 +1,17 @@
 // Flutter imports:
+import 'package:beautifulsoup/beautifulsoup.dart';
+import 'package:eduserveMinimal/global/gloabls.dart';
+import 'package:eduserveMinimal/screens/home/pages/home_page.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
-import 'package:eduserveMinimal/edu_serve.dart';
 import 'package:eduserveMinimal/screens/home/pages/feedback_form.dart';
 import 'package:eduserveMinimal/service/login.dart';
 
@@ -85,6 +88,8 @@ class Credentials extends StatelessWidget {
                     Fluttertoast.showToast(
                         msg: "Credentials updated successfully");
 
+                    cacheBirthDate();
+
                     if (loginStatus == "feedback form found") {
                       Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(builder: (_) => FeedbackForm()),
@@ -92,8 +97,7 @@ class Credentials extends StatelessWidget {
                     }
                     if (pushHomePage ?? false) {
                       Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(
-                              builder: (context) => EduServeMinimal()),
+                          MaterialPageRoute(builder: (context) => HomePage()),
                           (route) => route.isFirst);
                     } else {
                       Navigator.pop(context);
@@ -232,5 +236,23 @@ class Credentials extends StatelessWidget {
                 ],
               );
             }));
+  }
+
+  Future<void> cacheBirthDate() async {
+    Response res = await get(
+        Uri.parse("https://eduserve.karunya.edu/Student/PersonalInfo.aspx"),
+        headers: httpHeaders);
+    Beautifulsoup soup = Beautifulsoup(res.body);
+
+    String? dateString = soup
+        .find_all("input")
+        .where((element) => element.id == "ctl00_mainContent_TXTDOB_dateInput")
+        .first
+        .attributes["value"];
+
+    if (dateString != null) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString("birthDay", dateString);
+    }
   }
 }

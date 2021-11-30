@@ -82,7 +82,7 @@ class Settings extends StatelessWidget {
               child: ElevatedButton(
                   child: Text("Attributions"),
                   onPressed: () => Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (_) => Attribution()))),
+                      .push(MaterialPageRoute(builder: (_) => AttributionScreen()))),
             ),
             Row(
               children: [

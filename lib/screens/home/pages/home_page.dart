@@ -3,6 +3,7 @@ import 'package:eduserveMinimal/screens/home/widgets/attendance_summary_basic.da
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 
 // Package imports:
 import 'package:lottie/lottie.dart';
@@ -44,6 +45,8 @@ class HomePage extends StatelessWidget {
           builder: (BuildContext context,
               AsyncSnapshot<SharedPreferences> snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
+              checkBirthday(context);
+
               return (snapshot.data!.containsKey("username"))
                   ? FutureBuilder(
                       future: login(),
@@ -99,6 +102,65 @@ class HomePage extends StatelessWidget {
             return CircularProgressIndicator();
           }),
     );
+  }
+
+  Future<void> checkBirthday(BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.containsKey("birthDay")) {
+      String? birthday = prefs.getString("birthDay");
+
+      if (birthday != null) {
+        DateFormat dateFormat = DateFormat("dd MMM yyyy");
+        DateTime birthDay = dateFormat.parse(birthday);
+        DateTime today = DateTime.now();
+
+        if (birthDay.month == today.month && birthDay.day == today.day) {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (_) => Scaffold(
+                    body: SafeArea(
+                      child: Container(
+                        child: Stack(
+                          alignment: Alignment.topRight,
+                          children: [
+                            Lottie.asset("assets/lottie/confetti.json",
+                                repeat: false),
+                            Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: Lottie.asset(
+                                        "assets/lottie/happy_birthday.json",
+                                        repeat: false),
+                                  ),
+                                  Expanded(
+                                    child: Lottie.asset(
+                                        "assets/lottie/gifts.json",
+                                        fit: BoxFit.fill),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(30),
+                                    child: Text(
+                                      "Hope you get more gifts and party all day!!! 😊",
+                                      style: TextStyle(
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            IconButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                icon: Icon(Icons.close)),
+                          ],
+                        ),
+                      ),
+                    ),
+                  )));
+        }
+      }
+    }
   }
 
   List<StatelessWidget> buildDrawer(BuildContext context) {
