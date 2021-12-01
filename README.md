@@ -5,6 +5,7 @@ Minimalist app for eduserve
 ![Preview](screenshots/preview.png)
 
 [![Website][website-shield]][website-url]
+![Lines of code](https://img.shields.io/tokei/lines/github/hiruthicShaSS/eduserveMinimal?color=916BBF&label=Lines%20of%20code&style=for-the-badge)
 
 ## Download
 
