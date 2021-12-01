@@ -1,5 +1,6 @@
 // Flutter imports:
 import 'package:beautifulsoup/beautifulsoup.dart';
+import 'package:eduserveMinimal/edu_serve.dart';
 import 'package:eduserveMinimal/global/gloabls.dart';
 import 'package:eduserveMinimal/screens/home/pages/home_page.dart';
 import 'package:flutter/material.dart';
@@ -66,7 +67,7 @@ class Credentials extends StatelessWidget {
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Text(
-                                      "Logging In...",
+                                      "Verifying credentials...",
                                       style: TextStyle(fontSize: 25),
                                     ),
                                   ),
@@ -83,25 +84,15 @@ class Credentials extends StatelessWidget {
                       return;
                     }
 
-                    prefs.setString("username", _usernameController.text);
-                    prefs.setString("password", _passwordController.text);
+                    await prefs.setString("username", _usernameController.text);
+                    await prefs.setString("password", _passwordController.text);
                     Fluttertoast.showToast(
                         msg: "Credentials updated successfully");
 
                     cacheBirthDate();
 
-                    if (loginStatus == "feedback form found") {
-                      Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(builder: (_) => FeedbackForm()),
-                          (route) => route.isFirst);
-                    }
-                    if (pushHomePage ?? false) {
-                      Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(builder: (context) => HomePage()),
-                          (route) => route.isFirst);
-                    } else {
-                      Navigator.pop(context);
-                    }
+                    Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (_) => HomeController()));
                   },
                 ),
                 SizedBox(height: 30.0),

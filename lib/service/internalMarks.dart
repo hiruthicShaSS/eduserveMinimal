@@ -40,13 +40,20 @@ Future getInternalMarks({String? academicTerm = null}) async {
 
     return academicTerms;
   } else {
-    Map formdata = formData;
-    formdata["ctl00\$mainContent\$DDLACADEMICTERM"] = academicTerm.toString();
-    formdata.remove("ctl00\$mainContent\$DDLEXAM");
+    headers["accept-encoding"] = "gzip, deflate, br";
+    headers["accept-language"] = "en-US,en;q0.9";
+    headers["cache-control"] = "max-age=0";
+    // headers["content-length"] = "15695";
+    headers["sec-ch-ua-platform"] = "Windows";
+    headers["sec-ch-ua"] = "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"96\", \"Google Chrome\";v=\"96\"";
+    headers["sec-ch-ua-mobile"] = "?0";
+
+    formData["ctl00\$mainContent\$DDLACADEMICTERM"] = 20.toString();
+    formData.remove("ctl00\$mainContent\$DDLEXAM");
     Response res = await post(
         Uri.parse("https://eduserve.karunya.edu$internalsURL"),
         headers: headers,
-        body: formdata);
+        body: formData);
 
     if ((res.body.indexOf("No records to display.") != -1)) {
       return "No records to display.";

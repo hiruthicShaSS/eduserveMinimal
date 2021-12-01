@@ -12,6 +12,8 @@ Future<Map> parse() async {
   // Parse the student basic info
   String studentHomePage = await login();
 
+  if (studentHomePage == "") return {};
+
   var soup = Beautifulsoup(studentHomePage);
   List basicInfo =
       soup.find_all("span").map((e) => (e.innerHtml)).toList().sublist(54);

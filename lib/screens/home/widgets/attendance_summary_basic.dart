@@ -38,13 +38,15 @@ class AttendanceSummary extends StatelessWidget {
       future: getAttendanceSummary(),
       builder: (context, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          return Column(
-            children: [
-              AttendancePieChart(data: snapshot.data),
-              Padding(padding: EdgeInsets.all(10)),
-              AttendanceBarChart(data: snapshot.data)
-            ],
-          );
+          return snapshot.hasData
+              ? Column(
+                  children: [
+                    AttendancePieChart(data: snapshot.data),
+                    Padding(padding: EdgeInsets.all(10)),
+                    AttendanceBarChart(data: snapshot.data)
+                  ],
+                )
+              : Center(child: Text("Something went wrong while building the chart"));
         }
         return Shimmer(
           gradient: LinearGradient(colors: [Colors.white, Colors.black]),

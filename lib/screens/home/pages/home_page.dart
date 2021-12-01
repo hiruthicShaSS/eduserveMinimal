@@ -35,73 +35,35 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    processExcessInfo(context);
+
     return Scaffold(
       drawer: Drawer(
         child: Column(
           children: buildDrawer(context),
         ),
       ),
-      body: FutureBuilder(
-          future: SharedPreferences.getInstance(),
-          builder: (BuildContext context,
-              AsyncSnapshot<SharedPreferences> snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              checkBirthday(context);
-
-              return (snapshot.data!.containsKey("username"))
-                  ? FutureBuilder(
-                      future: login(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          if (snapshot.data == "feedback form found")
-                            return FeedbackForm();
-                          if (snapshot.data == "Login error")
-                            return Credentials(pushHomePage: true);
-
-                          processExcessInfo(context);
-
-                          return CustomScrollView(
-                            slivers: [
-                              SliverAppBar(
-                                expandedHeight:
-                                    MediaQuery.of(context).size.height * 0.25,
-                                title: Text("eduserveMinimal"),
-                                pinned: true,
-                                flexibleSpace: FlexibleSpaceBar(
-                                  background: Padding(
-                                    padding: const EdgeInsets.only(top: 100),
-                                    child: AttendanceContainer(),
-                                  ),
-                                ),
-                              ),
-                              SliverList(
-                                delegate: SliverChildListDelegate([
-                                  LeaveInformation(),
-                                  AttendanceSummary(),
-                                ]),
-                              ),
-                            ],
-                          );
-                        }
-                        return Center(
-                            child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Lottie.asset("assets/lottie/log_in.json"),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                "Logging In...",
-                                style: TextStyle(fontSize: 25),
-                              ),
-                            ),
-                          ],
-                        ));
-                      })
-                  : Credentials(pushHomePage: true);
-            }
-            return CircularProgressIndicator();
-          }),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            expandedHeight: MediaQuery.of(context).size.height * 0.25,
+            title: Text("eduserveMinimal"),
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              background: Padding(
+                padding: const EdgeInsets.only(top: 100),
+                child: AttendanceContainer(),
+              ),
+            ),
+          ),
+          SliverList(
+            delegate: SliverChildListDelegate([
+              LeaveInformation(),
+              AttendanceSummary(),
+            ]),
+          ),
+        ],
+      ),
     );
   }
 
@@ -191,7 +153,9 @@ class HomePage extends StatelessWidget {
   }
 
   Future<void> processExcessInfo(BuildContext context) async {
+    checkBirthday(context);
     _checkUpdates(context);
+    
     Map dataCache = await fetchAllData();
 
     bool feesDue = (double.tryParse(dataCache["fees"]["dues"].first) ?? 0) > 0;
