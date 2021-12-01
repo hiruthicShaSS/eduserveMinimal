@@ -22,8 +22,6 @@ class OnDutyList extends StatelessWidget {
       child: Container(
         child: ListView.builder(
           padding: EdgeInsets.zero,
-          physics:
-              BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
           itemCount: data!.length + 1,
           itemBuilder: (BuildContext context, int index) {
             if (index == 0)

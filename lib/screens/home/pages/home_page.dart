@@ -1,20 +1,20 @@
 // Flutter imports:
+import 'package:eduserveMinimal/providers/theme.dart';
 import 'package:eduserveMinimal/screens/home/widgets/attendance_summary_basic.dart';
 import 'package:eduserveMinimal/screens/home/widgets/birthday.dart';
+import 'package:eduserveMinimal/service/login.dart';
+import 'package:eduserveMinimal/service/studentInfo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
 // Package imports:
-import 'package:lottie/lottie.dart';
 import 'package:new_version/new_version.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
-import 'package:eduserveMinimal/screens/home/pages/credentials.dart';
-import 'package:eduserveMinimal/screens/home/pages/feedback_form.dart';
 import 'package:eduserveMinimal/screens/home/pages/fees.dart';
 import 'package:eduserveMinimal/screens/home/pages/hallticket.dart';
 import 'package:eduserveMinimal/screens/home/pages/internals.dart';
@@ -26,9 +26,7 @@ import 'package:eduserveMinimal/screens/home/widgets/leave_information.dart';
 import 'package:eduserveMinimal/screens/settings/pages/user.dart';
 import 'package:eduserveMinimal/service/downloadHallTicket.dart';
 import 'package:eduserveMinimal/service/feesDetails.dart';
-import 'package:eduserveMinimal/service/login.dart';
 import 'package:eduserveMinimal/service/scrap.dart';
-import 'package:eduserveMinimal/service/studentInfo.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -43,26 +41,30 @@ class HomePage extends StatelessWidget {
           children: buildDrawer(context),
         ),
       ),
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            expandedHeight: MediaQuery.of(context).size.height * 0.25,
-            title: Text("eduserveMinimal"),
-            pinned: true,
-            flexibleSpace: FlexibleSpaceBar(
-              background: Padding(
-                padding: const EdgeInsets.only(top: 100),
-                child: AttendanceContainer(),
+      body: RefreshIndicator(
+        displacement: 100,
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              expandedHeight: MediaQuery.of(context).size.height * 0.25,
+              title: Text("eduserveMinimal"),
+              pinned: true,
+              flexibleSpace: FlexibleSpaceBar(
+                background: Padding(
+                  padding: const EdgeInsets.only(top: 100),
+                  child: AttendanceContainer(),
+                ),
               ),
             ),
-          ),
-          SliverList(
-            delegate: SliverChildListDelegate([
-              LeaveInformation(),
-              AttendanceSummary(),
-            ]),
-          ),
-        ],
+            SliverList(
+              delegate: SliverChildListDelegate([
+                LeaveInformation(),
+                AttendanceSummary(),
+              ]),
+            ),
+          ],
+        ),
+        onRefresh: () => login().then((value) => Fluttertoast.showToast(msg: "Refresh complete")),
       ),
     );
   }

@@ -2,7 +2,6 @@
 import 'package:beautifulsoup/beautifulsoup.dart';
 import 'package:eduserveMinimal/edu_serve.dart';
 import 'package:eduserveMinimal/global/gloabls.dart';
-import 'package:eduserveMinimal/screens/home/pages/home_page.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -13,7 +12,6 @@ import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
-import 'package:eduserveMinimal/screens/home/pages/feedback_form.dart';
 import 'package:eduserveMinimal/service/login.dart';
 
 class Credentials extends StatelessWidget {
