@@ -1,11 +1,36 @@
+import 'dart:math';
+
 import 'package:eduserveMinimal/providers/theme.dart';
 import 'package:eduserveMinimal/service/attendance_summary.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 
 class AttendanceSummary extends StatelessWidget {
-  const AttendanceSummary({Key? key}) : super(key: key);
+  AttendanceSummary({Key? key}) : super(key: key);
+
+  final Map dummyData = {
+    "basicInfo": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      Random().nextInt(90).toString(),
+      Random().nextInt(10).toString()
+    ],
+    "summaryData": List.generate(
+        10,
+        (index) => List.generate(
+            17,
+            (index) =>
+                index == 0 ? "18 MAY 2002" : Random().nextInt(11).toString()))
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -17,11 +42,19 @@ class AttendanceSummary extends StatelessWidget {
             children: [
               AttendancePieChart(data: snapshot.data),
               Padding(padding: EdgeInsets.all(10)),
-              AttendanceBarChart(data: snapshot.data),
+              AttendanceBarChart(data: snapshot.data)
             ],
           );
         }
-        return LinearProgressIndicator();
+        return Shimmer(
+          gradient: LinearGradient(colors: [Colors.white, Colors.black]),
+          child: Column(
+            children: [
+              AttendancePieChart(data: dummyData),
+              AttendanceBarChart(data: dummyData),
+            ],
+          ),
+        );
       },
     );
   }
