@@ -10,7 +10,7 @@ import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:eduserveMinimal/providers/theme.dart';
 
 void main(List<String> args) async {
-  return runApp(MultiProvider(
+  runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider<AppState>(create: (_) => AppState()),
       ChangeNotifierProvider<ThemeProvider>(create: (_) => ThemeProvider()),
