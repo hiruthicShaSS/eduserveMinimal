@@ -1,15 +1,16 @@
 // Package imports:
 import 'package:beautifulsoup/beautifulsoup.dart';
 import 'package:eduserveMinimal/global/gloabls.dart';
+import 'package:eduserveMinimal/providers/app_state.dart';
 
 // Project imports:
 import 'package:eduserveMinimal/service/login.dart';
 import 'package:eduserveMinimal/service/scrap.dart';
 import 'package:http/http.dart';
 
-Future<Map> parse() async {
-  // Parse basic info
-  // Parse the student basic info
+Future<Map> getInfo() async {
+  if (Scraper.cache.containsKey("user")) return Scraper.cache["user"];
+  
   String studentHomePage = await login();
 
   if (studentHomePage == "") return {};
@@ -116,14 +117,7 @@ Future<Map> parse() async {
       headers: httpHeaders);
   data["qrImage"] = qrCodeResponse.bodyBytes;
 
-  return data;
-}
 
-Future<Map> getInfo() async {
-  if (Scraper.cache.containsKey("user")) return Scraper.cache["user"];
-
-  Map data = await parse();
-  data["dateScraped"] = DateTime.now().toString();
   Scraper.cache["user"] = data;
   return data;
 }

@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:eduserveMinimal/providers/theme.dart';
 import 'package:eduserveMinimal/screens/home/widgets/attendance_summary_basic.dart';
 import 'package:eduserveMinimal/screens/home/widgets/birthday.dart';
 import 'package:eduserveMinimal/service/login.dart';

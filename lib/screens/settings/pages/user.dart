@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:eduserveMinimal/screens/settings/widgets/semester_summary_graph.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -157,6 +158,10 @@ class User extends StatelessWidget {
                             ),
                           ),
                         ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 20),
+                        child: SemesterSummaryGraph(),
                       ),
                     ],
                   ),

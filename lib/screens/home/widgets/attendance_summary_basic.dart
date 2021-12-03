@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:eduserveMinimal/global/widgets/dot_container.dart';
 import 'package:eduserveMinimal/providers/theme.dart';
 import 'package:eduserveMinimal/service/attendance_summary.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -46,7 +47,8 @@ class AttendanceSummary extends StatelessWidget {
                     AttendanceBarChart(data: snapshot.data)
                   ],
                 )
-              : Center(child: Text("Something went wrong while building the chart"));
+              : Center(
+                  child: Text("Something went wrong while building the chart"));
         }
         return Shimmer(
           gradient: LinearGradient(colors: [Colors.white, Colors.black]),
@@ -119,8 +121,8 @@ class AttendancePieChart extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _DotContainer(color: Colors.green, text: "Present"),
-                      _DotContainer(color: Colors.red, text: "Absent"),
+                      DotContainer(color: Colors.green, text: "Present"),
+                      DotContainer(color: Colors.red, text: "Absent"),
                     ],
                   ),
                   RichText(
@@ -263,33 +265,4 @@ getBottomTitle(data, value) {
   return data["summaryData"]
       .sublist(data["summaryData"].length - 7)[value.toInt()][0]
       .substring(0, 6);
-}
-
-class _DotContainer extends StatelessWidget {
-  const _DotContainer({Key? key, required this.color, required this.text})
-      : super(key: key);
-
-  final Color color;
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(10),
-          child: Container(
-            width: 10,
-            height: 10,
-            decoration: BoxDecoration(
-              color: color,
-              shape: BoxShape.circle,
-            ),
-          ),
-        ),
-        Text(text),
-      ],
-    );
-  }
 }
