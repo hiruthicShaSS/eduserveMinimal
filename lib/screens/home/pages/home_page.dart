@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:eduserveMinimal/global/widgets/restart_widget.dart';
+import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:eduserveMinimal/screens/home/widgets/attendance_summary_basic.dart';
 import 'package:eduserveMinimal/screens/home/widgets/birthday.dart';
 import 'package:eduserveMinimal/service/login.dart';
@@ -52,10 +54,12 @@ class HomePage extends StatelessWidget {
               floating: true,
               flexibleSpace: FlexibleSpaceBar(
                 background: Padding(
-                  padding: const EdgeInsets.only(top: 80),
+                  padding: const EdgeInsets.only(top: 100),
                   child: AttendanceContainer(),
                 ),
               ),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15)),
             ),
             SliverList(
               delegate: SliverChildListDelegate([
@@ -65,7 +69,12 @@ class HomePage extends StatelessWidget {
             ),
           ],
         ),
-        onRefresh: () => login().then((value) => Fluttertoast.showToast(msg: "Refresh complete")),
+        onRefresh: () => login()
+            .then((value) {
+              Scraper.cache.clear();
+              Fluttertoast.showToast(msg: "Refresh complete");
+              RestartWidget.restartApp(context);
+            }),
       ),
     );
   }
@@ -158,7 +167,7 @@ class HomePage extends StatelessWidget {
   Future<void> processExcessInfo(BuildContext context) async {
     checkBirthday(context);
     _checkUpdates(context);
-    
+
     Map dataCache = await fetchAllData();
 
     bool feesDue = (double.tryParse(dataCache["fees"]["dues"].first) ?? 0) > 0;

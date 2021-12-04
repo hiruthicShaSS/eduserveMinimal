@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:eduserveMinimal/global/widgets/restart_widget.dart';
 import 'package:eduserveMinimal/service/login.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -57,7 +58,7 @@ class HomeController extends StatelessWidget {
                           return FeedbackForm();
                         if (snapshot.data!["loginError"]) return Credentials();
 
-                        return HomePage();
+                        return RestartWidget(child: HomePage());
                       }
                       return Credentials();
                     }
