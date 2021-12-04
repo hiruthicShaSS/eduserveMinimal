@@ -40,9 +40,10 @@ class OnDutyList extends StatelessWidget {
               );
 
             if (isLoading)
-              return Shimmer(
+              return Shimmer.fromColors(
                 child: onDutyTile(context, 1),
-                gradient: LinearGradient(colors: [Colors.white, Colors.black]),
+                baseColor: Colors.grey,
+                highlightColor: Colors.grey[900]!,
               );
             return onDutyTile(context, index);
           },

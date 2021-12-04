@@ -39,12 +39,9 @@ class AttendanceContainer extends StatelessWidget {
       child: Column(
         children: [
           isLoading
-              ? Shimmer(
-                  gradient: LinearGradient(colors: [
-                    ThemeProvider.currentThemeData!.primaryColor,
-                    ThemeProvider.currentThemeData!.primaryColor
-                        .withOpacity(0.1),
-                  ]),
+              ? Shimmer.fromColors(
+                  baseColor: Colors.grey,
+                  highlightColor: Colors.grey[900]!,
                   child: buildAttendenceContainer(data, context),
                 )
               : buildAttendenceContainer(data, context),

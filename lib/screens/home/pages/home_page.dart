@@ -48,9 +48,11 @@ class HomePage extends StatelessWidget {
               expandedHeight: MediaQuery.of(context).size.height * 0.25,
               title: Text("eduserveMinimal"),
               pinned: true,
+              snap: true,
+              floating: true,
               flexibleSpace: FlexibleSpaceBar(
                 background: Padding(
-                  padding: const EdgeInsets.only(top: 100),
+                  padding: const EdgeInsets.only(top: 80),
                   child: AttendanceContainer(),
                 ),
               ),

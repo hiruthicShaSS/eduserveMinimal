@@ -30,6 +30,8 @@ Future<List> getAttendance() async {
       .toList();
   attendenceList.removeWhere((element) => element == null);
 
+  await Future.delayed(Duration(seconds: 10));
+
   Scraper.cache["att"] = attendenceList;
   return attendenceList;
 }

@@ -50,8 +50,9 @@ class AttendanceSummary extends StatelessWidget {
               : Center(
                   child: Text("Something went wrong while building the chart"));
         }
-        return Shimmer(
-          gradient: LinearGradient(colors: [Colors.white, Colors.black]),
+        return Shimmer.fromColors(
+          baseColor: Colors.grey,
+          highlightColor: Colors.grey[900]!,
           child: Column(
             children: [
               AttendancePieChart(data: dummyData),

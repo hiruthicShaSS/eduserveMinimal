@@ -1,5 +1,9 @@
 // Flutter imports:
+import 'dart:math';
+
 import 'package:eduserveMinimal/screens/settings/widgets/semester_summary_graph.dart';
+import 'package:eduserveMinimal/service/attendance_summary.dart';
+import 'package:eduserveMinimal/service/semester_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -8,6 +12,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 // Project imports:
 import 'package:eduserveMinimal/service/studentInfo.dart';
+import 'package:shimmer/shimmer.dart';
 
 class User extends StatelessWidget {
   @override
@@ -161,7 +166,48 @@ class User extends StatelessWidget {
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 20),
-                        child: SemesterSummaryGraph(),
+                        child: FutureBuilder(
+                            future: getSemesterSummary(),
+                            builder: (context,
+                                AsyncSnapshot<Map<String, List<String>>>
+                                    snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.done) {
+                                Map data = snapshot.data!;
+                                List<String> months = data["months"];
+                                List<String> arrears = data["arrears"];
+                                List<String> scgpa = data["scgpa"];
+                                List<String> cgpa = data["cgpa"];
+
+                                return SemesterSummaryGraph(
+                                    months: months,
+                                    arrears: arrears,
+                                    scgpa: scgpa,
+                                    cgpa: cgpa);
+                              }
+
+                              return Shimmer.fromColors(
+                                baseColor: Colors.grey,
+                                highlightColor: Colors.grey[900]!,
+                                child: SemesterSummaryGraph(
+                                    months: List.generate(
+                                        4,
+                                        (index) =>
+                                            Random().nextInt(12).toString()),
+                                    arrears: List.generate(
+                                        4,
+                                        (index) =>
+                                            Random().nextInt(10).toString()),
+                                    scgpa: List.generate(
+                                        4,
+                                        (index) =>
+                                            Random().nextInt(10).toString()),
+                                    cgpa: List.generate(
+                                        4,
+                                        (index) =>
+                                            Random().nextInt(10).toString())),
+                              );
+                            }),
                       ),
                     ],
                   ),
