@@ -13,5 +13,5 @@ void main() {
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider<AppState>(create: (_) => AppState()),
     ChangeNotifierProvider<ThemeProvider>(create: (_) => ThemeProvider()),
-  ], child: const EduServeMinimal(flavor: "staging")));
+  ], child: EduServeMinimal(flavor: "staging")));
 }

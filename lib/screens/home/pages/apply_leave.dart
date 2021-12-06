@@ -6,7 +6,8 @@ import 'package:eduserveMinimal/global/enum.dart';
 import 'package:eduserveMinimal/providers/theme.dart';
 
 class ApplyLeaveView extends StatefulWidget {
-  const ApplyLeaveView({Key? key, required this.leaveType}) : super(key: key);
+  const ApplyLeaveView({Key? key, this.leaveType = LeaveType.Medical})
+      : super(key: key);
 
   final LeaveType leaveType;
 

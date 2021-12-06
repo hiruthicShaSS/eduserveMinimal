@@ -1,6 +1,9 @@
 // Flutter imports:
+import 'package:eduserveMinimal/global/enum.dart';
 import 'package:eduserveMinimal/global/widgets/restart_widget.dart';
+import 'package:eduserveMinimal/screens/settings/pages/user.dart';
 import 'package:eduserveMinimal/service/login.dart';
+import 'package:eduserveMinimal/shortcuts.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
@@ -11,11 +14,11 @@ import 'package:provider/provider.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:eduserveMinimal/providers/theme.dart';
 import 'package:eduserveMinimal/screens/home/pages/pages.dart';
+import 'package:quick_actions/quick_actions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class EduServeMinimal extends StatelessWidget {
-  const EduServeMinimal({Key? key, this.flavor = "production"})
-      : super(key: key);
+  EduServeMinimal({Key? key, this.flavor = "production"}) : super(key: key);
   final String flavor;
 
   @override
@@ -26,10 +29,13 @@ class EduServeMinimal extends StatelessWidget {
       debugShowCheckedModeBanner: flavor == "development",
       home: HomeController(),
       routes: {
+        "/home": (BuildContext context) => HomePage(),
         "/feedbackForm": (BuildContext context) => FeedbackForm(),
         "/timetable": (BuildContext context) => TimeTable(),
-        "/home": (BuildContext context) => HomePage(),
+        "/apply_leave": (BuildContext context) => ApplyLeaveView(),
+        "/fees": (BuildContext context) => FeesView(),
         "/credentials": (BuildContext context) => Credentials(),
+        "/user": (BuildContext context) => User(),
       },
       darkTheme: ThemeProvider.dark,
       title: "eduserveMinimal",
@@ -43,6 +49,8 @@ class HomeController extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    initQuickActions(context);
+
     return Scaffold(
       body: FutureBuilder(
         future: SharedPreferences.getInstance(),
@@ -84,6 +92,11 @@ class HomeController extends StatelessWidget {
         },
       ),
     );
+  }
+
+  void initQuickActions(BuildContext context) {
+    final quickActions = QuickActions();
+    quickActions.setShortcutItems(ShortcutItems.items);
   }
 
   bool credentialsExist(SharedPreferences prefs) =>

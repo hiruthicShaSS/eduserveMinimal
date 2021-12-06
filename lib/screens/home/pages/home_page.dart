@@ -13,6 +13,7 @@ import 'package:intl/intl.dart';
 // Package imports:
 import 'package:new_version/new_version.dart';
 import 'package:package_info/package_info.dart';
+import 'package:quick_actions/quick_actions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
@@ -35,6 +36,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     processExcessInfo(context);
+    initQuickActionsEvents(context);
 
     return Scaffold(
       drawer: Drawer(
@@ -69,14 +71,35 @@ class HomePage extends StatelessWidget {
             ),
           ],
         ),
-        onRefresh: () => login()
-            .then((value) {
-              Scraper.cache.clear();
-              Fluttertoast.showToast(msg: "Refresh complete");
-              RestartWidget.restartApp(context);
-            }),
+        onRefresh: () => login().then((value) {
+          Scraper.cache.clear();
+          Fluttertoast.showToast(msg: "Refresh complete");
+          RestartWidget.restartApp(context);
+        }),
       ),
     );
+  }
+
+  void initQuickActionsEvents(BuildContext context) {
+    final quickActions = QuickActions();
+    quickActions.initialize((type) {
+      print(type);
+
+      switch (type) {
+        case "timetable":
+          Navigator.of(context).pushNamed("/timetable");
+          break;
+        case "fees":
+          Navigator.of(context).pushNamed("/fees");
+          break;
+        case "apply_leave":
+          Navigator.of(context).pushNamed("/apply_leave");
+          break;
+        case "user":
+          Navigator.of(context).pushNamed("/user");
+          break;
+      }
+    });
   }
 
   Future<void> checkBirthday(BuildContext context) async {
@@ -170,43 +193,46 @@ class HomePage extends StatelessWidget {
 
     Map dataCache = await fetchAllData();
 
-    bool feesDue = (double.tryParse(dataCache["fees"]["dues"].first) ?? 0) > 0;
-    bool hallTicketUnEligile = dataCache["hallticket"]
-            .contains("No records to display.")
-        ? false
-        : dataCache["hallticket"].first.where((e) => e == "Eligible").length <
-            3;
+    try {
+      bool feesDue =
+          (double.tryParse(dataCache["fees"]["dues"].first) ?? 0) > 0;
+      bool hallTicketUnEligile = dataCache["hallticket"]
+              .contains("No records to display.")
+          ? false
+          : dataCache["hallticket"].first.where((e) => e == "Eligible").length <
+              3;
 
-    print("Fees due: $feesDue");
-    print("Uneligible for exam: $hallTicketUnEligile");
+      print("Fees due: $feesDue");
+      print("Uneligible for exam: $hallTicketUnEligile");
 
-    if (feesDue || hallTicketUnEligile) {
-      ScaffoldMessenger.of(context).showMaterialBanner(MaterialBanner(
-        backgroundColor: Colors.redAccent,
-        leading: Icon(Icons.error_outline),
-        content: TextButton(
-            onPressed: () {
-              SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => IssuesView(
-                        outstandingDue: feesDue,
-                        hallTicketUnEligible: hallTicketUnEligile)));
-                ScaffoldMessenger.of(context).removeCurrentMaterialBanner();
-              });
-            },
-            child: Text("Action required!",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold))),
-        actions: [
-          IconButton(
-              onPressed: () =>
-                  ScaffoldMessenger.of(context).removeCurrentMaterialBanner(),
-              icon: Icon(Icons.close)),
-        ],
-      ));
-    }
+      if (feesDue || hallTicketUnEligile) {
+        ScaffoldMessenger.of(context).showMaterialBanner(MaterialBanner(
+          backgroundColor: Colors.redAccent,
+          leading: Icon(Icons.error_outline),
+          content: TextButton(
+              onPressed: () {
+                SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => IssuesView(
+                          outstandingDue: feesDue,
+                          hallTicketUnEligible: hallTicketUnEligile)));
+                  ScaffoldMessenger.of(context).removeCurrentMaterialBanner();
+                });
+              },
+              child: Text("Action required!",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold))),
+          actions: [
+            IconButton(
+                onPressed: () =>
+                    ScaffoldMessenger.of(context).removeCurrentMaterialBanner(),
+                icon: Icon(Icons.close)),
+          ],
+        ));
+      }
+    } catch (e) {}
   }
 
   Future<Map> fetchAllData() async {
@@ -228,8 +254,5 @@ class HomePage extends StatelessWidget {
 
     final newVersion = NewVersion(androidId: info.packageName);
     newVersion.showAlertIfNecessary(context: context);
-    bool? canUpdate = (await newVersion.getVersionStatus())?.canUpdate;
-    if (canUpdate ?? false)
-      Fluttertoast.showToast(msg: "You are already on latest version!");
   }
 }
