@@ -24,6 +24,7 @@ jobs:
       
       - name: Build application
         run: |
+          git submodule update --init --recursive
           flutter pub get
           flutter build apk --target lib/main_production.dart --flavor production --split-per-abi
       
