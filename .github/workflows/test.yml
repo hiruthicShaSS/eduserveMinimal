@@ -7,4 +7,5 @@ jobs:
     name: E2E on Chrome
     steps:
       - uses: actions/checkout@v2
+      - name: Print boi
         run: echo "Hey"
