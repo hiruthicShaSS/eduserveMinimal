@@ -1,0 +1,34 @@
+name: VirusTotal Scan
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  virustotal-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup environment
+        env:
+          VIRUS_TOTAL_API_KEY: ${{ secrets.VIRUS_TOTAL_API_KEY }}
+        run: echo "Secret loaded"
+      
+      - name: Setup JAVA
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+          
+      - name: Setup flutter
+        uses: subosito/flutter-action@v1
+        with:
+          flutter-version: '2.0.5'
+      
+      - name: Build application
+        run: |
+          flutter pub get
+          flutter build apk --target lib/main_production.dart --flavor production --split-per-abi
+      
+      - name: Upload and get results
+        run: |
+          curl --request POST --url https://www.virustotal.com/api/v3/files --header "x-apikey: $VIRUS_TOTAL_API_KEY" --header "Accept: application/json" --header "Content-Type: multipart/form-data" -F "file=@build/app/outputs/apk/production/release/app-production-release.apk"
+          sha256sum build/app/outputs/apk/production/release/app-production-release.apk | hash.txt
+          curl --request GET --url https://www.virustotal.com/api/v3/files/$(cat hash.txt) --header "x-apikey: $VIRUS_TOTAL_API_KEY"
