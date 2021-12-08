@@ -20,10 +20,11 @@ jobs:
       - name: Setup flutter
         uses: subosito/flutter-action@v1
         with:
-          flutter-version: '2.12.0'
+          flutter-version: '2.0.5'
       
       - name: Build application
         run: |
+          flutter upgrade
           git submodule update --init --recursive
           flutter pub get
           flutter build apk --target lib/main_production.dart --flavor production --split-per-abi
