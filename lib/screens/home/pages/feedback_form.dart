@@ -1,13 +1,14 @@
 // Flutter imports:
+import 'package:eduserveMinimal/global/widgets/restart_widget.dart';
+import 'package:eduserveMinimal/service/fill_feedback.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:provider/provider.dart';
 
 // Project imports:
-import 'package:eduserveMinimal/providers/app_state.dart';
-import 'package:eduserveMinimal/service/feedbackform.dart';
+import 'package:eduserveMinimal/service/get_feedback_form.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class FeedbackForm extends StatefulWidget {
   FeedbackForm({Key? key}) : super(key: key);
@@ -37,15 +38,49 @@ class _FeedbackFormState extends State<FeedbackForm> {
                   ],
                 );
               if (index == snapshot.data!.length + 1)
-                return ElevatedButton(
-                    onPressed: () {
-                      Provider.of<AppState>(context, listen: false)
-                          .scraper
-                          .fillFeedbackForm(feedbackRating);
-                      // .then((value) =>
-                      //     Navigator.of(context).pushNamed("/home"));
-                    },
-                    child: Text("Submit"));
+                return Column(
+                  children: [
+                    ElevatedButton(
+                        // onPressed: null,
+                        onPressed: () {
+                          fillFeedbackForm(feedbackRating);
+                          // .then(
+                          //     (value) => Navigator.of(context).pushNamed("/home"));
+                        },
+                        child: Text("Submit")),
+                    Column(
+                      children: [
+                        Text("This feature is under development!"),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("Please fill the form in "),
+                            GestureDetector(
+                              child: Text(
+                                "eduserve page.",
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                              onTap: () async {
+                                await launch(
+                                    "https://eduserve.karunya.edu/MIS/IQAC/HFBCollection.aspx");
+                              },
+                            ),
+                          ],
+                        ),
+                        Text("Sorry for the inconvenience 🙇"),
+                      ],
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pushNamed("/home");
+                      },
+                      child: Text("Reload"),
+                    ),
+                  ],
+                );
 
               feedbackRating[snapshot.data![index - 1][1].toString()] = 1;
 

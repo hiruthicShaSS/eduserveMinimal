@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:eduserveMinimal/service/fees_details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -9,7 +10,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 // Project imports:
 import 'package:eduserveMinimal/providers/theme.dart';
-import 'package:eduserveMinimal/service/feesDetails.dart';
 
 class FeesView extends StatelessWidget {
   @override

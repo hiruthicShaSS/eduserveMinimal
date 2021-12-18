@@ -2,16 +2,13 @@
 import 'dart:math';
 
 import 'package:eduserveMinimal/screens/settings/widgets/semester_summary_graph.dart';
-import 'package:eduserveMinimal/service/attendance_summary.dart';
 import 'package:eduserveMinimal/service/semester_summary.dart';
+import 'package:eduserveMinimal/service/student_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:fluttertoast/fluttertoast.dart';
-
-// Project imports:
-import 'package:eduserveMinimal/service/studentInfo.dart';
 import 'package:shimmer/shimmer.dart';
 
 class User extends StatelessWidget {

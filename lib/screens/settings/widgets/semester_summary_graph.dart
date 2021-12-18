@@ -1,5 +1,4 @@
 import 'package:eduserveMinimal/global/widgets/dot_container.dart';
-import 'package:eduserveMinimal/service/semester_summary.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 

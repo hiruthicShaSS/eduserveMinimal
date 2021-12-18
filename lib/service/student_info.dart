@@ -1,7 +1,6 @@
 // Package imports:
 import 'package:beautifulsoup/beautifulsoup.dart';
 import 'package:eduserveMinimal/global/gloabls.dart';
-import 'package:eduserveMinimal/providers/app_state.dart';
 
 // Project imports:
 import 'package:eduserveMinimal/service/login.dart';

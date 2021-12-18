@@ -1,6 +1,3 @@
-// Dart imports:
-import 'dart:convert';
-
 // Flutter imports:
 import 'package:flutter/material.dart';
 
@@ -64,59 +61,6 @@ class Scraper {
   }
 
   int totalFeedback = 0;
-
-  Future<void> fillFeedbackForm(Map rating) async {
-    Map feedback_data = formData;
-    Map<String, String> headers = this.headers;
-
-    var soup = Beautifulsoup(pages["hfb"].body);
-    final inputs = soup.find_all("input").map((e) => e.attributes).toList();
-
-    final RegExp exp = RegExp(
-        r"ctl00_mainContent_grdHFB_ctl00_ctl\d{1,2}_rtngHFB_ClientState");
-
-    List feedbackIds = feedback_data.keys
-        .map((e) => (exp.allMatches(e).length > 0) ? e : null)
-        .toList();
-    feedbackIds.removeWhere((element) => element == null);
-    // print(feedbackIds);
-
-    inputs.forEach((element) {
-      if (!element["name"]!.contains("ClassHandle")) {
-        feedback_data[element["name"]] = element["value"];
-      }
-    });
-
-    feedbackIds.forEach((id) async {
-      feedback_data[id] = {"value": "1", "readOnly": false}.toString();
-      Response response = await client.post(
-          Uri.parse("https://eduserve.karunya.edu/MIS/IQAC/HFBCollection.aspx"),
-          headers: headers,
-          body: jsonEncode(feedback_data));
-      // print(response.statusCode);
-      // Repopulate data with new values after each rating request
-      var soup = Beautifulsoup(response.body);
-      final inputs = soup.find_all("input").map((e) => e.attributes).toList();
-
-      inputs.forEach((element) {
-        if (!element["name"]!.contains("ClassHandle")) {
-          feedback_data[element["name"]] = element["value"];
-        }
-      });
-    });
-
-    feedback_data["ctl00_radMenu_ClientState"] = "";
-    feedback_data["__VIEWSTATEGENERATOR"] = ""; // More form data required
-
-    feedback_data.forEach((key, value) => print("$key => $value"));
-
-    // Response response = await client.post(
-    //     Uri.parse("https://eduserve.karunya.edu/MIS/IQAC/HFBCollection.aspx"),
-    //     headers: headers,
-    //     body: jsonEncode(feedback_data));
-    // print(response.body);
-    // print(response.statusCode);
-  }
 
   Future<List?> getAttendenceSummary({String? term}) async {
     Map<String, String> headers = this.headers;

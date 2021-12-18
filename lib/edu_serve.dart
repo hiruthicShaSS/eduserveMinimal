@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:eduserveMinimal/global/enum.dart';
 import 'package:eduserveMinimal/global/widgets/restart_widget.dart';
 import 'package:eduserveMinimal/screens/settings/pages/user.dart';
 import 'package:eduserveMinimal/service/login.dart';

@@ -1,10 +1,11 @@
 // Flutter imports:
 import 'package:eduserveMinimal/global/widgets/restart_widget.dart';
-import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:eduserveMinimal/screens/home/widgets/attendance_summary_basic.dart';
 import 'package:eduserveMinimal/screens/home/widgets/birthday.dart';
+import 'package:eduserveMinimal/service/download_hallticket.dart';
+import 'package:eduserveMinimal/service/fees_details.dart';
 import 'package:eduserveMinimal/service/login.dart';
-import 'package:eduserveMinimal/service/studentInfo.dart';
+import 'package:eduserveMinimal/service/student_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -26,8 +27,6 @@ import 'package:eduserveMinimal/screens/home/pages/timetable.dart';
 import 'package:eduserveMinimal/screens/home/widgets/attendance_widget.dart';
 import 'package:eduserveMinimal/screens/home/widgets/leave_information.dart';
 import 'package:eduserveMinimal/screens/settings/pages/user.dart';
-import 'package:eduserveMinimal/service/downloadHallTicket.dart';
-import 'package:eduserveMinimal/service/feesDetails.dart';
 import 'package:eduserveMinimal/service/scrap.dart';
 
 class HomePage extends StatelessWidget {
