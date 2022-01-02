@@ -30,7 +30,16 @@
       "profile": "https://github.com/shivnesh646",
       "contributions": [
         "business"
-       ]
+      ]
+    },
+    {
+      "login": "nikhilSolomon",
+      "name": "Nikhil solomon",
+      "avatar_url": "https://avatars.githubusercontent.com/u/58876406?v=4",
+      "profile": "https://github.com/nikhilSolomon",
+      "contributions": [
+        "test"
+      ]
     }
   ],
   "contributorsPerLine": 7,
