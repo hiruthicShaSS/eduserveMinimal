@@ -1,7 +1,4 @@
 # eduserveMinimal
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 Minimalist app for eduserve
 
@@ -9,6 +6,9 @@ Minimalist app for eduserve
 
 [![Website][website-shield]][website-url]
 ![Lines of code](https://img.shields.io/tokei/lines/github/hiruthicShaSS/eduserveMinimal?color=916BBF&label=Lines%20of%20code&style=for-the-badge)
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ## Download
 
@@ -104,3 +104,8 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+
+## Early Adopters
+
+- [Joseph Manoharan](https://www.instagram.com/_Joseph.mano_/) (This piece of cake doesnt remember his github uid, so take it on insta)
+- [Nikhil Solomon](https://github.com/nikhilSolomon)
