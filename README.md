@@ -92,6 +92,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- markdownlint-disable -->
 <table>
   <tr>
+    <td align="center"><a href="https://github.com/shivnesh646"><img src="https://avatars.githubusercontent.com/u/56859062?v=4?s=100" width="100px;" alt=""/><br /><sub><b>shivnesh646</b></sub></a><br /><a href="#business-shivnesh646" title="Business development">💼</a></td>
     <td align="center"><a href="http://hiruthicsha.com"><img src="https://avatars.githubusercontent.com/u/56349092?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Hiruthic</b></sub></a><br /><a href="#projectManagement-hiruthicShaSS" title="Project Management">📆</a></td>
   </tr>
 </table>
