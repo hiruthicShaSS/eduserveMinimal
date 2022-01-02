@@ -7,7 +7,7 @@ Minimalist app for eduserve
 [![Website][website-shield]][website-url]
 ![Lines of code](https://img.shields.io/tokei/lines/github/hiruthicShaSS/eduserveMinimal?color=916BBF&label=Lines%20of%20code&style=for-the-badge)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ## Download
@@ -95,6 +95,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="http://hiruthicsha.com"><img src="https://avatars.githubusercontent.com/u/56349092?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Hiruthic</b></sub></a><br /><a href="#projectManagement-hiruthicShaSS" title="Project Management">📆</a></td>
     <td align="center"><a href="https://github.com/sachinravikumar"><img src="https://avatars.githubusercontent.com/u/56858946?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Sachin R</b></sub></a><br /><a href="#business-sachinravikumar" title="Business development">💼</a></td>
     <td align="center"><a href="https://github.com/shivnesh646"><img src="https://avatars.githubusercontent.com/u/56859062?v=4?s=100" width="100px;" alt=""/><br /><sub><b>shivnesh646</b></sub></a><br /><a href="#business-shivnesh646" title="Business development">💼</a></td>
+    <td align="center"><a href="https://github.com/nikhilSolomon"><img src="https://avatars.githubusercontent.com/u/58876406?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Nikhil solomon</b></sub></a><br /><a href="https://github.com/hiruthicShaSS/eduserveMinimal/commits?author=nikhilSolomon" title="Tests">⚠️</a></td>
   </tr>
 </table>
 
