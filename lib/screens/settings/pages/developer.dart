@@ -17,7 +17,7 @@ class Developer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("About"),
+        title: Text("Author"),
         centerTitle: true,
       ),
       body: SafeArea(
@@ -74,7 +74,7 @@ class Developer extends StatelessWidget {
                   style: GoogleFonts.kanit(fontSize: 25, color: Colors.black),
                 ),
                 onPressed: () => launch(
-                    "https://github.com/hiruthicShaSS/eduserveMinimal/issues/new"),
+                    "https://github.com/hiruthicShaSS/eduserveMinimal/issues/new?assignees=&labels=&template=feature_request.md&title="),
               ),
               Spacer(),
               buildSocialIcons()
