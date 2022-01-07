@@ -5,6 +5,7 @@ import 'package:http/http.dart';
 
 // Project imports:
 import 'package:eduserveMinimal/global/gloabls.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future getInternalMarks({String? academicTerm = null}) async {
   final String internalsURL = "/Student/InternalMarks.aspx";
@@ -18,6 +19,8 @@ Future getInternalMarks({String? academicTerm = null}) async {
 
     if (res.body.indexOf("Login") != -1) {
       Fluttertoast.showToast(msg: "esM: Session expired. Refresh data!");
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setBool("isLoggedIn", false);
       return;
     }
 

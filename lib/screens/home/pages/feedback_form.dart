@@ -1,6 +1,5 @@
 // Flutter imports:
-import 'package:eduserveMinimal/global/widgets/restart_widget.dart';
-import 'package:eduserveMinimal/service/fill_feedback.dart';
+import 'package:eduserveMinimal/service/fill_feedback_form.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -82,7 +81,7 @@ class _FeedbackFormState extends State<FeedbackForm> {
                   ],
                 );
 
-              feedbackRating[snapshot.data![index - 1][1].toString()] = 1;
+              feedbackRating[snapshot.data![index - 1].last.toString()] = 1;
 
               return ExpansionTile(
                 title: Text(snapshot.data![index - 1][1].toString()),
@@ -101,7 +100,7 @@ class _FeedbackFormState extends State<FeedbackForm> {
                       color: Colors.amber,
                     ),
                     onRatingUpdate: (rating) {
-                      feedbackRating[snapshot.data![index - 1][1].toString()] =
+                      feedbackRating[snapshot.data![index - 1].last.toString()] =
                           rating.toInt();
                     },
                   )

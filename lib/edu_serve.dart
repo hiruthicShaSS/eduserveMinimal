@@ -2,6 +2,7 @@
 import 'package:eduserveMinimal/global/widgets/restart_widget.dart';
 import 'package:eduserveMinimal/screens/settings/pages/user.dart';
 import 'package:eduserveMinimal/service/login.dart';
+import 'package:eduserveMinimal/service/scrap.dart';
 import 'package:eduserveMinimal/shortcuts.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -55,9 +56,11 @@ class HomeController extends StatelessWidget {
         future: SharedPreferences.getInstance(),
         builder: (context, AsyncSnapshot<SharedPreferences> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            if (credentialsExist(snapshot.data!))
+            SharedPreferences prefs = snapshot.data!;
+
+            if (credentialsExist(prefs))
               return FutureBuilder(
-                  future: isLoggedIn(),
+                  future: isLoggedIn(prefs),
                   builder: (context, AsyncSnapshot<Map> snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
                       if (snapshot.data!["isLoggedIn"]) {
@@ -67,6 +70,7 @@ class HomeController extends StatelessWidget {
 
                         return RestartWidget(child: HomePage());
                       }
+
                       return Credentials();
                     }
 
@@ -101,8 +105,26 @@ class HomeController extends StatelessWidget {
   bool credentialsExist(SharedPreferences prefs) =>
       prefs.containsKey("username") && prefs.containsKey("password");
 
-  Future<Map> isLoggedIn() async {
+  Future<Map> isLoggedIn(SharedPreferences prefs) async {
+    Duration lastLogin = DateTime.parse(
+            prefs.getString("lastLogin") ?? DateTime.now().toString())
+        .difference(DateTime.now());
+
+    if (lastLogin.inMinutes < 30 && Scraper.cache["home"] != null) {
+      print("hey");
+      return {
+        "isLoggedIn": true,
+        "loginData": Scraper.cache["home"],
+        "feedBackFormFound":
+            Scraper.cache["home"].contains("feedback form found"),
+        "loginError": false,
+      };
+    }
+
     String loginData = await login();
+
+    if (!loginData.contains("Login error"))
+      prefs.setString("lastLogin", DateTime.now().toString());
 
     return {
       "isLoggedIn": loginData.length > 0,

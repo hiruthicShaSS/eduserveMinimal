@@ -7,6 +7,7 @@ import 'package:http/http.dart';
 import 'package:eduserveMinimal/global/gloabls.dart';
 import 'package:eduserveMinimal/service/login.dart';
 import 'package:eduserveMinimal/service/scrap.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future<List?> downloadHallTicket(
     {String? term, bool download = false, int retry = 0}) async {
@@ -19,7 +20,9 @@ Future<List?> downloadHallTicket(
         Uri.parse("https://eduserve.karunya.edu$hallticketURL"),
         headers: headers);
     if (res.body.indexOf("Login") != -1) {
-      Fluttertoast.showToast(msg: "esM: Session expired. Refresh data!");
+      Fluttertoast.showToast(msg: "Session expired. Refresh data!");
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setBool("isLoggedIn", false);
       return null;
     }
 

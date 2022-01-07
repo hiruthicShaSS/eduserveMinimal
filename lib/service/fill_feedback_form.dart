@@ -37,23 +37,20 @@ Future<void> fillFeedbackForm(Map rating) async {
 
   setInputs(res.body);
 
-  List<String> course_ids =
-      soup.find_all("tr").map((e) => e.id).toSet().toList();
-  course_ids.removeWhere((e) => e == "");
+  for (int i = 0; i < rating.keys.toList().length; i++) {
+    formData[rating.keys.toList()[i]] =
+        {"value": rating.values.toList()[i].toString(), "readOnly": "false"}.toString();
 
-  course_ids.forEach((element) => formData[element] = "");
+    formData["__EVENTTARGET"] = rating.keys.toList()[i];
 
-  formData[course_ids.first] = {"value": "4", "readOnly": false}.toString();
-  for (int i = 1; i < course_ids.length; i++) {
     post(Uri.parse("https://eduserve.karunya.edu/MIS/IQAC/HFBCollection.aspx"))
         .then((res) async {
-      formData[course_ids[i]] = {"value": "4", "readOnly": false}.toString();
-
       setInputs(res.body);
       print(res.statusCode);
 
-      if (i+1 == course_ids.length) {
+      if (i + 1 == rating.keys.toList().length) {
         formData["ctl00\$mainContent\$btnSave"] = "Save";
+        formData["__EVENTTARGET"] = "";
         res = await post(
             Uri.parse(
                 "https://eduserve.karunya.edu/MIS/IQAC/HFBCollection.aspx"),

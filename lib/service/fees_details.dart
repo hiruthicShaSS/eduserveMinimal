@@ -6,6 +6,7 @@ import 'package:http/http.dart';
 // Project imports:
 import 'package:eduserveMinimal/global/gloabls.dart';
 import 'package:eduserveMinimal/service/scrap.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future<Map?> getFeesDetails({bool force = false}) async {
   if (Scraper.cache.containsKey("fees")) return Scraper.cache["fees"];
@@ -21,6 +22,8 @@ Future<Map?> getFeesDetails({bool force = false}) async {
 
   if (page.body.indexOf("Login") != -1) {
     Fluttertoast.showToast(msg: "esM: Session expired. Refresh data!");
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool("isLoggedIn", false);
     return null;
   }
 

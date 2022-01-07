@@ -1,6 +1,7 @@
 // Package imports:
 import 'package:beautifulsoup/beautifulsoup.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:eduserveMinimal/service/scrap.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
@@ -80,5 +81,8 @@ Future<String> login(
   if (res.body.contains("Hourly Feedback")) {
     return "feedback form found";
   }
+
+  Scraper.cache["home"] = res.body;
+
   return res.body;
 }

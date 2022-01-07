@@ -2,6 +2,7 @@
 import 'package:beautifulsoup/beautifulsoup.dart';
 import 'package:eduserveMinimal/edu_serve.dart';
 import 'package:eduserveMinimal/global/gloabls.dart';
+import 'package:eduserveMinimal/service/scrap.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -202,6 +203,7 @@ class Credentials extends StatelessWidget {
                           await SharedPreferences.getInstance();
                       await prefs.remove("username");
                       await prefs.remove("password");
+                      Scraper.cache = {};
 
                       Fluttertoast.showToast(msg: "Logout completed");
                       Navigator.of(context).pushNamedAndRemoveUntil(
