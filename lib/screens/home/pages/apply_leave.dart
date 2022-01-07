@@ -47,8 +47,8 @@ class _ApplyLeaveViewState extends State<ApplyLeaveView>
             ),
             Expanded(
               child: TabBarView(controller: _tabController, children: [
-                MedicalLeave(),
-                OnDutyLeave(),
+                MedicalLeaveWidget(),
+                OnDutyLeaveWidget(),
               ]),
             ),
           ],
@@ -58,8 +58,8 @@ class _ApplyLeaveViewState extends State<ApplyLeaveView>
   }
 }
 
-class MedicalLeave extends StatelessWidget {
-  const MedicalLeave({Key? key}) : super(key: key);
+class MedicalLeaveWidget extends StatelessWidget {
+  const MedicalLeaveWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -69,8 +69,8 @@ class MedicalLeave extends StatelessWidget {
   }
 }
 
-class OnDutyLeave extends StatelessWidget {
-  const OnDutyLeave({Key? key}) : super(key: key);
+class OnDutyLeaveWidget extends StatelessWidget {
+  const OnDutyLeaveWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

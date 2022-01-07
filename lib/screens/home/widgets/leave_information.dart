@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:eduserveMinimal/models/leave.dart';
 import 'package:eduserveMinimal/service/leave_info.dart';
 import 'package:flutter/material.dart';
 
@@ -33,43 +34,8 @@ class _LeaveInformationState extends State<LeaveInformation>
     // Provider.of<AppState>(context, listen: false).scraper.getLeaveInfo();
     // return Container();
 
-    List<List<String>> fakeLeaveData = [
-      ["", "", "", "", "", "", "      "],
-      ["", "", "", "", "", "", "      "],
-      ["", "", "", "", "", "", "      "]
-    ];
-    List<List<String>> fakeOnDutyData = [
-      [
-        "           ",
-        "        ",
-        "           ",
-        "           ",
-        "                    ",
-        "           ",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        ""
-      ],
-      [
-        "           ",
-        "        ",
-        "           ",
-        "           ",
-        "                    ",
-        "           ",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        ""
-      ]
-    ];
+    Leave fakeLeaveData = Leave.generateFakeLeave();
+
     return Container(
       height: MediaQuery.of(context).size.height * 0.60,
       child: Column(
@@ -91,7 +57,7 @@ class _LeaveInformationState extends State<LeaveInformation>
             child: FutureBuilder(
               future: getLeaveInfo(),
               builder: (context,
-                  AsyncSnapshot<Map<String, List<List<String>>>> snapshot) {
+                  AsyncSnapshot<Leave> snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   Provider.of<AppState>(context, listen: false).leaveInfo =
                       snapshot.data;
@@ -99,22 +65,22 @@ class _LeaveInformationState extends State<LeaveInformation>
                   if (snapshot.data == null)
                     return Text("No records to display.");
 
-                  List? leave = snapshot.data!["leave"];
-                  List? onDuty = snapshot.data!["onDuty"];
+                  List<OtherLeave>? leave = snapshot.data?.allLeave;
+                  List<OnDutyLeave>? onDuty = snapshot.data?.allOnDuty;
 
                   return TabBarView(
                     controller: _tabController,
                     children: [
-                      LeaveList(data: leave),
-                      OnDutyList(data: onDuty),
+                      LeaveList(leave: leave),
+                      OnDutyList(leave: onDuty),
                     ],
                   );
                 }
                 return TabBarView(
                   controller: _tabController,
                   children: [
-                    LeaveList(data: fakeLeaveData, isLoading: true),
-                    OnDutyList(data: fakeOnDutyData, isLoading: true),
+                    LeaveList(leave: fakeLeaveData.allLeave, isLoading: true),
+                    OnDutyList(leave: fakeLeaveData.allOnDuty, isLoading: true),
                   ],
                 );
               },

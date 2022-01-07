@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:eduserveMinimal/models/leave.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -10,9 +11,9 @@ import 'package:eduserveMinimal/global/enum.dart';
 import 'package:eduserveMinimal/screens/home/pages/apply_leave.dart';
 
 class LeaveList extends StatelessWidget {
-  const LeaveList({Key? key, required this.data, this.isLoading = false})
+  const LeaveList({Key? key, required this.leave, this.isLoading = false})
       : super(key: key);
-  final List? data;
+  final List<OtherLeave>? leave;
   final bool isLoading;
 
   @override
@@ -22,7 +23,7 @@ class LeaveList extends StatelessWidget {
       child: Container(
         child: ListView.builder(
           padding: EdgeInsets.zero,
-          itemCount: data!.length + 1,
+          itemCount: leave!.length + 1,
           itemBuilder: (BuildContext context, int index) {
             if (index == 0)
               return Row(
@@ -75,7 +76,7 @@ class LeaveList extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   AutoSizeText(
-                    data![index - 1][1].toString(),
+                    leave![index - 1].reason.toString(),
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                         color: Theme.of(context)
@@ -85,11 +86,11 @@ class LeaveList extends StatelessWidget {
                             .withOpacity(0.3)),
                   ),
                   Text(
-                    "${data![index - 1][2]} - ${data![index - 1][4]}",
+                    "${leave![index - 1].fromDate} - ${leave![index - 1].toDate}",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    data![index - 1][3],
+                    leave![index - 1].session,
                     style: TextStyle(
                         color: Theme.of(context).colorScheme.secondary),
                   ),
@@ -103,15 +104,15 @@ class LeaveList extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.all(2),
                   decoration: BoxDecoration(
-                    color: data![index - 1][6].contains("Active")
+                    color: leave![index - 1].status.contains("Active")
                         ? Colors.greenAccent.withOpacity(0.8)
-                        : data![index - 1][6].contains("Rejected")
+                        : leave![index - 1].status.contains("Rejected")
                             ? Colors.redAccent.withOpacity(0.8)
                             : Colors.orangeAccent.withOpacity(0.8),
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: Text(
-                    data![index - 1][6],
+                    leave![index - 1].status,
                     style: TextStyle(color: Colors.black),
                   ),
                 ),
@@ -129,20 +130,21 @@ class LeaveList extends StatelessWidget {
                     showDialog(
                         context: context,
                         builder: (_) => AlertDialog(
-                              title: Text(data![index - 1][0].toString()),
+                              title: Text(leave![index - 1].reason.toString()),
                               content: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
-                                    "Duration: ${data![index - 1][2]} - ${data![index - 1][4]}",
+                                    "Duration: ${leave![index - 1].fromDate} - ${leave![index - 1].fromDate}",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                   SizedBox(height: 10),
-                                  Text("From Session: ${data![index - 1][5]}"),
-                                  Text("Status: ${data![index - 1][6]}"),
+                                  Text("From Session: ${leave![index - 1].fromSession}"),
+                                  Text("To Session: ${leave![index - 1].toSession}"),
+                                  Text("Status: ${leave![index - 1].status}"),
                                   SizedBox(height: 10),
                                   Center(
                                     child: TextButton(
