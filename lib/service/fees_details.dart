@@ -1,5 +1,6 @@
 // Package imports:
 import 'package:beautifulsoup/beautifulsoup.dart';
+import 'package:eduserveMinimal/models/fees.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 
@@ -8,13 +9,14 @@ import 'package:eduserveMinimal/global/gloabls.dart';
 import 'package:eduserveMinimal/service/scrap.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-Future<Map?> getFeesDetails({bool force = false}) async {
+Future<Fees?> getFeesDetails({bool force = false}) async {
   if (Scraper.cache.containsKey("fees")) return Scraper.cache["fees"];
   Map<String, String> headers = httpHeaders;
 
   String feesDownload = "/Student/Fees/DownloadReceipt.aspx";
   String feesOverallStatement = "/Student/Fees/FeesStatement.aspx";
-  Map feesStatement = new Map();
+  Fees fees = new Fees();
+  
 
   Response page = await get(
       Uri.parse("https://eduserve.karunya.edu${feesDownload}"),
@@ -55,15 +57,15 @@ Future<Map?> getFeesDetails({bool force = false}) async {
       element = element.trim().replaceAll('<td style="display:none;">', "");
       element = element.trim().replaceAll("</td>", "<space>");
 
-      List? temp = [];
+      List<String>? temp = [];
       temp = element.split("<space>");
       temp!.removeRange(0, 3);
       temp.removeWhere((element) => element.length == 0);
-      feesStatement[temp[1]] = temp;
+      fees.add(temp[1], temp);
     }
   });
 
-  feesStatement["dues"] = dueslist;
-  Scraper.cache["fees"] = feesStatement;
-  return feesStatement;
+  fees.dues = dueslist;
+  Scraper.cache["fees"] = fees;
+  return fees;
 }
