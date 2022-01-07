@@ -12,14 +12,14 @@ import 'package:eduserveMinimal/providers/theme.dart';
 import 'package:eduserveMinimal/screens/home/widgets/leave_list.dart';
 import 'package:eduserveMinimal/screens/home/widgets/on_duty_list.dart';
 
-class LeaveInformation extends StatefulWidget {
-  const LeaveInformation({Key? key}) : super(key: key);
+class LeaveInformationWidget extends StatefulWidget {
+  const LeaveInformationWidget({Key? key}) : super(key: key);
 
   @override
-  _LeaveInformationState createState() => _LeaveInformationState();
+  _LeaveInformationWidgetState createState() => _LeaveInformationWidgetState();
 }
 
-class _LeaveInformationState extends State<LeaveInformation>
+class _LeaveInformationWidgetState extends State<LeaveInformationWidget>
     with SingleTickerProviderStateMixin {
   TabController? _tabController;
 

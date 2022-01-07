@@ -45,6 +45,7 @@ class HomePage extends StatelessWidget {
       ),
       body: RefreshIndicator(
         displacement: 100,
+        triggerMode: RefreshIndicatorTriggerMode.anywhere,
         child: CustomScrollView(
           slivers: [
             SliverAppBar(
@@ -64,8 +65,8 @@ class HomePage extends StatelessWidget {
             ),
             SliverList(
               delegate: SliverChildListDelegate([
-                LeaveInformation(),
-                AttendanceSummary(),
+                LeaveInformationWidget(),
+                AttendanceSummaryWidget(),
               ]),
             ),
           ],

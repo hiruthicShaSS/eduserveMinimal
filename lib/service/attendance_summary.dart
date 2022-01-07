@@ -1,8 +1,9 @@
 import 'package:beautifulsoup/beautifulsoup.dart';
 import 'package:eduserveMinimal/global/gloabls.dart';
+import 'package:eduserveMinimal/models/attendance_summary.dart';
 import 'package:http/http.dart';
 
-Future getAttendanceSummary() async {
+Future<AttendanceSummary> getAttendanceSummary() async {
   Map<String, String> headers = httpHeaders;
   Map formData = httpFormData;
   formData.remove("ctl00\$mainContent\$DDLEXAM");
@@ -17,8 +18,7 @@ Future getAttendanceSummary() async {
 
   final academicTerms =
       soup.find_all("option").map((e) => e.text.trim()).toSet().toList();
-  int maxAcademicTerm = academicTerms.length -
-      1; // -1 for for compensating 0 indexing and to remove the option 'Select the Academic Term'
+  int maxAcademicTerm = academicTerms.length - 1; // -1 for for compensating 0 indexing and to remove the option 'Select the Academic Term'
 
   inputs.forEach((element) {
     // Populate form data
@@ -30,8 +30,7 @@ Future getAttendanceSummary() async {
     }
   });
 
-  formData["ctl00\$mainContent\$DDLACADEMICTERM"] =
-      "20"; // maxAcademicTerm.toString();
+  formData["ctl00\$mainContent\$DDLACADEMICTERM"] = maxAcademicTerm.toString();
   res = await post(
       Uri.parse("https://eduserve.karunya.edu/Student/AttSummary.aspx"),
       headers: headers,
@@ -48,10 +47,10 @@ Future getAttendanceSummary() async {
   List summary = soup.find_all("td").map((e) => e.text.trim()).toList();
   summary = summary.sublist(summaryDataStart);
 
-  List<List> summaryData = [];
+  List<List<String>> summaryData = [];
   for (int i = 0; i < summary.length; i += 14) {
     try {
-      summaryData.add(summary.sublist(i, i + 14));
+      summaryData.add(summary.sublist(i, i + 14) as List<String>);
     } catch (e) {}
   }
 
@@ -65,8 +64,8 @@ Future getAttendanceSummary() async {
     summaryData[i].add(totalUnAttended.toString());
   }
 
-  return {
-    "basicInfo": basicInfo,
-    "summaryData": summaryData,
-  };
+  AttendanceSummary attendanceSummary =
+      AttendanceSummary(basicInfo: basicInfo, summaryData: summaryData);
+
+  return attendanceSummary;
 }

@@ -1,6 +1,5 @@
-import 'dart:math';
-
 import 'package:eduserveMinimal/global/widgets/dot_container.dart';
+import 'package:eduserveMinimal/models/attendance_summary.dart';
 import 'package:eduserveMinimal/providers/theme.dart';
 import 'package:eduserveMinimal/service/attendance_summary.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -8,43 +7,23 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-class AttendanceSummary extends StatelessWidget {
-  AttendanceSummary({Key? key}) : super(key: key);
+class AttendanceSummaryWidget extends StatelessWidget {
+  AttendanceSummaryWidget({Key? key}) : super(key: key);
 
-  final Map dummyData = {
-    "basicInfo": [
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      Random().nextInt(90).toString(),
-      Random().nextInt(10).toString()
-    ],
-    "summaryData": List.generate(
-        10,
-        (index) => List.generate(
-            17,
-            (index) =>
-                index == 0 ? "18 MAY 2002" : Random().nextInt(11).toString()))
-  };
+  final AttendanceSummary dummyData = AttendanceSummary.generateFakeData();
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: getAttendanceSummary(),
-      builder: (context, AsyncSnapshot snapshot) {
+      builder: (context, AsyncSnapshot<AttendanceSummary> snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           return snapshot.hasData
               ? Column(
                   children: [
-                    AttendancePieChart(data: snapshot.data),
+                    AttendancePieChart(data: snapshot.data!.basicInfo),
                     Padding(padding: EdgeInsets.all(10)),
-                    AttendanceBarChart(data: snapshot.data)
+                    AttendanceBarChart(data: snapshot.data!.summaryData)
                   ],
                 )
               : Center(
@@ -55,8 +34,9 @@ class AttendanceSummary extends StatelessWidget {
           highlightColor: Colors.grey[900]!,
           child: Column(
             children: [
-              AttendancePieChart(data: dummyData),
-              AttendanceBarChart(data: dummyData),
+              AttendancePieChart(data: dummyData.basicInfo),
+              Padding(padding: EdgeInsets.all(10)),
+              AttendanceBarChart(data: dummyData.summaryData),
             ],
           ),
         );
@@ -68,10 +48,10 @@ class AttendanceSummary extends StatelessWidget {
 class AttendancePieChart extends StatelessWidget {
   const AttendancePieChart({
     Key? key,
-    this.data,
+    required this.data,
   }) : super(key: key);
 
-  final data;
+  final AttendanceBasicInfo data;
 
   @override
   Widget build(BuildContext context) {
@@ -97,15 +77,15 @@ class AttendancePieChart extends StatelessWidget {
                 startDegreeOffset: -45,
                 sections: [
                   PieChartSectionData(
-                    title: data!["basicInfo"][9],
+                    title: data.presentHours,
                     color: Colors.green,
-                    value: double.parse(data!["basicInfo"][9]),
+                    value: double.parse(data.presentHours),
                     radius: 60,
                   ),
                   PieChartSectionData(
-                    title: data!["basicInfo"].last,
+                    title: data.absentHours,
                     color: Colors.red,
-                    value: double.parse(data!["basicInfo"].last),
+                    value: double.parse(data.absentHours),
                     radius: 70,
                   ),
                 ],
@@ -142,15 +122,11 @@ class AttendancePieChart extends StatelessWidget {
                                     mainAxisSize: MainAxisSize.min,
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                      Text(
-                                          "Total Hours: ${data!["basicInfo"][7]}"),
-                                      Text("Actual: ${data!["basicInfo"][10]}"),
-                                      Text(
-                                          "OD Corrected: ${data!["basicInfo"][11]}"),
-                                      Text(
-                                          "ML Corrected: ${data!["basicInfo"][12]}"),
-                                      Text(
-                                          "Leave Hours: ${data!["basicInfo"][14]}"),
+                                      Text("Total Hours: ${data.totalHours}"),
+                                      Text("Actual: ${data.actual}"),
+                                      Text("OD Corrected: ${data.odCorrected}"),
+                                      Text("ML Corrected: ${data.mlCorrected}"),
+                                      Text("Leave Hours: ${data.leaveHours}"),
                                     ],
                                   ),
                                 )),
@@ -167,16 +143,16 @@ class AttendancePieChart extends StatelessWidget {
 }
 
 class AttendanceBarChart extends StatelessWidget {
-  const AttendanceBarChart({Key? key, this.data}) : super(key: key);
+  const AttendanceBarChart({Key? key, required this.data}) : super(key: key);
 
-  final data;
+  final List<AttendanceSummaryData> data;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
       child: Container(
-        height: 250,
+        height: 300,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
@@ -185,72 +161,112 @@ class AttendanceBarChart extends StatelessWidget {
             width: 2,
           ),
         ),
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.all(15),
         child: Column(
           children: [
-            Text("Last 7 days attendance/hour"),
+            Row(
+              children: [
+                Text(
+                  "Last 7 days attendance/hour",
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                ),
+                Spacer(),
+                buildLegend(),
+              ],
+            ),
             Expanded(
-              child: BarChart(
-                BarChartData(
-                  alignment: BarChartAlignment.center,
-                  maxY: 11,
-                  minY: 0,
-                  groupsSpace: 4,
-                  gridData: FlGridData(show: false),
-                  barTouchData: BarTouchData(enabled: true),
-                  borderData: FlBorderData(show: false),
-                  titlesData: FlTitlesData(
-                    topTitles: SideTitles(showTitles: false),
-                    rightTitles: SideTitles(showTitles: false),
-                    leftTitles: SideTitles(showTitles: false),
-                    bottomTitles: SideTitles(
-                        showTitles: true,
-                        getTitles: (double value) =>
-                            getBottomTitle(data, value),
-                        rotateAngle: -45),
-                  ),
-                  axisTitleData: FlAxisTitleData(
-                    show: true,
-                    bottomTitle: AxisTitle(
-                        titleText: "Day", showTitle: true, margin: 20),
-                    leftTitle: AxisTitle(titleText: "Hour", showTitle: true),
-                  ),
-                  barGroups: List.generate(
-                    data["summaryData"]
-                        .sublist(data["summaryData"].length - 7)
-                        .length,
-                    (index) => BarChartGroupData(
-                      x: index,
-                      barRods: [
-                        BarChartRodData(
-                          y: double.parse(data["summaryData"][index][14]),
-                          colors: [Colors.green, Colors.greenAccent],
-                          width: 15,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(6),
-                            topRight: Radius.circular(6),
-                          ),
-                        ),
-                        BarChartRodData(
-                          y: double.parse(data["summaryData"][index][15]),
-                          colors: [Colors.red, Colors.redAccent],
-                          width: 15,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(6),
-                            topRight: Radius.circular(6),
-                          ),
-                        ),
-                        BarChartRodData(
-                          y: double.parse(data["summaryData"][index][16]),
-                          colors: [Colors.grey, Colors.white],
-                          width: 10,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(6),
-                            topRight: Radius.circular(6),
-                          ),
-                        ),
-                      ],
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: BarChart(
+                  BarChartData(
+                    alignment: BarChartAlignment.center,
+                    maxY: 11,
+                    minY: 0,
+                    groupsSpace: 15,
+                    gridData: FlGridData(
+                      show: true,
+                      drawHorizontalLine: false,
+                      drawVerticalLine: true,
+                      horizontalInterval: 1,
+                      verticalInterval: 2,
                     ),
+                    barTouchData: BarTouchData(enabled: true),
+                    borderData: FlBorderData(show: false),
+                    titlesData: FlTitlesData(
+                      topTitles: SideTitles(showTitles: false),
+                      rightTitles: SideTitles(showTitles: false),
+                      leftTitles: SideTitles(showTitles: false, interval: 1),
+                      bottomTitles: SideTitles(
+                          showTitles: true,
+                          getTitles: (double index) =>
+                              getBottomTitle(data.sublist(0, 7), index),
+                          rotateAngle: -45),
+                    ),
+                    axisTitleData: FlAxisTitleData(
+                      show: true,
+                      leftTitle: AxisTitle(titleText: "Hour", showTitle: true),
+                    ),
+                    barGroups: List.generate(7, (index) {
+                      List<AttendanceSummaryData> last7Days =
+                          data.sublist(0, 7);
+
+                      return BarChartGroupData(
+                        x: index,
+                        barRods: [
+                          BarChartRodData(
+                            y: last7Days[index].present,
+                            colors: [Colors.green, Colors.greenAccent],
+                            backDrawRodData: BackgroundBarChartRodData(
+                              colors: [
+                                Colors.lightGreenAccent.withOpacity(0.01),
+                                Colors.lightGreen.withOpacity(0.01)
+                              ],
+                              show: true,
+                              y: 11,
+                            ),
+                            width: 15,
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(6),
+                              topRight: Radius.circular(6),
+                            ),
+                          ),
+                          BarChartRodData(
+                            y: last7Days[index].absent,
+                            colors: [Colors.red, Colors.redAccent],
+                            width: 12,
+                            backDrawRodData: BackgroundBarChartRodData(
+                              colors: [
+                                Colors.redAccent.withOpacity(0.02),
+                                Colors.red.withOpacity(0.02)
+                              ],
+                              show: true,
+                              y: 11,
+                            ),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(6),
+                              topRight: Radius.circular(6),
+                            ),
+                          ),
+                          BarChartRodData(
+                            y: last7Days[index].unAttended,
+                            colors: [Colors.black, Colors.grey],
+                            backDrawRodData: BackgroundBarChartRodData(
+                              colors: [
+                                Colors.grey.withOpacity(0.02),
+                                Colors.black.withOpacity(0.02)
+                              ],
+                              show: true,
+                              y: 11,
+                            ),
+                            width: 8,
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(6),
+                              topRight: Radius.circular(6),
+                            ),
+                          ),
+                        ],
+                      );
+                    }),
                   ),
                 ),
               ),
@@ -260,10 +276,80 @@ class AttendanceBarChart extends StatelessWidget {
       ),
     );
   }
+
+  Column buildLegend() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            _LinearGradientLegend(
+              colors: [Colors.green, Colors.lightGreenAccent],
+              height: 5,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Text("Present"),
+            )
+          ],
+        ),
+        Row(
+          children: [
+            _LinearGradientLegend(
+              colors: [Colors.red, Colors.redAccent],
+              height: 5,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Text("Absent"),
+            )
+          ],
+        ),
+        Row(
+          children: [
+            _LinearGradientLegend(
+              colors: [Colors.black, Colors.grey],
+              height: 5,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Text("Un-Attended"),
+            )
+          ],
+        ),
+      ],
+    );
+  }
 }
 
-getBottomTitle(data, value) {
-  return data["summaryData"]
-      .sublist(data["summaryData"].length - 7)[value.toInt()][0]
-      .substring(0, 6);
+String getBottomTitle(List<AttendanceSummaryData> data, index) {
+  return data.sublist(data.length - 7)[index.toInt()].date.substring(0, 6);
+}
+
+class _LinearGradientLegend extends StatelessWidget {
+  _LinearGradientLegend(
+      {Key? key, required this.colors, this.height = 10.0, this.width = 20.0})
+      : super(key: key);
+
+  final List<Color> colors;
+  double height = 10.0;
+  double width = 10.0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        children: [
+          Container(
+            height: height,
+            width: width,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(colors: colors),
+              borderRadius: BorderRadius.circular(20),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
