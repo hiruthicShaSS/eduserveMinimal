@@ -1,16 +1,17 @@
 // Package imports:
 import 'package:beautifulsoup/beautifulsoup.dart';
+import 'package:eduserveMinimal/models/leave.dart';
 import 'package:http/http.dart';
 
 // Project imports:
 import 'package:eduserveMinimal/global/gloabls.dart';
 import 'package:eduserveMinimal/service/scrap.dart';
 
-Future<Map<String, List<List<String>>>> getLeaveInfo() async {
+Future<Leave> getLeaveInfo() async {
   if (Scraper.cache.containsKey("leave")) return Scraper.cache["leave"];
   Map<String, String> headers = httpHeaders;
 
-  Map<String, List<List<String>>> parsePage(String page) {
+  Leave parsePage(String page) {
     String onDutySection = page.toString().split("Leave Type")[1];
 
     Beautifulsoup onDutySoup = Beautifulsoup(onDutySection);
@@ -20,8 +21,7 @@ Future<Map<String, List<List<String>>>> getLeaveInfo() async {
     List leavest = leaveSoup.find_all("td").map((e) => e.text).toList();
     leavest = leavest.sublist(leavest.indexOf("Medical Leave"));
 
-    List<List<String>> allLeave = [];
-    List<List<String>> allOnDuty = [];
+    Leave allLeave = Leave();
     // onDuty structure [From Date, From Session, To Date, To Session, Reason, Status, Pending with, Created by, Created on, Approval by,
     // Approval on, Availed by, Availed on]
     List<String> onDuty = [];
@@ -35,11 +35,11 @@ Future<Map<String, List<List<String>>>> getLeaveInfo() async {
         leave.add(leavest[i]);
         leaveEntryCount++;
         if (leaveEntryCount > 8) {
-          allLeave.add(leave);
+          allLeave.addOtherLeave(leave);
           break;
         }
       } else {
-        allLeave.add(leave);
+        allLeave.addOtherLeave(leave);
         leave = [];
         leaveEntryCount = 0;
       }
@@ -58,7 +58,7 @@ Future<Map<String, List<List<String>>>> getLeaveInfo() async {
           onDuty.add(element);
           return;
         }
-        allOnDuty.add(onDuty);
+        allLeave.addOnDuty(onDuty);
         onDuty = [element];
         return;
       }
@@ -67,8 +67,8 @@ Future<Map<String, List<List<String>>>> getLeaveInfo() async {
       onDuty.add(element.toString().trim());
     });
 
-    Scraper.cache["leave"] = {"onDuty": allOnDuty, "leave": allLeave};
-    return {"onDuty": allOnDuty, "leave": allLeave};
+    Scraper.cache["leave"] = leave;
+    return allLeave;
   }
 
   Response home_page = await get(

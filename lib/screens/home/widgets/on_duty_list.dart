@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:eduserveMinimal/models/leave.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -10,9 +11,9 @@ import 'package:eduserveMinimal/global/enum.dart';
 import 'package:eduserveMinimal/screens/home/pages/apply_leave.dart';
 
 class OnDutyList extends StatelessWidget {
-  const OnDutyList({Key? key, required this.data, this.isLoading = false})
+  const OnDutyList({Key? key, required this.leave, this.isLoading = false})
       : super(key: key);
-  final List? data;
+  final List<OnDutyLeave>? leave;
   final bool isLoading;
 
   @override
@@ -22,7 +23,7 @@ class OnDutyList extends StatelessWidget {
       child: Container(
         child: ListView.builder(
           padding: EdgeInsets.zero,
-          itemCount: data!.length + 1,
+          itemCount: leave!.length + 1,
           itemBuilder: (BuildContext context, int index) {
             if (index == 0)
               return Row(
@@ -75,7 +76,7 @@ class OnDutyList extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   AutoSizeText(
-                    data![index - 1][4].toString(),
+                    leave![index - 1].reason.toString(),
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                         color: Theme.of(context)
@@ -85,13 +86,11 @@ class OnDutyList extends StatelessWidget {
                             .withOpacity(0.3)),
                   ),
                   Text(
-                    "${data![index - 1][0]} - ${data![index - 1][2]}",
+                    "${leave![index - 1].fromDate} - ${leave![index - 1].toDate}",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    (data![index - 1][1] == "FULL DAY")
-                        ? "FD"
-                        : data![index - 1][1],
+                    leave![index - 1].session,
                     style: TextStyle(
                         color: Theme.of(context).colorScheme.secondary),
                   ),
@@ -105,15 +104,15 @@ class OnDutyList extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.all(2),
                   decoration: BoxDecoration(
-                    color: data![index - 1][5].contains("AVAILED")
+                    color: leave![index - 1].status.contains("AVAILED")
                         ? Colors.greenAccent.withOpacity(0.8)
-                        : data![index - 1][5].contains("REJECTED")
+                        : leave![index - 1].status.contains("REJECTED")
                             ? Colors.redAccent.withOpacity(0.8)
                             : Colors.orangeAccent.withOpacity(0.8),
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: Text(
-                    data![index - 1][5],
+                    leave![index - 1].status,
                     style: TextStyle(color: Colors.black),
                   ),
                 ),
@@ -131,28 +130,36 @@ class OnDutyList extends StatelessWidget {
                     showDialog(
                         context: context,
                         builder: (_) => AlertDialog(
-                              title: Text(data![index - 1][4].toString()),
+                              title: Text(leave![index - 1].reason.toString()),
                               content: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
-                                    "Duration: ${data![index - 1][0]} - ${data![index - 1][2]}",
+                                    "Duration: ${leave![index - 1].fromDate} - ${leave![index - 1].toDate}",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                   SizedBox(height: 10),
                                   Text(
-                                      "Created on: ${data![index - 1][8].toString()}"),
-                                  Text("From Session: ${data![index - 1][1]}"),
-                                  Text("Status: ${data![index - 1][5]}"),
+                                      "Created on: ${leave![index - 1].createdOn.toString()}"),
+                                  Text(
+                                      "From Session: ${leave![index - 1].fromSession}"),
+                                  Text(
+                                      "To Session: ${leave![index - 1].toSession}"),
+                                  Text("Status: ${leave![index - 1].status}"),
                                   SizedBox(height: 10),
-                                  Text("Created by: ${data![index - 1][7]}"),
-                                  Text("Approval by: ${data![index - 1][9]}"),
-                                  Text("Approval on: ${data![index - 1][10]}"),
-                                  Text("Availed by: ${data![index - 1][11]}"),
-                                  Text("Availed on: ${data![index - 1][12]}"),
+                                  Text(
+                                      "Created by: ${leave![index - 1].createdBy}"),
+                                  Text(
+                                      "Approval by: ${leave![index - 1].approvalBy}"),
+                                  Text(
+                                      "Approval on: ${leave![index - 1].approvalOn}"),
+                                  Text(
+                                      "Availed by: ${leave![index - 1].availedBy}"),
+                                  Text(
+                                      "Availed on: ${leave![index - 1].availedOn}"),
                                   Center(
                                     child: TextButton(
                                         onPressed: () =>

@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:eduserveMinimal/models/leave.dart';
 import 'package:flutter/cupertino.dart';
 
 // Package imports:
@@ -13,7 +14,7 @@ class AppState extends ChangeNotifier {
   Map cache = {};
 
   List? attendance = [];
-  Map? leaveInfo = {};
+  Leave? leaveInfo = Leave();
 
   AppState() {
     initPlatformState();

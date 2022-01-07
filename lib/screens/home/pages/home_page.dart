@@ -72,8 +72,8 @@ class HomePage extends StatelessWidget {
         ),
         onRefresh: () => login().then((value) {
           Scraper.cache.clear();
-          Fluttertoast.showToast(msg: "Refresh complete");
           RestartWidget.restartApp(context);
+          Fluttertoast.showToast(msg: "Refresh complete");
         }),
       ),
     );
