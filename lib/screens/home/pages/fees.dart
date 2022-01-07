@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:eduserveMinimal/models/fees.dart';
 import 'package:eduserveMinimal/service/fees_details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,13 +21,10 @@ class FeesView extends StatelessWidget {
       body: SafeArea(
         child: FutureBuilder(
           future: getFeesDetails(),
-          builder: (context, AsyncSnapshot<Map?> snapshot) {
+          builder: (context, AsyncSnapshot<Fees?> snapshot) {
             if (snapshot.hasData) {
-              Map data = snapshot.data!;
-              List dues = (data["dues"] == null || data["dues"].length < 2)
-                  ? [0, 0]
-                  : data["dues"];
-              data.remove("dues");
+              Fees fees = snapshot.data!;
+              List dues = fees.dues.length < 2 ? [0, 0] : fees.dues;
 
               return Column(
                 children: [
@@ -78,42 +76,33 @@ class FeesView extends StatelessWidget {
                   ),
                   Expanded(
                     child: ListView.builder(
-                      itemCount: data.keys.length,
+                      itemCount: fees.length,
                       itemBuilder: (context, index) {
-                        String currency = "";
-                        if (data[data.keys.toList()[index]]
-                                [data[data.keys.toList()[index]].length - 2] ==
-                            "Indian Rupee") {
-                          currency = "\u{20B9}";
-                        }
-                        // else if (# new currency logic) {}
-
                         return Padding(
                           padding: const EdgeInsets.all(5.0),
                           child: ListTile(
                             tileColor:
                                 ThemeProvider.currentThemeData!.cardColor,
-                            title: AutoSizeText(
-                                data[data.keys.toList()[index]][3]),
+                            title: AutoSizeText(fees.values[index].description),
+                            leading: AutoSizeText(
+                              fees.values[index].date, // Date
+                              minFontSize: 12,
+                              maxFontSize: 18,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                             trailing: Column(
                               children: [
                                 AutoSizeText(
-                                  "$currency ${data[data.keys.toList()[index]].last}", // Amount
+                                  "${fees.values[index].currency} ${fees.values[index].amountPaid}", // Amount
                                   minFontSize: 18,
                                   maxFontSize: 24,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(color: Colors.red),
                                 ),
                                 AutoSizeText(
-                                  data.keys.toList()[index], // Reciept number
+                                  fees.ids[index], // Reciept number
                                   minFontSize: 12,
                                   maxFontSize: 18,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                AutoSizeText(
-                                  data[data.keys.toList()[index]][2], // Date
-                                  minFontSize: 6,
-                                  maxFontSize: 10,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ],
@@ -121,7 +110,7 @@ class FeesView extends StatelessWidget {
                             onTap: () {
                               Clipboard.setData(ClipboardData(
                                   text:
-                                      "${data[data.keys.toList()[index]][3]}\nReciept no. : ${data.keys.toList()[index]}\nAmount: ${data[data.keys.toList()[index]].last}\nDate Payed: ${data[data.keys.toList()[index]][2]}"));
+                                      "${fees.values[index].description}\nReciept no. : ${fees.ids[index]}\nAmount: ${fees.values[index].amountPaid}\nDate Payed: ${fees.values[index].date}"));
                               Fluttertoast.showToast(
                                   msg: "Copied to clipboard");
                             },
