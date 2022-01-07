@@ -1,0 +1,51 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "hiruthicShaSS",
+      "name": "Hiruthic",
+      "avatar_url": "https://avatars.githubusercontent.com/u/56349092?v=4",
+      "profile": "http://hiruthicsha.com",
+      "contributions": [
+        "projectManagement"
+      ]
+    },
+    {
+      "login": "sachinravikumar",
+      "name": "Sachin R",
+      "avatar_url": "https://avatars.githubusercontent.com/u/56858946?v=4",
+      "profile": "https://github.com/sachinravikumar",
+      "contributions": [
+        "business"
+      ]
+    },
+    {
+      "login": "shivnesh646",
+      "name": "shivnesh646",
+      "avatar_url": "https://avatars.githubusercontent.com/u/56859062?v=4",
+      "profile": "https://github.com/shivnesh646",
+      "contributions": [
+        "business"
+      ]
+    },
+    {
+      "login": "nikhilSolomon",
+      "name": "Nikhil solomon",
+      "avatar_url": "https://avatars.githubusercontent.com/u/58876406?v=4",
+      "profile": "https://github.com/nikhilSolomon",
+      "contributions": [
+        "test"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "eduserveMinimal",
+  "projectOwner": "hiruthicShaSS",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}

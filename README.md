@@ -6,6 +6,9 @@ Minimalist app for eduserve
 
 [![Website][website-shield]][website-url]
 ![Lines of code](https://img.shields.io/tokei/lines/github/hiruthicShaSS/eduserveMinimal?color=916BBF&label=Lines%20of%20code&style=for-the-badge)
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ## Download
 
@@ -79,3 +82,31 @@ git clone --recurse-submodules https://github.com/hiruthicShaSS/eduserveMinimal.
 
 [website-url]: https://hiruthicshass.github.io/eduserveMinimal/
 [website-shield]: https://img.shields.io/website?label=GitHub%20Pages&style=for-the-badge&url=https://hiruthicshass.github.io/eduserveMinimal/
+
+## Contributors ✨
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="http://hiruthicsha.com"><img src="https://avatars.githubusercontent.com/u/56349092?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Hiruthic</b></sub></a><br /><a href="#projectManagement-hiruthicShaSS" title="Project Management">📆</a></td>
+    <td align="center"><a href="https://github.com/sachinravikumar"><img src="https://avatars.githubusercontent.com/u/56858946?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Sachin R</b></sub></a><br /><a href="#business-sachinravikumar" title="Business development">💼</a></td>
+    <td align="center"><a href="https://github.com/shivnesh646"><img src="https://avatars.githubusercontent.com/u/56859062?v=4?s=100" width="100px;" alt=""/><br /><sub><b>shivnesh646</b></sub></a><br /><a href="#business-shivnesh646" title="Business development">💼</a></td>
+    <td align="center"><a href="https://github.com/nikhilSolomon"><img src="https://avatars.githubusercontent.com/u/58876406?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Nikhil solomon</b></sub></a><br /><a href="https://github.com/hiruthicShaSS/eduserveMinimal/commits?author=nikhilSolomon" title="Tests">⚠️</a></td>
+  </tr>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+
+## Early Adopters
+
+- [Joseph Manoharan](https://www.instagram.com/_Joseph.mano_/) (This piece of cake doesnt remember his github uid, so take it on insta)
+- [Nikhil Solomon](https://github.com/nikhilSolomon)
