@@ -1,8 +1,12 @@
 // Flutter imports:
+import 'dart:convert';
+
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:beautifulsoup/beautifulsoup.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -60,68 +64,184 @@ class Scraper {
     prefs = await SharedPreferences.getInstance();
   }
 
-  int totalFeedback = 0;
-
-  Future<List?> getAttendenceSummary({String? term}) async {
-    Map<String, String> headers = this.headers;
-    Map formData = this.formData;
-
-    // headers[":authority:"] = "eduserve.karunya.edu";
-    // headers[":method:"] = "GET";
-    // headers[":path:"] = "/Student/AttSummary.aspx";
-    // headers[":scheme:"] = "https";
-    headers["referer"] = "https://eduserve.karunya.edu/Student/AttSummary.aspx";
-    headers["accept-encoding"] = "gzip, deflate, br";
-    headers["accept-language"] = "en-US,en;q=0.9";
-    headers["sec-ch-ua"] =
-        '"Chromium";v="94", "Microsoft Edge";v="94", ";Not A Brand";v="99"';
-    headers["cache-control"] = "max-age=0";
-    headers["content-length"] = "16209";
-
-    if (term == null) {
-      Response res = await this.client.get(
-          Uri.parse("https://eduserve.karunya.edu/Student/AttSummary.aspx"),
-          headers: headers);
-
-      if (res.body.indexOf("Login") == -1) login();
-
-      var soup = Beautifulsoup(res.body);
-      final inputs = soup.find_all("input").map((e) => e.attributes).toList();
-      List academicTerms = soup
-          .find_all("option")
-          .map((e) => {e.text.trim(): e.attributes})
-          .toSet()
-          .toList();
-
-      inputs.forEach((element) {
-        // Populate form data
-        if (formData[element["name"]] == "") {
-          formData[element["name"]] =
-              (element["value"] == "Clear" || element["value"] == null)
-                  ? ""
-                  : element["value"];
-        }
-      });
-      return academicTerms;
-    } else {
-      // headers[":method:"] = "POST";
-      formData["ctl00\$mainContent\$DDLACADEMICTERM"] = term;
-      formData.remove("ctl00\$mainContent\$DDLEXAM");
-
-      Response res = await client.post(
-          Uri.parse("https://eduserve.karunya.edu/Student/AttSummary.aspx"),
-          headers: headers,
-          body: formData);
-
-      Beautifulsoup soup = Beautifulsoup(res.body);
-      final a = soup.find_all("td").map((e) => e.text).toList();
-      final selectedOption = soup
-          .find_all("option")
-          .where((e) => e.attributes.containsKey("selected"))
-          .toList();
-
-      if (a.contains("No records to display.")) return [];
-      a.forEach((element) => print(element));
+  Future<String> login([callback]) async {
+    // Login
+    var connection = await (Connectivity().checkConnectivity());
+    if (connection == ConnectivityResult.none) {
+      Fluttertoast.showToast(
+        msg: "Internet, caveman. Turn it on...",
+        timeInSecForIosWeb: 10,
+      );
     }
+
+    String loginAddress = "/Login.aspx?ReturnUrl=%2f";
+
+    String username = prefs.getString("username")!;
+    String password = prefs.getString("password")!;
+
+    Map<String, String> login_data = {
+      "RadScriptManager1_TSM": "",
+      "__EVENTTARGET": "",
+      "__EVENTARGUMENT": "",
+      "__VIEWSTATE": "",
+      "__VIEWSTATEGENERATOR": "",
+      "__EVENTVALIDATION": "",
+      "ctl00\$mainContent\$Login1\$UserName": username,
+      "ctl00\$mainContent\$Login1\$Password": password,
+      "ctl00\$mainContent\$Login1\$LoginButton": "Log In"
+    };
+
+    status = "Get EduServe...";
+
+    // Get karunya.edu
+    url = hostname;
+    headers["referer"] = url;
+    var res = await client.get(Uri.parse(url));
+    var eduserveCookie = res.headers["set-cookie"]; // Set the ASP.NET_SessionId
+
+    // Parse: Start
+    var soup = Beautifulsoup(res.body);
+    final inputs = soup.find_all("input").map((e) => e.attributes).toList();
+
+    inputs.forEach((element) {
+      if (login_data[element["name"]] == "") {
+        login_data[element["name"]!] = element["value"]!;
+      }
+    });
+    // Parse: End
+
+    // Get login.aspx
+    status += "\nLogging in...";
+    headers["cookie"] = eduserveCookie!.split(";")[0];
+    url = hostname + loginAddress;
+    headers["referer"] = url;
+
+    // Post to login.aspx
+    res = await client.post(Uri.parse(url), headers: headers, body: login_data);
+
+    if (res.body.indexOf(
+            "Your login attempt was not successful. Please try again.") !=
+        -1) {
+      Fluttertoast.showToast(
+          msg: "Your login attempt was not successful. Please try again.",
+          gravity: ToastGravity.CENTER);
+    }
+
+    if (res.statusCode == 302) {
+      status += "\nRedirecting to Home";
+      headers["cookie"] =
+          headers["cookie"]! + "; ${res.headers['set-cookie']!.split(';')[0]}";
+      res = await client.get(
+          Uri.parse("https://eduserve.karunya.edu${res.headers["location"]}"),
+          headers: headers);
+    }
+
+    if (res.body.contains("Hourly Feedback")) {
+      return "feedback form found";
+    }
+    return res.body;
+  }
+
+  Future<Map> getFeesDetails({bool force = false}) async {
+    if (cache.containsKey("fees")) return cache["fees"];
+
+    String feesDownload = "/Student/Fees/DownloadReceipt.aspx";
+    String feesOverallStatement = "/Student/Fees/FeesStatement.aspx";
+    Map feesStatement = new Map();
+
+    Response page = await client.get(Uri.parse("$hostname${feesDownload}"),
+        headers: headers);
+
+    if (page.body.indexOf("Login") != -1) {
+      Fluttertoast.showToast(msg: "esM: Session expired. Refresh data!");
+      return {};
+    }
+
+    Response dues = await client
+        .get(Uri.parse("$hostname${feesOverallStatement}"), headers: headers);
+    var dueSoup = Beautifulsoup(dues.body);
+    List dueslist = dueSoup
+        .find_all("span")
+        .map((e) => (e.attributes["id"] == "mainContent_LBLDUES" ||
+                e.attributes["id"] == "mainContent_LBLEXCESS")
+            ? e.text
+            : "")
+        .toSet()
+        .toList();
+    dueslist.removeWhere((element) => element == "");
+
+    var soup = Beautifulsoup(page.body);
+    List table = soup.find_all("tr").map((e) => e.innerHtml).toSet().toList();
+
+    bool flagReached = false;
+    table.forEach((element) {
+      if (element.indexOf("Total Amount") != -1) {
+        flagReached = true;
+        return;
+      }
+      if (flagReached) {
+        element = element.trim().replaceAll("<td>", "");
+        element = element.trim().replaceAll('<td style="display:none;">', "");
+        element = element.trim().replaceAll("</td>", "<space>");
+
+        List temp = [];
+        temp = element.split("<space>");
+        temp.removeRange(0, 3);
+        temp.removeWhere((element) => element.length == 0);
+        feesStatement[temp[1]] = temp;
+      }
+    });
+
+    feesStatement["dues"] = dueslist;
+    cache["fees"] = feesStatement;
+    return feesStatement;
+  }
+
+  Future<Map> getTimetable({bool force = false}) async {
+    final String timetableURL = "/Student/TimeTable.aspx";
+
+    headers["referer"] = "https://eduserve.karunya.edu/Student/TimeTable.aspx";
+    Response res =
+        await client.get(Uri.parse("$hostname$timetableURL"), headers: headers);
+
+    if (res.body.indexOf("Login") != -1) {
+      Fluttertoast.showToast(msg: "esM: Session expired. Refresh data!");
+      return {};
+    }
+
+    var soup = Beautifulsoup(res.body);
+    final inputs = soup.find_all("input").map((e) => e.attributes).toList();
+    final academicTerms =
+        soup.find_all("option").map((e) => e.text.trim()).toSet().toList();
+    int maxAcademicTerm = academicTerms.length -
+        1; // -1 for for compensating 0 indexing and to remove the option 'Select the Academic Term'
+
+    inputs.forEach((element) {
+      // Populate form data
+      if (formData[element["name"]] == "") {
+        formData[element["name"]] =
+            (element["value"] == "Clear" || element["value"] == null)
+                ? ""
+                : element["value"];
+      }
+    });
+
+    formData["ctl00\$mainContent\$DDLACADEMICTERM"] =
+        maxAcademicTerm.toString();
+    res = await client.post(Uri.parse("$hostname$timetableURL"),
+        headers: headers, body: formData);
+    soup = Beautifulsoup(res.body);
+    List classes = soup.find_all("td").map((e) => e.text).toList();
+
+    List days = ["MON", "TUE", "WED", "THU", "FRI"];
+    List tempList = [];
+    Map data = new Map();
+    days.forEach((day) {
+      int dayIndex = classes.indexOf(day);
+      tempList = classes.sublist(dayIndex + 1, dayIndex + 12);
+      data[day] = tempList;
+    });
+
+    return data;
   }
 }

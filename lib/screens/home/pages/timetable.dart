@@ -6,7 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:eduserveMinimal/service/timetable.dart';
 
 class TimeTable extends StatelessWidget {
-  List days = [];
+  final List days = [];
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class TimeTable extends StatelessWidget {
         future: getTimetable(),
         builder: (context, AsyncSnapshot<Map?> snapshot) {
           if (snapshot.hasData) {
-            days = snapshot.data!.keys.toList();
+            days.addAll(snapshot.data!.keys.toList());
 
             if (days.contains("__error__"))
               return Center(

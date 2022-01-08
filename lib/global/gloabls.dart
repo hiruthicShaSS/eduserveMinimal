@@ -6,11 +6,8 @@ Map<String, String> httpHeaders = {
   "content-type": "application/x-www-form-urlencoded",
   "origin": "https://eduserve.karunya.edu",
   "referer": "",
-  "sec-fetch-dest": "document",
-  "sec-fetch-mode": "navigate",
-  "sec-fetch-site": "same-origin",
-  "sec-fetch-user": "?1",
-  "upgrade-insecure-requests": "1"
+  "upgrade-insecure-requests": "1",
+  "accecpt-encoding": "gzip, deflate, br",
 };
 
 Map httpFormData = {
