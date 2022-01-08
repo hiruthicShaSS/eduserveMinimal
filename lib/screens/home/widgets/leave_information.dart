@@ -56,8 +56,7 @@ class _LeaveInformationWidgetState extends State<LeaveInformationWidget>
           Expanded(
             child: FutureBuilder(
               future: getLeaveInfo(),
-              builder: (context,
-                  AsyncSnapshot<Leave> snapshot) {
+              builder: (context, AsyncSnapshot<Leave> snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   Provider.of<AppState>(context, listen: false).leaveInfo =
                       snapshot.data;

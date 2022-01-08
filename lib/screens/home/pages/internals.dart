@@ -1,10 +1,6 @@
 // Flutter imports:
 import 'package:eduserveMinimal/global/gloabls.dart';
-import 'package:eduserveMinimal/service/scrap.dart';
 import 'package:flutter/material.dart';
-
-// Package imports:
-import 'package:provider/provider.dart';
 
 class InternalMarks extends StatefulWidget {
   @override

@@ -2,7 +2,6 @@
 import 'package:eduserveMinimal/service/download_hallticket.dart';
 import 'package:flutter/material.dart';
 
-
 class HallTicketView extends StatefulWidget {
   @override
   _HallTicketViewState createState() => _HallTicketViewState();

@@ -1,6 +1,4 @@
 // Flutter imports:
-import 'dart:convert';
-
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 
@@ -9,11 +7,6 @@ import 'package:beautifulsoup/beautifulsoup.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-// Project imports:
-import 'package:eduserveMinimal/service/login.dart';
-
-// Flutter importimport 'package:flutter/material.dart';
 
 class Scraper {
   static BuildContext? mainPageContext;

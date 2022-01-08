@@ -100,8 +100,8 @@ class _FeedbackFormState extends State<FeedbackForm> {
                       color: Colors.amber,
                     ),
                     onRatingUpdate: (rating) {
-                      feedbackRating[snapshot.data![index - 1].last.toString()] =
-                          rating.toInt();
+                      feedbackRating[snapshot.data![index - 1].last
+                          .toString()] = rating.toInt();
                     },
                   )
                 ],

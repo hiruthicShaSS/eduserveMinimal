@@ -18,7 +18,8 @@ Future<AttendanceSummary> getAttendanceSummary() async {
 
   final academicTerms =
       soup.find_all("option").map((e) => e.text.trim()).toSet().toList();
-  int maxAcademicTerm = academicTerms.length - 1; // -1 for for compensating 0 indexing and to remove the option 'Select the Academic Term'
+  int maxAcademicTerm = academicTerms.length -
+      1; // -1 for for compensating 0 indexing and to remove the option 'Select the Academic Term'
 
   inputs.forEach((element) {
     // Populate form data

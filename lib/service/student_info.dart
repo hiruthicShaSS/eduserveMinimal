@@ -9,7 +9,7 @@ import 'package:http/http.dart';
 
 Future<Map> getInfo() async {
   if (Scraper.cache.containsKey("user")) return Scraper.cache["user"];
-  
+
   String studentHomePage = await login();
 
   if (studentHomePage == "") return {};
@@ -115,7 +115,6 @@ Future<Map> getInfo() async {
           "https://eduserve.karunya.edu/${data["qrImage"].replaceAll("../", "")}"),
       headers: httpHeaders);
   data["qrImage"] = qrCodeResponse.bodyBytes;
-
 
   Scraper.cache["user"] = data;
   return data;

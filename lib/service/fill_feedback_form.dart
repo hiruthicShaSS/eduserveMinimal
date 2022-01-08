@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:beautifulsoup/beautifulsoup.dart';
 import 'package:eduserveMinimal/global/gloabls.dart';
 import 'package:http/http.dart';
@@ -20,7 +18,6 @@ Future<void> fillFeedbackForm(Map rating) async {
     headers: headers,
   );
 
-  Beautifulsoup soup = Beautifulsoup(res.body);
   void setInputs(String body) {
     Beautifulsoup soup = Beautifulsoup(body);
     final inputs = soup.find_all("input").map((e) => e.attributes).toList();
@@ -38,8 +35,10 @@ Future<void> fillFeedbackForm(Map rating) async {
   setInputs(res.body);
 
   for (int i = 0; i < rating.keys.toList().length; i++) {
-    formData[rating.keys.toList()[i]] =
-        {"value": rating.values.toList()[i].toString(), "readOnly": "false"}.toString();
+    formData[rating.keys.toList()[i]] = {
+      "value": rating.values.toList()[i].toString(),
+      "readOnly": "false"
+    }.toString();
 
     formData["__EVENTTARGET"] = rating.keys.toList()[i];
 
