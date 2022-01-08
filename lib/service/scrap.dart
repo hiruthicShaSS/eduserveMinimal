@@ -142,59 +142,69 @@ class Scraper {
     return res.body;
   }
 
-  Future<Map> getFeesDetails({bool force = false}) async {
-    if (cache.containsKey("fees")) return cache["fees"];
+  Future<dynamic> getInternalMarks({String? academicTerm = null}) async {
+    final String internalsURL = "/Student/InternalMarks.aspx";
 
-    String feesDownload = "/Student/Fees/DownloadReceipt.aspx";
-    String feesOverallStatement = "/Student/Fees/FeesStatement.aspx";
-    Map feesStatement = new Map();
+    if (academicTerm == null) {
+      Response res = await client.get(Uri.parse("$hostname$internalsURL"),
+          headers: headers);
 
-    Response page = await client.get(Uri.parse("$hostname${feesDownload}"),
-        headers: headers);
-
-    if (page.body.indexOf("Login") != -1) {
-      Fluttertoast.showToast(msg: "esM: Session expired. Refresh data!");
-      return {};
-    }
-
-    Response dues = await client
-        .get(Uri.parse("$hostname${feesOverallStatement}"), headers: headers);
-    var dueSoup = Beautifulsoup(dues.body);
-    List dueslist = dueSoup
-        .find_all("span")
-        .map((e) => (e.attributes["id"] == "mainContent_LBLDUES" ||
-                e.attributes["id"] == "mainContent_LBLEXCESS")
-            ? e.text
-            : "")
-        .toSet()
-        .toList();
-    dueslist.removeWhere((element) => element == "");
-
-    var soup = Beautifulsoup(page.body);
-    List table = soup.find_all("tr").map((e) => e.innerHtml).toSet().toList();
-
-    bool flagReached = false;
-    table.forEach((element) {
-      if (element.indexOf("Total Amount") != -1) {
-        flagReached = true;
+      if (res.body.indexOf("Login") != -1) {
+        Fluttertoast.showToast(msg: "esM: Session expired. Refresh data!");
         return;
       }
-      if (flagReached) {
-        element = element.trim().replaceAll("<td>", "");
-        element = element.trim().replaceAll('<td style="display:none;">', "");
-        element = element.trim().replaceAll("</td>", "<space>");
 
-        List temp = [];
-        temp = element.split("<space>");
-        temp.removeRange(0, 3);
-        temp.removeWhere((element) => element.length == 0);
-        feesStatement[temp[1]] = temp;
+      var soup = Beautifulsoup(res.body);
+      final inputs = soup.find_all("input").map((e) => e.attributes).toList();
+      List academicTerms =
+          soup.find_all("option").map((e) => e.text.trim()).toSet().toList();
+
+      inputs.forEach((element) {
+        // Populate form data
+        if (formData[element["name"]] == "") {
+          formData[element["name"]] =
+              (element["value"] == "Clear" || element["value"] == null)
+                  ? ""
+                  : element["value"];
+        }
+      });
+
+      formData["ctl00\$mainContent\$DDLACADEMICTERM"] = academicTerm;
+
+      return academicTerms;
+    } else {
+      Map formDataCopy = formData;
+      formDataCopy["ctl00\$mainContent\$DDLACADEMICTERM"] =
+          academicTerm.toString();
+      Response res = await client.post(Uri.parse("$hostname$internalsURL"),
+          headers: headers, body: formDataCopy);
+
+      if ((res.body.indexOf("No records to display.") != -1)) {
+        return "No records to display.";
       }
-    });
 
-    feesStatement["dues"] = dueslist;
-    cache["fees"] = feesStatement;
-    return feesStatement;
+      var soup = Beautifulsoup(res.body);
+      List table = soup.find_all("tr").map((e) => e.innerHtml).toSet().toList();
+
+      bool flagReached = false;
+      Map data = new Map();
+      table.forEach((element) {
+        if (element.indexOf("Entered by") != -1) {
+          flagReached = true;
+          return;
+        }
+        if (flagReached) {
+          element = element.trim().replaceAll("<td>", "");
+          element = element.trim().replaceAll("</td>", "<space>");
+
+          data[element.split("<space>")[8]] = element.split("<space>");
+          data[element.split("<space>")[8]]
+              .removeWhere((element) => element == "");
+        }
+      });
+
+      return Map.of(data);
+    }
   }
 
   Future<Map> getTimetable({bool force = false}) async {

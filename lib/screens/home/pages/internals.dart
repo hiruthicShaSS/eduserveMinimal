@@ -1,6 +1,10 @@
 // Flutter imports:
-import 'package:eduserveMinimal/service/internal_marks.dart';
+import 'package:eduserveMinimal/global/gloabls.dart';
+import 'package:eduserveMinimal/service/scrap.dart';
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:provider/provider.dart';
 
 class InternalMarks extends StatefulWidget {
   @override
@@ -8,7 +12,7 @@ class InternalMarks extends StatefulWidget {
 }
 
 class _InternalMarksState extends State<InternalMarks> {
-  String? status = "";
+  String status = "";
   bool _visible = false;
   Widget table = Container();
   String? dropdownSelection;
@@ -33,7 +37,7 @@ class _InternalMarksState extends State<InternalMarks> {
 
   FutureBuilder<dynamic> dropDown(BuildContext context) {
     return FutureBuilder(
-      future: getInternalMarks(),
+      future: scraper.getInternalMarks(),
       builder: (context, AsyncSnapshot<dynamic> snapshot) {
         List<String> academicTerms = [];
 
@@ -53,16 +57,17 @@ class _InternalMarksState extends State<InternalMarks> {
                     icon: Icon(Icons.arrow_downward),
                     iconSize: 24,
                     elevation: 16,
+                    style: TextStyle(color: Colors.white),
                     underline: Container(
                       height: 2,
                       color: Colors.white,
                     ),
                     value: dropdownSelection,
                     items: academicTerms
-                        .map<DropdownMenuItem<String>>((String? value) {
+                        .map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
-                        child: Text(value!),
+                        child: Text(value),
                       );
                     }).toList(),
                     onChanged: (String? value) async {
@@ -71,7 +76,7 @@ class _InternalMarksState extends State<InternalMarks> {
                         table = Center(child: CircularProgressIndicator());
                       });
 
-                      final data = await getInternalMarks(
+                      final data = await scraper.getInternalMarks(
                           academicTerm: (academicTerms.length -
                                   academicTerms.indexOf(value!))
                               .toString());
@@ -81,15 +86,10 @@ class _InternalMarksState extends State<InternalMarks> {
                         academicTerms = [];
                       }
                       if (data.runtimeType != String) {
-                        // table data
+                        // table dataY
                         List dataCell = [];
-                        List failedSubjectsIndex = [];
                         data.forEach((key, value) {
                           List<DataCell> temp = [];
-                          if ((double.tryParse(value[4]) ?? 21) < 20) {
-                            failedSubjectsIndex.add(dataCell.length);
-                          }
-
                           value.forEach((element) {
                             temp.add(DataCell(Container(
                               color:
@@ -107,8 +107,7 @@ class _InternalMarksState extends State<InternalMarks> {
                         });
 
                         setState(() {
-                          table =
-                              buildTable(data, dataCell, failedSubjectsIndex);
+                          table = buildTable(data, dataCell);
                         });
                         return;
                       } else {
@@ -119,7 +118,7 @@ class _InternalMarksState extends State<InternalMarks> {
                           table = Container();
                         });
                         Future.delayed(Duration(seconds: 2)).then((value) {
-                          if (mounted) setState(() => _visible = !_visible);
+                          setState(() => _visible = !_visible);
                         });
                       }
                     },
@@ -140,7 +139,7 @@ class _InternalMarksState extends State<InternalMarks> {
     );
   }
 
-  Widget buildTable(Map? data, List dataCell, List failedSubjectsIndex) {
+  Widget buildTable(Map data, List dataCell) {
     List header = [
       "Subject Code",
       "Subject Name",
@@ -174,17 +173,8 @@ class _InternalMarksState extends State<InternalMarks> {
                           header[index].toString(),
                           style: TextStyle(color: Colors.black),
                         ))),
-                rows: List.generate(
-                    dataCell.length,
-                    (index) => DataRow(
-                          cells: dataCell[index],
-                          color: MaterialStateProperty.resolveWith<Color>(
-                              (Set<MaterialState> states) {
-                            return failedSubjectsIndex.contains(index)
-                                ? Colors.red.withOpacity(0.2)
-                                : Colors.transparent;
-                          }),
-                        )),
+                rows: List.generate(dataCell.length,
+                    (index) => DataRow(cells: dataCell[index])),
               ),
             ),
           ],

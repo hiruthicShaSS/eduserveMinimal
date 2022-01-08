@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:eduserveMinimal/global/gloabls.dart';
 import 'package:eduserveMinimal/global/widgets/restart_widget.dart';
 import 'package:eduserveMinimal/screens/settings/pages/user.dart';
 import 'package:eduserveMinimal/service/login.dart';
@@ -122,6 +123,7 @@ class HomeController extends StatelessWidget {
     }
 
     String loginData = await login();
+    await scraper.login();
 
     if (!loginData.contains("Login error"))
       prefs.setString("lastLogin", DateTime.now().toString());
