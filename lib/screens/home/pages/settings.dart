@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:eduserveMinimal/screens/home/pages/cache_data.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:new_version/new_version.dart';
@@ -83,6 +84,13 @@ class Settings extends StatelessWidget {
                   child: Text("Attributions"),
                   onPressed: () => Navigator.of(context)
                       .push(MaterialPageRoute(builder: (_) => AttributionScreen()))),
+            ),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                  child: Text("Manage Cache Data"),
+                  onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => CacheDataView()))),
             ),
             Row(
               children: [

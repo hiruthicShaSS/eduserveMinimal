@@ -57,10 +57,8 @@ class _InternalMarksState extends State<InternalMarks> {
                     icon: Icon(Icons.arrow_downward),
                     iconSize: 24,
                     elevation: 16,
-                    style: TextStyle(color: Colors.white),
                     underline: Container(
                       height: 2,
-                      color: Colors.white,
                     ),
                     value: dropdownSelection,
                     items: academicTerms
