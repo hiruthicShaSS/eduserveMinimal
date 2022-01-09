@@ -3,7 +3,7 @@ import 'package:eduserveMinimal/global/gloabls.dart';
 import 'package:eduserveMinimal/models/attendance_summary.dart';
 import 'package:http/http.dart';
 
-Future<AttendanceSummary> getAttendanceSummary() async {
+Future<AttendanceSummary> getAttendanceSummary([retries = 0]) async {
   Map<String, String> headers = httpHeaders;
   Map formData = httpFormData;
   formData.remove("ctl00\$mainContent\$DDLEXAM");
@@ -42,6 +42,9 @@ Future<AttendanceSummary> getAttendanceSummary() async {
   const summaryDataStart = 38;
 
   List basicInfo = soup.find_all("span").map((e) => e.text).toList();
+
+  if (basicInfo.length == 0 && retries == 0)
+    return getAttendanceSummary(++retries);
   basicInfo = basicInfo.sublist(basicInfoStart);
   // basicInfo [Semester, email, phone, ANDREW, SRA, Status, Total Hours : , total_hour_value, Present Hours : , present_hour_value, actual, od_corrected, ml_corrected, Leave Hours : , leave_hours_value, Absent Hours : , absent_hours_value]
 

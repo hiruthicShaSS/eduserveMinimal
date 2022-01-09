@@ -1,5 +1,6 @@
 // Package imports:
 import 'package:beautifulsoup/beautifulsoup.dart';
+import 'package:eduserveMinimal/service/scrap.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 
@@ -8,6 +9,10 @@ import 'package:eduserveMinimal/global/gloabls.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future getInternalMarks({String? academicTerm = null}) async {
+  Scraper scraper = Scraper();
+  await scraper.login();
+  return await scraper.getInternalMarks();
+
   final String internalsURL = "/Student/InternalMarks.aspx";
   Map<String, String> headers = httpHeaders;
   Map formData = httpFormData;
