@@ -39,6 +39,11 @@ class AttendanceSummary extends StatelessWidget {
       future: getAttendanceSummary(),
       builder: (context, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasError) {
+            print(snapshot.error);
+            print(snapshot);
+          }
+
           return snapshot.hasData
               ? Column(
                   children: [

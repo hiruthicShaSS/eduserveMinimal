@@ -67,7 +67,7 @@ Future<Leave> getLeaveInfo() async {
       onDuty.add(element.toString().trim());
     });
 
-    Scraper.cache["leave"] = leave;
+    Scraper.cache["leave"] = allLeave;
     return allLeave;
   }
 

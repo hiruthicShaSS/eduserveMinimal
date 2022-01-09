@@ -59,6 +59,10 @@ class _LeaveInformationState extends State<LeaveInformation>
               builder: (context,
                   AsyncSnapshot<Leave> snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
+                  if (snapshot.hasError) {
+                    print(snapshot);
+                  }
+
                   Provider.of<AppState>(context, listen: false).leaveInfo =
                       snapshot.data;
 

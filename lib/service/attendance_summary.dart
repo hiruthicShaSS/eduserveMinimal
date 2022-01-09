@@ -38,7 +38,7 @@ Future getAttendanceSummary() async {
       body: formData);
   soup = Beautifulsoup(res.body);
 
-  const basicInfoStart = 47;
+  const basicInfoStart = 46;
   const summaryDataStart = 38;
 
   List basicInfo = soup.find_all("span").map((e) => e.text).toList();
