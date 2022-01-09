@@ -1,10 +1,7 @@
 // Flutter imports:
 import 'package:eduserveMinimal/global/gloabls.dart';
-import 'package:eduserveMinimal/service/scrap.dart';
+import 'package:eduserveMinimal/service/internal_marks.dart';
 import 'package:flutter/material.dart';
-
-// Package imports:
-import 'package:provider/provider.dart';
 
 class InternalMarks extends StatefulWidget {
   @override
@@ -37,7 +34,7 @@ class _InternalMarksState extends State<InternalMarks> {
 
   FutureBuilder<dynamic> dropDown(BuildContext context) {
     return FutureBuilder(
-      future: scraper.getInternalMarks(),
+      future: getInternalMarks(),
       builder: (context, AsyncSnapshot<dynamic> snapshot) {
         List<String> academicTerms = [];
 
