@@ -18,6 +18,11 @@ class AttendanceSummaryWidget extends StatelessWidget {
       future: getAttendanceSummary(),
       builder: (context, AsyncSnapshot<AttendanceSummary> snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasError) {
+            print(snapshot.error);
+            print(snapshot);
+          }
+
           return snapshot.hasData
               ? Column(
                   children: [
@@ -127,6 +132,7 @@ class AttendancePieChart extends StatelessWidget {
                                       Text("OD Corrected: ${data.odCorrected}"),
                                       Text("ML Corrected: ${data.mlCorrected}"),
                                       Text("Leave Hours: ${data.leaveHours}"),
+                                      Text("Absent Hours: ${data.absentHours}"),
                                     ],
                                   ),
                                 )),
