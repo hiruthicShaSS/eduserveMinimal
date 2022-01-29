@@ -32,7 +32,8 @@ class Leave {
     ));
   }
 
-  static Leave generateFakeLeave([otherLeaveAmount = 3, onDutyAmount = 2]) {
+  /// Generate fake leave data. Defaults to 3 leave data and 2 on-duty data
+  static Leave generateFakeLeave({int otherLeaveAmount = 3, int onDutyAmount = 2}) {
     Leave leave = Leave();
 
     List.generate(

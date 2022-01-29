@@ -16,13 +16,6 @@ Future<List> getFeedbackForm([int? stars]) async {
   List feedbackList =
       feedbackSoup.find_all("td").map((e) => e.text.trim()).toList();
 
-  RegExp FEEDBACK_INPUT_EXP =
-      RegExp("ctl00_mainContent_grdHFB_ctl00_ctl\d{2}_rtngHFB_ClientState");
-  // List feedback_inputs = feedbackSoup
-  //     .find_all("input")
-  //     .where((e) => FEEDBACK_INPUT_EXP.hasMatch(e.id))
-  //     .toList();
-
   List feedback_inputs = feedbackSoup
       .find_all("input")
       .map((e) => e.id)

@@ -1,19 +1,27 @@
 import 'dart:convert';
 
 class Currency {
+  /// Contains the unicode and currency mapping to render special characters.
+
+  /// Indian rupee
   static String inr = "\u{20B9}";
 
   static Map<String, dynamic> currencyCharMap = {
     "Indian Rupee": inr,
   };
 
+  /// Get unicode character for a specific currency
   static String currencyToChar(String currency) => currencyCharMap[currency];
 }
 
 class Fees {
+  /// All fees deatils that has been transferred
   List<SingleFee> all = [];
+
+  /// Payment due. First element contains the `Total Due` and the last index contains `Excess Fee`
   List dues = [];
 
+  /// Add a [SingleFee] entry to the [Fees] object.
   void add(String id, List<String> data) {
     all.add(SingleFee(
       reciept: data[1],
@@ -27,16 +35,24 @@ class Fees {
 
   int get length => all.length;
 
+  /// Get all reciepts for the transfers.
   List<String> get ids => all.map((fee) => fee.reciept).toList();
+
+  /// Get all the fees details.
   List<SingleFee> get values => all;
 }
 
 class SingleFee {
+  /// Unique number for a particular fee which starts with the character `'R'` followed by 7 digit number.
   String reciept;
   String recieptType;
+
+  /// Fee detail
   String description;
   String date;
   double amountPaid;
+
+  /// Special character mapping for various currencies. Add a new currency to the [Currency.currencyCharMap] in [Currency] model.
   String currency;
 
   SingleFee({

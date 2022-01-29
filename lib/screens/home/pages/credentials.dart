@@ -16,8 +16,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:eduserveMinimal/service/login.dart';
 
 class Credentials extends StatelessWidget {
-  bool? pushHomePage = false;
-  Credentials({this.pushHomePage});
+  const Credentials({this.pushHomePage = false});
+
+  final bool? pushHomePage;
 
   @override
   Widget build(BuildContext context) {
