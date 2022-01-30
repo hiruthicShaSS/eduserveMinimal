@@ -16,6 +16,7 @@ Future<Fees?> getFeesDetails({bool force = false}) async {
   String feesDownload = "/Student/Fees/DownloadReceipt.aspx";
   String feesOverallStatement = "/Student/Fees/FeesStatement.aspx";
   Fees fees = new Fees();
+  
 
   Response page = await get(
       Uri.parse("https://eduserve.karunya.edu${feesDownload}"),

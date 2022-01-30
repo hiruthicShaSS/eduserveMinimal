@@ -3,7 +3,7 @@ import 'package:eduserveMinimal/global/gloabls.dart';
 import 'package:eduserveMinimal/models/attendance_summary.dart';
 import 'package:http/http.dart';
 
-Future<AttendanceSummary> getAttendanceSummary([retries = 0]) async {
+Future<Map<String, List>> getAttendanceSummary([retries = 0]) async {
   Map<String, String> headers = httpHeaders;
   Map formData = httpFormData;
   formData.remove("ctl00\$mainContent\$DDLEXAM");
@@ -68,5 +68,8 @@ Future<AttendanceSummary> getAttendanceSummary([retries = 0]) async {
     summaryData[i].add(totalUnAttended.toString());
   }
 
-  return AttendanceSummary(basicInfo: basicInfo, summaryData: summaryData);
+  return {
+    "basicInfo": basicInfo,
+    "summaryData": summaryData,
+  };
 }

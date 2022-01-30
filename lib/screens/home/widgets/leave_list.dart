@@ -142,10 +142,8 @@ class LeaveList extends StatelessWidget {
                                     ),
                                   ),
                                   SizedBox(height: 10),
-                                  Text(
-                                      "From Session: ${leave![index - 1].fromSession}"),
-                                  Text(
-                                      "To Session: ${leave![index - 1].toSession}"),
+                                  Text("From Session: ${leave![index - 1].fromSession}"),
+                                  Text("To Session: ${leave![index - 1].toSession}"),
                                   Text("Status: ${leave![index - 1].status}"),
                                   SizedBox(height: 10),
                                   Center(

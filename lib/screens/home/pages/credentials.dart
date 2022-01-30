@@ -16,9 +16,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:eduserveMinimal/service/login.dart';
 
 class Credentials extends StatelessWidget {
-  const Credentials({this.pushHomePage = false});
-
-  final bool? pushHomePage;
+  bool? pushHomePage = false;
+  Credentials({this.pushHomePage});
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -40,123 +40,130 @@ class Credentials extends StatelessWidget {
           padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
           child: SingleChildScrollView(
             physics: NeverScrollableScrollPhysics(),
-            child: Column(
-              children: [
-                Text("Enter Credentials", style: TextStyle(fontSize: 30)),
-                SizedBox(height: 20),
-                buildTextField(
-                    _usernameController, 'Enter your register number.', false),
-                SizedBox(height: 20),
-                buildTextField(
-                    _passwordController, 'Enter your password.', true),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  child: Text("Save"),
-                  onPressed: () async {
-                    SharedPreferences prefs =
-                        await SharedPreferences.getInstance();
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  Text("Enter Credentials", style: TextStyle(fontSize: 30)),
+                  SizedBox(height: 20),
+                  buildTextField(_usernameController,
+                      'Enter your register number.', false),
+                  SizedBox(height: 20),
+                  buildTextField(
+                      _passwordController, 'Enter your password.', true),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    child: Text("Save"),
+                    onPressed: () async {
+                      if (!_formKey.currentState!.validate()) return;
 
-                    showDialog(
-                        context: context,
-                        barrierDismissible: false,
-                        builder: (_) => AlertDialog(
-                              content: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      "Verifying credentials...",
-                                      style: TextStyle(fontSize: 25),
+                      SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+
+                      showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (_) => AlertDialog(
+                                content: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        "Verifying credentials...",
+                                        style: TextStyle(fontSize: 25),
+                                      ),
                                     ),
-                                  ),
-                                  CircularProgressIndicator(),
-                                ],
-                              ),
-                            ));
-                    String loginStatus = await login(
-                        _usernameController.text, _passwordController.text);
-                    Navigator.of(context).pop();
-
-                    if (loginStatus == "Login error") {
-                      Fluttertoast.showToast(msg: "Login error");
-                      return;
-                    }
-
-                    await prefs.setString("username", _usernameController.text);
-                    await prefs.setString("password", _passwordController.text);
-                    Fluttertoast.showToast(
-                        msg: "Credentials updated successfully");
-
-                    cacheBirthDate();
-
-                    Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (_) => HomeController()));
-                  },
-                ),
-                SizedBox(height: 30.0),
-                Text("Caution!",
-                    style: GoogleFonts.kanit(
-                      fontSize: 20,
-                      color: Colors.red,
-                    )),
-                Column(
-                  children: [
-                    Row(children: [
-                      Icon(Icons.control_point),
-                      SizedBox(width: 10),
-                      Expanded(
-                        child: AutoSizeText(
-                          "Refreshing the data too many times will result in banning in eduserve. You will need to reset your password everytime you get banned.",
-                          style: GoogleFonts.kanit(),
-                          maxFontSize: 30,
-                          minFontSize: 15,
-                          maxLines: 4,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ]),
-                    SizedBox(height: 20),
-                    Row(children: [
-                      Icon(Icons.control_point),
-                      SizedBox(width: 10),
-                      Expanded(
-                        child: AutoSizeText(
-                          "If you feel the app doesn't work properly hard restart the app. If that doesnt help file a issue on github.\nSettings -> About -> Request Feature",
-                          style: GoogleFonts.kanit(),
-                          maxFontSize: 30,
-                          minFontSize: 15,
-                          maxLines: 4,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ])
-                  ],
-                ),
-                SizedBox(height: 50),
-                FutureBuilder(
-                    future: SharedPreferences.getInstance(),
-                    builder:
-                        (context, AsyncSnapshot<SharedPreferences> snapshot) {
-                      return snapshot.hasData
-                          ? Visibility(
-                              visible: snapshot.data!.containsKey("username"),
-                              child: ElevatedButton(
-                                onPressed: () => Fluttertoast.showToast(
-                                    msg: "Press and hold for action"),
-                                onLongPress: () => logout(context),
-                                child: Text("Logout"),
-                                style: ButtonStyle(
-                                  backgroundColor:
-                                      MaterialStateProperty.resolveWith<Color>(
-                                          (states) => Colors.red),
+                                    CircularProgressIndicator(),
+                                  ],
                                 ),
-                              ),
-                            )
-                          : Container();
-                    })
-              ],
+                              ));
+                      String loginStatus = await login(
+                          _usernameController.text, _passwordController.text);
+                      Navigator.of(context).pop();
+
+                      if (loginStatus == "Login error") {
+                        Fluttertoast.showToast(msg: "Login error");
+                        return;
+                      }
+
+                      await prefs.setString(
+                          "username", _usernameController.text);
+                      await prefs.setString(
+                          "password", _passwordController.text);
+                      Fluttertoast.showToast(
+                          msg: "Credentials updated successfully");
+
+                      cacheBirthDate();
+
+                      Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (_) => HomeController()));
+                    },
+                  ),
+                  SizedBox(height: 30.0),
+                  Text("Caution!",
+                      style: GoogleFonts.kanit(
+                        fontSize: 20,
+                        color: Colors.red,
+                      )),
+                  Column(
+                    children: [
+                      Row(children: [
+                        Icon(Icons.control_point),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: AutoSizeText(
+                            "Refreshing the data too many times will result in banning in eduserve. You will need to reset your password everytime you get banned.",
+                            style: GoogleFonts.kanit(),
+                            maxFontSize: 30,
+                            minFontSize: 15,
+                            maxLines: 4,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ]),
+                      SizedBox(height: 20),
+                      Row(children: [
+                        Icon(Icons.control_point),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: AutoSizeText(
+                            "If you feel the app doesn't work properly hard restart the app. If that doesnt help file a issue on github.\nSettings -> About -> Request Feature",
+                            style: GoogleFonts.kanit(),
+                            maxFontSize: 30,
+                            minFontSize: 15,
+                            maxLines: 4,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ])
+                    ],
+                  ),
+                  SizedBox(height: 50),
+                  FutureBuilder(
+                      future: SharedPreferences.getInstance(),
+                      builder:
+                          (context, AsyncSnapshot<SharedPreferences> snapshot) {
+                        return snapshot.hasData
+                            ? Visibility(
+                                visible: snapshot.data!.containsKey("username"),
+                                child: ElevatedButton(
+                                  onPressed: () => Fluttertoast.showToast(
+                                      msg: "Press and hold for action"),
+                                  onLongPress: () => logout(context),
+                                  child: Text("Logout"),
+                                  style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.resolveWith<
+                                            Color>((states) => Colors.red),
+                                  ),
+                                ),
+                              )
+                            : Container();
+                      })
+                ],
+              ),
             ),
           ),
         ),
@@ -164,9 +171,9 @@ class Credentials extends StatelessWidget {
     );
   }
 
-  TextField buildTextField(
+  TextFormField buildTextField(
       TextEditingController _starsController, String hint, bool obscure) {
-    return TextField(
+    return TextFormField(
       controller: _starsController,
       obscureText: obscure,
       decoration: InputDecoration(
@@ -184,6 +191,11 @@ class Credentials extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(32.0)),
         ),
       ),
+      validator: (value) {
+        if (value == null) return "Enter a value";
+        if (value == "") return "Enter a value";
+        return null;
+      },
     );
   }
 

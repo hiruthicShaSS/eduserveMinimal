@@ -92,6 +92,13 @@ class Settings extends StatelessWidget {
                   onPressed: () => Navigator.of(context).push(
                       MaterialPageRoute(builder: (_) => CacheDataView()))),
             ),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                  child: Text("Manage Cache Data"),
+                  onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => CacheDataView()))),
+            ),
             Row(
               children: [
                 Expanded(

@@ -23,24 +23,9 @@ class BirthDayWidget extends StatelessWidget {
                       child: Lottie.asset("assets/lottie/happy_birthday.json",
                           repeat: false),
                     ),
-                    Expanded(
-                      child: Lottie.asset("assets/lottie/gifts.json",
-                          fit: BoxFit.fill),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(30),
-                      child: Text(
-                        "Hope you get more gifts and party all day!!! 😊",
-                        style: TextStyle(
-                            fontSize: 25, fontWeight: FontWeight.bold),
-                      ),
-                    ),
                   ],
                 ),
               ),
-              IconButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  icon: Icon(Icons.close)),
             ],
           ),
         ),
