@@ -55,7 +55,7 @@ class HomePage extends StatelessWidget {
               floating: true,
               flexibleSpace: FlexibleSpaceBar(
                 background: Padding(
-                  padding: const EdgeInsets.only(top: 100),
+                  padding: const EdgeInsets.only(top: 80),
                   child: AttendanceContainer(),
                 ),
               ),
