@@ -2,7 +2,7 @@ import 'package:beautifulsoup/beautifulsoup.dart';
 import 'package:eduserveMinimal/global/gloabls.dart';
 import 'package:http/http.dart';
 
-Future getAttendanceSummary([retries = 0]) async {
+Future<Map<String, List>> getAttendanceSummary([retries = 0]) async {
   Map<String, String> headers = httpHeaders;
   Map formData = httpFormData;
   formData.remove("ctl00\$mainContent\$DDLEXAM");
@@ -30,8 +30,7 @@ Future getAttendanceSummary([retries = 0]) async {
     }
   });
 
-  formData["ctl00\$mainContent\$DDLACADEMICTERM"] =
-      "20"; // maxAcademicTerm.toString();
+  formData["ctl00\$mainContent\$DDLACADEMICTERM"] = maxAcademicTerm.toString();
   res = await post(
       Uri.parse("https://eduserve.karunya.edu/Student/AttSummary.aspx"),
       headers: headers,
