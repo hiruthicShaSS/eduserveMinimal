@@ -21,7 +21,7 @@ void main() async {
         ChangeNotifierProvider<AppState>(create: (_) => AppState()),
         ChangeNotifierProvider<ThemeProvider>(create: (_) => ThemeProvider()),
       ],
-      child: EduServeMinimal(flavor: "production"),
+      child: eduserveMinimal(flavor: "production"),
     )),
   );
 }

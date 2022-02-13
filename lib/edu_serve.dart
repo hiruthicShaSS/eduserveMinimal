@@ -18,8 +18,8 @@ import 'package:eduserveMinimal/screens/home/pages/pages.dart';
 import 'package:quick_actions/quick_actions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class EduServeMinimal extends StatelessWidget {
-  EduServeMinimal({Key? key, this.flavor = "production"}) : super(key: key);
+class eduserveMinimal extends StatelessWidget {
+  eduserveMinimal({Key? key, this.flavor = "production"}) : super(key: key);
   final String flavor;
 
   @override

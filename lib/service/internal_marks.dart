@@ -23,7 +23,7 @@ Future getInternalMarks({String? academicTerm = null}) async {
         headers: headers);
 
     if (res.body.indexOf("Login") != -1) {
-      Fluttertoast.showToast(msg: "esM: Session expired. Refresh data!");
+      Fluttertoast.showToast(msg: "eduserveMinimal: Session expired. Refresh data!");
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setBool("isLoggedIn", false);
       return;

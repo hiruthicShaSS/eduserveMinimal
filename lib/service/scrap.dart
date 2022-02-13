@@ -150,7 +150,7 @@ class Scraper {
           headers: headers);
 
       if (res.body.indexOf("Login") != -1) {
-        Fluttertoast.showToast(msg: "esM: Session expired. Refresh data!");
+        Fluttertoast.showToast(msg: "eduserveMinimal: Session expired. Refresh data!");
         return;
       }
 
@@ -215,7 +215,7 @@ class Scraper {
         await client.get(Uri.parse("$hostname$timetableURL"), headers: headers);
 
     if (res.body.indexOf("Login") != -1) {
-      Fluttertoast.showToast(msg: "esM: Session expired. Refresh data!");
+      Fluttertoast.showToast(msg: "eduserveMinimal: Session expired. Refresh data!");
       return {};
     }
 

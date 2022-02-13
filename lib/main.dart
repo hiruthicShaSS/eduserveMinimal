@@ -15,6 +15,6 @@ void main(List<String> args) async {
       ChangeNotifierProvider<AppState>(create: (_) => AppState()),
       ChangeNotifierProvider<ThemeProvider>(create: (_) => ThemeProvider()),
     ],
-    child: EduServeMinimal(),
+    child: eduserveMinimal(),
   ));
 }
