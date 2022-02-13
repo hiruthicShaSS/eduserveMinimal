@@ -9,14 +9,14 @@ import 'package:http/http.dart';
 
 Future<Map> getInfo() async {
   if (Scraper.cache.containsKey("user")) return Scraper.cache["user"];
-  
+
   String studentHomePage = await login();
 
   if (studentHomePage == "") return {};
 
   var soup = Beautifulsoup(studentHomePage);
   List basicInfo =
-      soup.find_all("span").map((e) => (e.innerHtml)).toList().sublist(54);
+      soup.find_all("span").map((e) => (e.innerHtml)).toList().sublist(53);
   String? studentImage =
       soup.find_all("img").map((e) => (e.attributes["src"])).toList()[2];
   String? qrImage =
@@ -99,9 +99,9 @@ Future<Map> getInfo() async {
 
   // generate Map of infromation
   Map data = new Map();
-  basicInfoKeys.asMap().forEach((i, element) {
+
+  for (int i = 0; i < basicInfoKeys.length; i++)
     data[basicInfoKeys[i]] = basicInfo[i];
-  });
 
   data["leaveApplications"] = leaveApplication;
 
@@ -115,7 +115,6 @@ Future<Map> getInfo() async {
           "https://eduserve.karunya.edu/${data["qrImage"].replaceAll("../", "")}"),
       headers: httpHeaders);
   data["qrImage"] = qrCodeResponse.bodyBytes;
-
 
   Scraper.cache["user"] = data;
   return data;
