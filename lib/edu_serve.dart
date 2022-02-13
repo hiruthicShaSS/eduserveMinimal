@@ -112,7 +112,6 @@ class HomeController extends StatelessWidget {
         .difference(DateTime.now());
 
     if (lastLogin.inMinutes < 30 && Scraper.cache["home"] != null) {
-      print("hey");
       return {
         "isLoggedIn": true,
         "loginData": Scraper.cache["home"],

@@ -132,7 +132,7 @@ class Settings extends StatelessWidget {
                           decoration: TextDecoration.underline,
                           color: Colors.blue)),
                   onTap: () =>
-                      launch("https://github.com/hiruthic2002/eduserveMinimal"),
+                      launch("https://github.com/hiruthicShaSS/eduserveMinimal"),
                 ),
                 Text(" to this project"),
               ],

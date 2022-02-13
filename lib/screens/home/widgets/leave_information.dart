@@ -1,5 +1,6 @@
 // Flutter imports:
 import 'package:eduserveMinimal/models/leave.dart';
+import 'package:eduserveMinimal/screens/home/widgets/dot_tab_bar_indeicator.dart';
 import 'package:eduserveMinimal/service/leave_info.dart';
 import 'package:flutter/material.dart';
 
@@ -43,21 +44,20 @@ class _LeaveInformationState extends State<LeaveInformation>
           TabBar(
             controller: _tabController,
             tabs: [
-              Tab(
-                text: "Leave",
-              ),
-              Tab(
-                text: "On-Duty Details",
-              ),
+              Tab(text: "Leave"),
+              Tab(text: "On-Duty Details"),
             ],
+            indicator: CircleTabIndicator(
+                color: Theme.of(context).primaryColor, radius: 5),
             labelColor:
                 ThemeProvider.currentThemeData!.textTheme.bodyText1!.color,
+            overlayColor: MaterialStateProperty.resolveWith(
+                (states) => Colors.transparent),
           ),
           Expanded(
             child: FutureBuilder(
               future: getLeaveInfo(),
-              builder: (context,
-                  AsyncSnapshot<Leave> snapshot) {
+              builder: (context, AsyncSnapshot<Leave> snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   if (snapshot.hasError) {
                     print(snapshot);

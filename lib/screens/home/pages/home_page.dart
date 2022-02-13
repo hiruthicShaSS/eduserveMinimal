@@ -55,7 +55,7 @@ class HomePage extends StatelessWidget {
               floating: true,
               flexibleSpace: FlexibleSpaceBar(
                 background: Padding(
-                  padding: const EdgeInsets.only(top: 100),
+                  padding: const EdgeInsets.only(top: 80),
                   child: AttendanceContainer(),
                 ),
               ),
@@ -82,8 +82,6 @@ class HomePage extends StatelessWidget {
   void initQuickActionsEvents(BuildContext context) {
     final quickActions = QuickActions();
     quickActions.initialize((type) {
-      print(type);
-
       switch (type) {
         case "timetable":
           Navigator.of(context).pushNamed("/timetable");
