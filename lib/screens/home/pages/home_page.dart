@@ -59,7 +59,7 @@ class HomePage extends StatelessWidget {
               flexibleSpace: FlexibleSpaceBar(
                 background: Padding(
                   padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.15),
+                      top: MediaQuery.of(context).size.height * (0.25 * 0.46)),
                   child: AttendanceContainer(),
                 ),
                 stretchModes: [

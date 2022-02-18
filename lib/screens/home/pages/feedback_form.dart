@@ -38,52 +38,17 @@ class _FeedbackFormState extends State<FeedbackForm> {
                   ],
                 );
               if (index == snapshot.data!.length + 1)
-                return Column(
-                  children: [
-                    ElevatedButton(
-                        // onPressed: null,
-                        onPressed: () async {
-                          bool feedBackFormFilled =
-                              await fillFeedbackForm(feedbackRating);
-                          if (feedBackFormFilled) {
-                            Navigator.of(context).pushNamed("/home");
-                            return;
-                          }
-                          Fluttertoast.showToast(msg: "Something went wrong!");
-                        },
-                        child: Text("Submit")),
-                    Column(
-                      children: [
-                        Text("This feature is under development!"),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text("Please fill the form in "),
-                            GestureDetector(
-                              child: Text(
-                                "eduserve page.",
-                                style: TextStyle(
-                                  color: Colors.blue,
-                                  decoration: TextDecoration.underline,
-                                ),
-                              ),
-                              onTap: () async {
-                                await launch(
-                                    "https://eduserve.karunya.edu/MIS/IQAC/HFBCollection.aspx");
-                              },
-                            ),
-                          ],
-                        ),
-                        Text("Sorry for the inconvenience 🙇"),
-                      ],
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pushNamed("/home");
-                      },
-                      child: Text("Reload"),
-                    ),
-                  ],
+                return ElevatedButton(
+                  onPressed: () async {
+                    bool feedBackFormFilled =
+                        await fillFeedbackForm(feedbackRating);
+                    if (feedBackFormFilled) {
+                      Navigator.of(context).pushNamed("/home");
+                      return;
+                    }
+                    Fluttertoast.showToast(msg: "Something went wrong!");
+                  },
+                  child: Text("Submit"),
                 );
 
               feedbackRating[snapshot.data![index - 1].last.toString()] = 1;
