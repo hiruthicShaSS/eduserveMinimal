@@ -38,13 +38,13 @@ class AttendancePieChart extends StatelessWidget {
                   PieChartSectionData(
                     title: data[9],
                     color: Colors.green,
-                    value: double.parse(data[9]),
+                    value: double.tryParse(data[9]) ?? 0,
                     radius: 60,
                   ),
                   PieChartSectionData(
                     title: data.last,
                     color: Colors.red,
-                    value: double.parse(data.last),
+                    value: double.tryParse(data.last) ?? 0,
                     radius: 70,
                   ),
                 ],

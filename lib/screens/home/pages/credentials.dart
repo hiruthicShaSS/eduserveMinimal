@@ -95,8 +95,6 @@ class Credentials extends StatelessWidget {
                       Fluttertoast.showToast(
                           msg: "Credentials updated successfully");
 
-                      cacheBirthDate();
-
                       Navigator.of(context).pushReplacement(
                           MaterialPageRoute(builder: (_) => HomeController()));
                     },
@@ -240,23 +238,5 @@ class Credentials extends StatelessWidget {
                 ],
               );
             }));
-  }
-
-  Future<void> cacheBirthDate() async {
-    Response res = await get(
-        Uri.parse("https://eduserve.karunya.edu/Student/PersonalInfo.aspx"),
-        headers: httpHeaders);
-    Beautifulsoup soup = Beautifulsoup(res.body);
-
-    String? dateString = soup
-        .find_all("input")
-        .where((element) => element.id == "ctl00_mainContent_TXTDOB_dateInput")
-        .first
-        .attributes["value"];
-
-    if (dateString != null) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString("birthDay", dateString);
-    }
   }
 }

@@ -7,6 +7,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 // Project imports:
 import 'package:eduserveMinimal/service/get_feedback_form.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class FeedbackForm extends StatefulWidget {
@@ -41,10 +42,14 @@ class _FeedbackFormState extends State<FeedbackForm> {
                   children: [
                     ElevatedButton(
                         // onPressed: null,
-                        onPressed: () {
-                          fillFeedbackForm(feedbackRating);
-                          // .then(
-                          //     (value) => Navigator.of(context).pushNamed("/home"));
+                        onPressed: () async {
+                          bool feedBackFormFilled =
+                              await fillFeedbackForm(feedbackRating);
+                          if (feedBackFormFilled) {
+                            Navigator.of(context).pushNamed("/home");
+                            return;
+                          }
+                          Fluttertoast.showToast(msg: "Something went wrong!");
                         },
                         child: Text("Submit")),
                     Column(
@@ -100,8 +105,8 @@ class _FeedbackFormState extends State<FeedbackForm> {
                       color: Colors.amber,
                     ),
                     onRatingUpdate: (rating) {
-                      feedbackRating[snapshot.data![index - 1].last.toString()] =
-                          rating.toInt();
+                      feedbackRating[snapshot.data![index - 1].last
+                          .toString()] = rating.toInt();
                     },
                   )
                 ],

@@ -4,7 +4,7 @@ import 'package:beautifulsoup/beautifulsoup.dart';
 import 'package:eduserveMinimal/global/gloabls.dart';
 import 'package:http/http.dart';
 
-Future<void> fillFeedbackForm(Map rating) async {
+Future<bool> fillFeedbackForm(Map rating) async {
   Map formData = httpFormData;
   Map<String, String> headers = httpHeaders;
 
@@ -14,6 +14,7 @@ Future<void> fillFeedbackForm(Map rating) async {
   formData.remove("ctl00_radMenuModule_ClientState");
   formData.remove("ctl00_mainContent_grdData_ClientState");
   formData.remove("ctl00\$mainContent\$DDLACADEMICTERM");
+  formData.remove("ctl00\$mainContent\$btnSave");
 
   Response res = await get(
     Uri.parse("https://eduserve.karunya.edu/MIS/IQAC/HFBCollection.aspx"),
@@ -37,28 +38,38 @@ Future<void> fillFeedbackForm(Map rating) async {
 
   setInputs(res.body);
 
+  rating.forEach((key, value) => formData[key] = "");
+
+  bool feedbackSubmitted = false;
   for (int i = 0; i < rating.keys.toList().length; i++) {
-    formData[rating.keys.toList()[i]] =
-        {"value": rating.values.toList()[i].toString(), "readOnly": "false"}.toString();
+    formData[rating.keys.toList()[i]] = {
+      "value": "\"${rating.values.toList()[i]}\"",
+      "readOnly": "false"
+    }.toString();
 
-    formData["__EVENTTARGET"] = rating.keys.toList()[i];
+    String eventTarget = rating.keys.toList()[i].replaceAll("_ClientState", "");
+    formData["__EVENTTARGET"] = eventTarget.replaceAll("_", "\$");
 
-    post(Uri.parse("https://eduserve.karunya.edu/MIS/IQAC/HFBCollection.aspx"))
-        .then((res) async {
-      setInputs(res.body);
+    Response res = await post(
+        Uri.parse("https://eduserve.karunya.edu/MIS/IQAC/HFBCollection.aspx"));
+
+    setInputs(res.body);
+    print(res.statusCode);
+
+    if (i + 1 == rating.keys.toList().length) {
+      formData["ctl00\$mainContent\$btnSave"] = "Save";
+      formData["__EVENTTARGET"] = "";
+      res = await post(
+          Uri.parse("https://eduserve.karunya.edu/MIS/IQAC/HFBCollection.aspx"),
+          headers: headers,
+          body: formData);
+
       print(res.statusCode);
 
-      if (i + 1 == rating.keys.toList().length) {
-        formData["ctl00\$mainContent\$btnSave"] = "Save";
-        formData["__EVENTTARGET"] = "";
-        res = await post(
-            Uri.parse(
-                "https://eduserve.karunya.edu/MIS/IQAC/HFBCollection.aspx"),
-            headers: headers,
-            body: formData);
-
-        print(res.statusCode);
+      if (res.headers["location"] == "/Student/Home.aspx") {
+        feedbackSubmitted = true;
       }
-    });
+    }
   }
+  return feedbackSubmitted;
 }

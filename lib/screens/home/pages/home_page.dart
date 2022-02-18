@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:beautifulsoup/beautifulsoup.dart';
+import 'package:eduserveMinimal/global/gloabls.dart';
 import 'package:eduserveMinimal/global/widgets/restart_widget.dart';
 import 'package:eduserveMinimal/screens/home/widgets/attendance_summary_basic.dart';
 import 'package:eduserveMinimal/screens/home/widgets/birthday.dart';
@@ -9,6 +11,7 @@ import 'package:eduserveMinimal/service/student_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 
 // Package imports:
@@ -55,9 +58,13 @@ class HomePage extends StatelessWidget {
               floating: true,
               flexibleSpace: FlexibleSpaceBar(
                 background: Padding(
-                  padding: const EdgeInsets.only(top: 80),
+                  padding: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.15),
                   child: AttendanceContainer(),
                 ),
+                stretchModes: [
+                  StretchMode.blurBackground,
+                ],
               ),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15)),
@@ -99,6 +106,24 @@ class HomePage extends StatelessWidget {
     });
   }
 
+  Future<void> cacheBirthDate() async {
+    Response res = await get(
+        Uri.parse("https://eduserve.karunya.edu/Student/PersonalInfo.aspx"),
+        headers: httpHeaders);
+    Beautifulsoup soup = Beautifulsoup(res.body);
+
+    String? dateString = soup
+        .find_all("input")
+        .where((element) => element.id == "ctl00_mainContent_TXTDOB_dateInput")
+        .first
+        .attributes["value"];
+
+    if (dateString != null) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString("birthDay", dateString);
+    }
+  }
+
   Future<void> checkBirthday(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey("birthDay")) {
@@ -113,6 +138,8 @@ class HomePage extends StatelessWidget {
           Navigator.of(context)
               .push(MaterialPageRoute(builder: (_) => BirthDayWidget()));
         }
+      } else {
+        cacheBirthDate();
       }
     }
   }
