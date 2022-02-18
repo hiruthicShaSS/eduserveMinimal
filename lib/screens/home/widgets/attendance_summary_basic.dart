@@ -1,9 +1,16 @@
+// 🎯 Dart imports:
 import 'dart:math';
+
+// 🐦 Flutter imports:
+import 'package:flutter/material.dart';
+
+// 📦 Package imports:
+import 'package:shimmer/shimmer.dart';
+
+// 🌎 Project imports:
 import 'package:eduserveMinimal/screens/home/widgets/attendance_bar_chart.dart';
 import 'package:eduserveMinimal/screens/home/widgets/attendance_pie_chart.dart';
 import 'package:eduserveMinimal/service/attendance_summary.dart';
-import 'package:flutter/material.dart';
-import 'package:shimmer/shimmer.dart';
 
 class AttendanceSummary extends StatelessWidget {
   AttendanceSummary({Key? key}) : super(key: key);

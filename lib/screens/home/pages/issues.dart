@@ -1,7 +1,7 @@
-// Flutter imports:
+// 🐦 Flutter imports:
 import 'package:flutter/material.dart';
 
-// Project imports:
+// 🌎 Project imports:
 import 'package:eduserveMinimal/screens/home/pages/fees.dart';
 import 'package:eduserveMinimal/screens/home/pages/hallticket.dart';
 

@@ -1,14 +1,14 @@
-// Flutter imports:
-import 'package:eduserveMinimal/screens/home/pages/cache_data.dart';
+// 🐦 Flutter imports:
 import 'package:flutter/material.dart';
+
+// 📦 Package imports:
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:new_version/new_version.dart';
-
-// Package imports:
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-// Project imports:
+// 🌎 Project imports:
+import 'package:eduserveMinimal/screens/home/pages/cache_data.dart';
 import 'package:eduserveMinimal/screens/home/pages/credentials.dart';
 import 'package:eduserveMinimal/screens/settings/pages/attribution.dart';
 import 'package:eduserveMinimal/screens/settings/pages/developer.dart';
@@ -82,8 +82,8 @@ class Settings extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                   child: Text("Attributions"),
-                  onPressed: () => Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (_) => AttributionScreen()))),
+                  onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => AttributionScreen()))),
             ),
             SizedBox(
               width: double.infinity,
@@ -131,8 +131,8 @@ class Settings extends StatelessWidget {
                       style: TextStyle(
                           decoration: TextDecoration.underline,
                           color: Colors.blue)),
-                  onTap: () =>
-                      launch("https://github.com/hiruthicShaSS/eduserveMinimal"),
+                  onTap: () => launch(
+                      "https://github.com/hiruthicShaSS/eduserveMinimal"),
                 ),
                 Text(" to this project"),
               ],

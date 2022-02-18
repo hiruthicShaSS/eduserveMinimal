@@ -1,7 +1,9 @@
-// Flutter imports:
+// 🐦 Flutter imports:
+import 'package:flutter/material.dart';
+
+// 🌎 Project imports:
 import 'package:eduserveMinimal/global/gloabls.dart';
 import 'package:eduserveMinimal/service/internal_marks.dart';
-import 'package:flutter/material.dart';
 
 class InternalMarks extends StatefulWidget {
   @override

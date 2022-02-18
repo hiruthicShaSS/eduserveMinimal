@@ -1,14 +1,14 @@
-// Dart imports:
+// 🎯 Dart imports:
 import 'dart:convert';
 
-// Package imports:
+// 📦 Package imports:
 import 'package:beautifulsoup/beautifulsoup.dart';
-import 'package:eduserveMinimal/service/scrap.dart';
 import 'package:http/http.dart';
 
-// Project imports:
+// 🌎 Project imports:
 import 'package:eduserveMinimal/global/gloabls.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
+import 'package:eduserveMinimal/service/scrap.dart';
 
 Future<Map?> getTimetable({bool force = false}) async {
   if (AppState.prefs!.containsKey("timetable"))
@@ -25,7 +25,7 @@ Future<Map?> getTimetable({bool force = false}) async {
 
   // I dont know why the below implementation works and I spent a lot of time than I should have.
   // So, I am using the old code(the above code) which was working before.
-  
+
   Map<String, String> headers = httpHeaders;
   Map formData = httpFormData;
   formData.remove("ctl00\$mainContent\$DDLEXAM");

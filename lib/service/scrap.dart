@@ -1,19 +1,12 @@
-// Flutter imports:
-import 'dart:convert';
-
-import 'package:connectivity/connectivity.dart';
+// 🐦 Flutter imports:
 import 'package:flutter/material.dart';
 
-// Package imports:
+// 📦 Package imports:
 import 'package:beautifulsoup/beautifulsoup.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-// Project imports:
-import 'package:eduserveMinimal/service/login.dart';
-
-// Flutter importimport 'package:flutter/material.dart';
 
 class Scraper {
   static BuildContext? mainPageContext;
@@ -150,7 +143,8 @@ class Scraper {
           headers: headers);
 
       if (res.body.indexOf("Login") != -1) {
-        Fluttertoast.showToast(msg: "eduserveMinimal: Session expired. Refresh data!");
+        Fluttertoast.showToast(
+            msg: "eduserveMinimal: Session expired. Refresh data!");
         return;
       }
 
@@ -215,7 +209,8 @@ class Scraper {
         await client.get(Uri.parse("$hostname$timetableURL"), headers: headers);
 
     if (res.body.indexOf("Login") != -1) {
-      Fluttertoast.showToast(msg: "eduserveMinimal: Session expired. Refresh data!");
+      Fluttertoast.showToast(
+          msg: "eduserveMinimal: Session expired. Refresh data!");
       return {};
     }
 

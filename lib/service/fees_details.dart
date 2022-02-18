@@ -1,13 +1,13 @@
-// Package imports:
+// 📦 Package imports:
 import 'package:beautifulsoup/beautifulsoup.dart';
-import 'package:eduserveMinimal/models/fees.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
-
-// Project imports:
-import 'package:eduserveMinimal/global/gloabls.dart';
-import 'package:eduserveMinimal/service/scrap.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+// 🌎 Project imports:
+import 'package:eduserveMinimal/global/gloabls.dart';
+import 'package:eduserveMinimal/models/fees.dart';
+import 'package:eduserveMinimal/service/scrap.dart';
 
 Future<Fees?> getFeesDetails({bool force = false}) async {
   if (Scraper.cache.containsKey("fees")) return Scraper.cache["fees"];
@@ -16,14 +16,14 @@ Future<Fees?> getFeesDetails({bool force = false}) async {
   String feesDownload = "/Student/Fees/DownloadReceipt.aspx";
   String feesOverallStatement = "/Student/Fees/FeesStatement.aspx";
   Fees fees = new Fees();
-  
 
   Response page = await get(
       Uri.parse("https://eduserve.karunya.edu${feesDownload}"),
       headers: headers);
 
   if (page.body.indexOf("Login") != -1) {
-    Fluttertoast.showToast(msg: "eduserveMinimal: Session expired. Refresh data!");
+    Fluttertoast.showToast(
+        msg: "eduserveMinimal: Session expired. Refresh data!");
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool("isLoggedIn", false);
     return null;

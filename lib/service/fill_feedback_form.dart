@@ -1,8 +1,9 @@
-import 'dart:convert';
-
+// 📦 Package imports:
 import 'package:beautifulsoup/beautifulsoup.dart';
-import 'package:eduserveMinimal/global/gloabls.dart';
 import 'package:http/http.dart';
+
+// 🌎 Project imports:
+import 'package:eduserveMinimal/global/gloabls.dart';
 
 Future<bool> fillFeedbackForm(Map rating) async {
   Map formData = httpFormData;
@@ -21,7 +22,6 @@ Future<bool> fillFeedbackForm(Map rating) async {
     headers: headers,
   );
 
-  Beautifulsoup soup = Beautifulsoup(res.body);
   void setInputs(String body) {
     Beautifulsoup soup = Beautifulsoup(body);
     final inputs = soup.find_all("input").map((e) => e.attributes).toList();

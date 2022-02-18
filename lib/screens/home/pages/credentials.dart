@@ -1,19 +1,16 @@
-// Flutter imports:
-import 'package:beautifulsoup/beautifulsoup.dart';
-import 'package:eduserveMinimal/edu_serve.dart';
-import 'package:eduserveMinimal/global/gloabls.dart';
-import 'package:eduserveMinimal/service/scrap.dart';
+// 🐦 Flutter imports:
 import 'package:flutter/material.dart';
 
-// Package imports:
+// 📦 Package imports:
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// Project imports:
+// 🌎 Project imports:
+import 'package:eduserveMinimal/edu_serve.dart';
 import 'package:eduserveMinimal/service/login.dart';
+import 'package:eduserveMinimal/service/scrap.dart';
 
 class Credentials extends StatelessWidget {
   bool? pushHomePage = false;

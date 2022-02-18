@@ -1,8 +1,13 @@
-import 'package:eduserveMinimal/global/widgets/dot_container.dart';
-import 'package:eduserveMinimal/providers/theme.dart';
-import 'package:fl_chart/fl_chart.dart';
+// 🐦 Flutter imports:
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+
+// 📦 Package imports:
+import 'package:fl_chart/fl_chart.dart';
+
+// 🌎 Project imports:
+import 'package:eduserveMinimal/global/widgets/dot_container.dart';
+import 'package:eduserveMinimal/providers/theme.dart';
 
 class AttendancePieChart extends StatelessWidget {
   const AttendancePieChart({

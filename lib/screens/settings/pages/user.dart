@@ -1,15 +1,18 @@
-// Flutter imports:
+// 🎯 Dart imports:
 import 'dart:math';
 
-import 'package:eduserveMinimal/screens/settings/widgets/semester_summary_graph.dart';
-import 'package:eduserveMinimal/service/semester_summary.dart';
-import 'package:eduserveMinimal/service/student_info.dart';
+// 🐦 Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-// Package imports:
+// 📦 Package imports:
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shimmer/shimmer.dart';
+
+// 🌎 Project imports:
+import 'package:eduserveMinimal/screens/settings/widgets/semester_summary_graph.dart';
+import 'package:eduserveMinimal/service/semester_summary.dart';
+import 'package:eduserveMinimal/service/student_info.dart';
 
 class User extends StatelessWidget {
   @override

@@ -1,5 +1,7 @@
-import 'package:eduserveMinimal/global/gloabls.dart';
+// 🐦 Flutter imports:
 import 'package:flutter/material.dart';
+
+// 📦 Package imports:
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,10 +20,12 @@ class CacheDataView extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                     onPressed: () async {
-                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                      SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
                       await prefs.remove("timetable");
                       Fluttertoast.showToast(msg: "Timetable data resetted!");
-                    }, child: Text("Reset Timtable Data")),
+                    },
+                    child: Text("Reset Timtable Data")),
               ),
             ],
           ),

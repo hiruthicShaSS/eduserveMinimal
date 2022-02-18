@@ -1,11 +1,11 @@
-// Package imports:
+// 📦 Package imports:
 import 'package:beautifulsoup/beautifulsoup.dart';
 import 'package:http/http.dart';
 
-// Project imports:
+// 🌎 Project imports:
 import 'package:eduserveMinimal/global/gloabls.dart';
 
-Future<List> getFeedbackForm([int? stars]) async {
+Future<List> getFeedbackForm() async {
   Map<String, String> headers = httpHeaders;
 
   Response page = await get(
@@ -16,13 +16,6 @@ Future<List> getFeedbackForm([int? stars]) async {
   List feedbackList =
       feedbackSoup.find_all("td").map((e) => e.text.trim()).toList();
 
-  RegExp FEEDBACK_INPUT_EXP =
-      RegExp("ctl00_mainContent_grdHFB_ctl00_ctl\d{2}_rtngHFB_ClientState");
-  // List feedback_inputs = feedbackSoup
-  //     .find_all("input")
-  //     .where((e) => FEEDBACK_INPUT_EXP.hasMatch(e.id))
-  //     .toList();
-
   List feedback_inputs = feedbackSoup
       .find_all("input")
       .map((e) => e.id)
@@ -31,7 +24,6 @@ Future<List> getFeedbackForm([int? stars]) async {
 
   List feedback = [];
   List allFeedback = [];
-  bool feedbackStart = false;
 
   int counter = 0;
   feedbackList.forEach((element) {
@@ -40,7 +32,6 @@ Future<List> getFeedbackForm([int? stars]) async {
       feedback.removeWhere((element) => element == "");
 
       allFeedback.add(feedback);
-      feedbackStart = false;
       feedback = [];
       counter++;
 
@@ -48,7 +39,6 @@ Future<List> getFeedbackForm([int? stars]) async {
     }
 
     if (element.toString().contains("Command item")) {
-      feedbackStart = true;
       return;
     }
 

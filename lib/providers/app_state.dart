@@ -1,11 +1,11 @@
-// Flutter imports:
-import 'package:eduserveMinimal/models/leave.dart';
+// 🐦 Flutter imports:
 import 'package:flutter/cupertino.dart';
 
-// Package imports:
+// 📦 Package imports:
 import 'package:shared_preferences/shared_preferences.dart';
 
-// Project imports:
+// 🌎 Project imports:
+import 'package:eduserveMinimal/models/leave.dart';
 import 'package:eduserveMinimal/service/scrap.dart';
 
 class AppState extends ChangeNotifier {

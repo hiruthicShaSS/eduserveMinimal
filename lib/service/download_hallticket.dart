@@ -1,13 +1,13 @@
-// Package imports:
+// 📦 Package imports:
 import 'package:beautifulsoup/beautifulsoup.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-// Project imports:
+// 🌎 Project imports:
 import 'package:eduserveMinimal/global/gloabls.dart';
 import 'package:eduserveMinimal/service/login.dart';
 import 'package:eduserveMinimal/service/scrap.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 Future<List?> downloadHallTicket(
     {String? term, bool download = false, int retry = 0}) async {

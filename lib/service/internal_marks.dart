@@ -1,12 +1,12 @@
-// Package imports:
+// 📦 Package imports:
 import 'package:beautifulsoup/beautifulsoup.dart';
-import 'package:eduserveMinimal/service/scrap.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
-
-// Project imports:
-import 'package:eduserveMinimal/global/gloabls.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+// 🌎 Project imports:
+import 'package:eduserveMinimal/global/gloabls.dart';
+import 'package:eduserveMinimal/service/scrap.dart';
 
 Future getInternalMarks({String? academicTerm = null}) async {
   Scraper scraper = Scraper();
@@ -23,7 +23,8 @@ Future getInternalMarks({String? academicTerm = null}) async {
         headers: headers);
 
     if (res.body.indexOf("Login") != -1) {
-      Fluttertoast.showToast(msg: "eduserveMinimal: Session expired. Refresh data!");
+      Fluttertoast.showToast(
+          msg: "eduserveMinimal: Session expired. Refresh data!");
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setBool("isLoggedIn", false);
       return;
@@ -53,7 +54,8 @@ Future getInternalMarks({String? academicTerm = null}) async {
     headers["cache-control"] = "max-age=0";
     // headers["content-length"] = "15695";
     headers["sec-ch-ua-platform"] = "Windows";
-    headers["sec-ch-ua"] = "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"96\", \"Google Chrome\";v=\"96\"";
+    headers["sec-ch-ua"] =
+        "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"96\", \"Google Chrome\";v=\"96\"";
     headers["sec-ch-ua-mobile"] = "?0";
 
     formData["ctl00\$mainContent\$DDLACADEMICTERM"] = 20.toString();

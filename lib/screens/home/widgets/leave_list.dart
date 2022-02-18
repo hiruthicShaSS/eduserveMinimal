@@ -1,13 +1,13 @@
-// Flutter imports:
-import 'package:eduserveMinimal/models/leave.dart';
+// 🐦 Flutter imports:
 import 'package:flutter/material.dart';
 
-// Package imports:
+// 📦 Package imports:
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:shimmer/shimmer.dart';
 
-// Project imports:
+// 🌎 Project imports:
 import 'package:eduserveMinimal/global/enum.dart';
+import 'package:eduserveMinimal/models/leave.dart';
 import 'package:eduserveMinimal/screens/home/pages/apply_leave.dart';
 
 class LeaveList extends StatelessWidget {
@@ -142,8 +142,10 @@ class LeaveList extends StatelessWidget {
                                     ),
                                   ),
                                   SizedBox(height: 10),
-                                  Text("From Session: ${leave![index - 1].fromSession}"),
-                                  Text("To Session: ${leave![index - 1].toSession}"),
+                                  Text(
+                                      "From Session: ${leave![index - 1].fromSession}"),
+                                  Text(
+                                      "To Session: ${leave![index - 1].toSession}"),
                                   Text("Status: ${leave![index - 1].status}"),
                                   SizedBox(height: 10),
                                   Center(

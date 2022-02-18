@@ -1,13 +1,13 @@
-// Package imports:
+// 📦 Package imports:
 import 'package:beautifulsoup/beautifulsoup.dart';
 import 'package:connectivity/connectivity.dart';
-import 'package:eduserveMinimal/service/scrap.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
-// Project imports:
+// 🌎 Project imports:
 import 'package:eduserveMinimal/global/gloabls.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
+import 'package:eduserveMinimal/service/scrap.dart';
 
 Future<String> login(
     [String? username, String? password, Function? callback]) async {

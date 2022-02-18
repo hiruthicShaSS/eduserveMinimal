@@ -1,22 +1,22 @@
-// Flutter imports:
+// 🐦 Flutter imports:
+import 'package:flutter/material.dart';
+
+// 📦 Package imports:
+import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
+import 'package:quick_actions/quick_actions.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+// 🌎 Project imports:
 import 'package:eduserveMinimal/global/gloabls.dart';
 import 'package:eduserveMinimal/global/widgets/restart_widget.dart';
+import 'package:eduserveMinimal/providers/app_state.dart';
+import 'package:eduserveMinimal/providers/theme.dart';
+import 'package:eduserveMinimal/screens/home/pages/pages.dart';
 import 'package:eduserveMinimal/screens/settings/pages/user.dart';
 import 'package:eduserveMinimal/service/login.dart';
 import 'package:eduserveMinimal/service/scrap.dart';
 import 'package:eduserveMinimal/shortcuts.dart';
-import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
-
-// Package imports:
-import 'package:provider/provider.dart';
-
-// Project imports:
-import 'package:eduserveMinimal/providers/app_state.dart';
-import 'package:eduserveMinimal/providers/theme.dart';
-import 'package:eduserveMinimal/screens/home/pages/pages.dart';
-import 'package:quick_actions/quick_actions.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class eduserveMinimal extends StatelessWidget {
   eduserveMinimal({Key? key, this.flavor = "production"}) : super(key: key);

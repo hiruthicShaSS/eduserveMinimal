@@ -1,7 +1,8 @@
-// Flutter imports:
-import 'package:eduserveMinimal/service/download_hallticket.dart';
+// 🐦 Flutter imports:
 import 'package:flutter/material.dart';
 
+// 🌎 Project imports:
+import 'package:eduserveMinimal/service/download_hallticket.dart';
 
 class HallTicketView extends StatefulWidget {
   @override

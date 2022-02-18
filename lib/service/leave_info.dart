@@ -1,10 +1,10 @@
-// Package imports:
+// 📦 Package imports:
 import 'package:beautifulsoup/beautifulsoup.dart';
-import 'package:eduserveMinimal/models/leave.dart';
 import 'package:http/http.dart';
 
-// Project imports:
+// 🌎 Project imports:
 import 'package:eduserveMinimal/global/gloabls.dart';
+import 'package:eduserveMinimal/models/leave.dart';
 import 'package:eduserveMinimal/service/scrap.dart';
 
 Future<Leave> getLeaveInfo() async {

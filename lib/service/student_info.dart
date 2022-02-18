@@ -1,11 +1,11 @@
-// Package imports:
+// 📦 Package imports:
 import 'package:beautifulsoup/beautifulsoup.dart';
-import 'package:eduserveMinimal/global/gloabls.dart';
+import 'package:http/http.dart';
 
-// Project imports:
+// 🌎 Project imports:
+import 'package:eduserveMinimal/global/gloabls.dart';
 import 'package:eduserveMinimal/service/login.dart';
 import 'package:eduserveMinimal/service/scrap.dart';
-import 'package:http/http.dart';
 
 Future<Map> getInfo() async {
   if (Scraper.cache.containsKey("user")) return Scraper.cache["user"];

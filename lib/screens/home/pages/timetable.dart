@@ -1,8 +1,7 @@
-// Flutter imports:
+// 🐦 Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
-// Project imports:
+// 🌎 Project imports:
 import 'package:eduserveMinimal/service/timetable.dart';
 
 class TimeTable extends StatelessWidget {

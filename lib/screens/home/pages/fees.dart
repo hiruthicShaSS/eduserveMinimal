@@ -1,16 +1,16 @@
-// Flutter imports:
-import 'package:eduserveMinimal/models/fees.dart';
-import 'package:eduserveMinimal/service/fees_details.dart';
+// 🐦 Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-// Package imports:
+// 📦 Package imports:
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-// Project imports:
+// 🌎 Project imports:
+import 'package:eduserveMinimal/models/fees.dart';
 import 'package:eduserveMinimal/providers/theme.dart';
+import 'package:eduserveMinimal/service/fees_details.dart';
 
 class FeesView extends StatelessWidget {
   @override
