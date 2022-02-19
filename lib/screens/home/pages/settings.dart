@@ -81,39 +81,50 @@ class Settings extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                  child: Text("Attributions"),
-                  onPressed: () => Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => AttributionScreen()))),
-            ),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
                   child: Text("Manage Cache Data"),
                   onPressed: () => Navigator.of(context).push(
                       MaterialPageRoute(builder: (_) => CacheDataView()))),
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
-                  child: ElevatedButton(
-                      child: Text("About"),
-                      onPressed: () async {
-                        PackageInfo info = await PackageInfo.fromPlatform();
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: ElevatedButton(
+                        child: Text("About"),
+                        onPressed: () async {
+                          PackageInfo info = await PackageInfo.fromPlatform();
 
-                        showAboutDialog(
-                            context: context,
-                            applicationVersion: info.version,
-                            applicationLegalese: "Yo, nice!");
-                      }),
+                          showAboutDialog(
+                              context: context,
+                              applicationVersion: info.version,
+                              applicationLegalese: "Yo, nice!");
+                        }),
+                  ),
                 ),
-                Spacer(),
                 Expanded(
-                  child: ElevatedButton(
-                    child: Text("Author"),
-                    onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Developer()));
-                    },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: ElevatedButton(
+                        child: Text("Attributions"),
+                        onPressed: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (_) => AttributionScreen()))),
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: ElevatedButton(
+                      child: Text("Author"),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Developer()));
+                      },
+                    ),
                   ),
                 ),
               ],

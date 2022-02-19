@@ -35,6 +35,12 @@ class AttributionScreen extends StatelessWidget {
           "https://lottiefiles.com/24586-gifts-open",
           "Lottie Files",
           "https://lottiefiles.com"),
+      Attribution(
+          AttributionType.Animation,
+          "VersaStock",
+          "https://lottiefiles.com/41070-notepad-with-a-list-of-tick-boxes-and-5-star-feedback",
+          "Lottie Files",
+          "https://lottiefiles.com"),
     ];
 
     return Scaffold(

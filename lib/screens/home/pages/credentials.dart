@@ -12,24 +12,30 @@ import 'package:eduserveMinimal/edu_serve.dart';
 import 'package:eduserveMinimal/service/login.dart';
 import 'package:eduserveMinimal/service/scrap.dart';
 
-class Credentials extends StatelessWidget {
-  bool? pushHomePage = false;
-  Credentials({this.pushHomePage});
+class Credentials extends StatefulWidget {
+  final bool? pushHomePage;
+  const Credentials({this.pushHomePage = false});
+
+  @override
+  State<Credentials> createState() => _CredentialsState();
+}
+
+class _CredentialsState extends State<Credentials> {
+  TextEditingController _usernameController = new TextEditingController();
+  TextEditingController _passwordController = new TextEditingController();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  int _autoFillFeedbackValue = 1;
+  bool _autoFillFedbackForm = false;
+
+  @override
+  void initState() {
+    super.initState();
+    setDefaults();
+  }
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController _usernameController = new TextEditingController();
-    TextEditingController _passwordController = new TextEditingController();
-
-    void setDefaults() async {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      _usernameController.text = prefs.getString("username") ?? "";
-      _passwordController.text = prefs.getString("password") ?? "";
-    }
-
-    setDefaults();
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
@@ -49,6 +55,32 @@ class Credentials extends StatelessWidget {
                   buildTextField(
                       _passwordController, 'Enter your password.', true),
                   SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Text("Autofill feedback form: "),
+                      Checkbox(
+                          value: _autoFillFedbackForm,
+                          onChanged: (value) => setState(
+                              () => _autoFillFedbackForm = value ?? false)),
+                      Visibility(
+                        visible: _autoFillFedbackForm,
+                        child: DropdownButton(
+                          hint: Text("Default rating"),
+                          value: _autoFillFeedbackValue,
+                          items: List.generate(
+                            5,
+                            (index) => DropdownMenuItem(
+                              child: Text((index + 1).toString()),
+                              value: index + 1,
+                            ),
+                          ),
+                          onChanged: (int? value) {
+                            setState(() => _autoFillFeedbackValue = value ?? 1);
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                   ElevatedButton(
                     child: Text("Save"),
                     onPressed: () async {
@@ -89,6 +121,8 @@ class Credentials extends StatelessWidget {
                           "username", _usernameController.text);
                       await prefs.setString(
                           "password", _passwordController.text);
+                      await prefs.setInt(
+                          "autoFillFeedbackValue", _autoFillFeedbackValue);
                       Fluttertoast.showToast(
                           msg: "Credentials updated successfully");
 
@@ -235,5 +269,11 @@ class Credentials extends StatelessWidget {
                 ],
               );
             }));
+  }
+
+  void setDefaults() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _usernameController.text = prefs.getString("username") ?? "";
+    _passwordController.text = prefs.getString("password") ?? "";
   }
 }
