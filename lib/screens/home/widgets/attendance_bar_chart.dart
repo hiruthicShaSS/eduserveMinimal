@@ -5,9 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 class AttendanceBarChart extends StatelessWidget {
-  const AttendanceBarChart({Key? key, required this.data}) : super(key: key);
+  AttendanceBarChart({Key? key, required this.data}) : super(key: key);
 
   final List<List<String>> data;
+  final List<Color> _presentGradient = [Colors.green, Colors.greenAccent];
+  final List<Color> _absentGradient = [Colors.red, Colors.redAccent];
+  final List<Color> _unAttendedGradient = [Colors.grey, Colors.white];
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +29,30 @@ class AttendanceBarChart extends StatelessWidget {
         padding: EdgeInsets.all(10),
         child: Column(
           children: [
-            Text("Last 7 days attendance/hour"),
+            Row(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    "Last 7 days attendance/hour",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    children: [
+                      LineChartLegend(
+                          text: "Present", gradientColors: _presentGradient),
+                      LineChartLegend(
+                          text: "Absent", gradientColors: _absentGradient),
+                      LineChartLegend(
+                          text: "Un-attended",
+                          gradientColors: _unAttendedGradient),
+                    ],
+                  ),
+                ),
+              ],
+            ),
             Expanded(
               child: BarChart(
                 BarChartData(
@@ -62,7 +88,7 @@ class AttendanceBarChart extends StatelessWidget {
                       barRods: [
                         BarChartRodData(
                           y: double.parse(data[index][14]),
-                          colors: [Colors.green, Colors.greenAccent],
+                          colors: _presentGradient,
                           width: 15,
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(6),
@@ -72,13 +98,12 @@ class AttendanceBarChart extends StatelessWidget {
                         BarChartRodData(
                           y: double.parse(data[index][15]),
                           backDrawRodData: BackgroundBarChartRodData(
-                            colors: [
-                              Colors.redAccent.withOpacity(0.01),
-                              Colors.red.withOpacity(0.01)
-                            ],
+                            colors: _absentGradient.reversed
+                                .map((color) => color.withOpacity(0.01))
+                                .toList(),
                             show: true,
                           ),
-                          colors: [Colors.red, Colors.redAccent],
+                          colors: _absentGradient,
                           width: 12,
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(6),
@@ -88,13 +113,12 @@ class AttendanceBarChart extends StatelessWidget {
                         BarChartRodData(
                           y: double.parse(data[index][16]),
                           backDrawRodData: BackgroundBarChartRodData(
-                            colors: [
-                              Colors.white.withOpacity(0.01),
-                              Colors.grey.withOpacity(0.01)
-                            ],
+                            colors: _unAttendedGradient.reversed
+                                .map((color) => color.withOpacity(0.01))
+                                .toList(),
                             show: true,
                           ),
-                          colors: [Colors.grey, Colors.white],
+                          colors: _unAttendedGradient,
                           width: 10,
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(6),
@@ -110,6 +134,35 @@ class AttendanceBarChart extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class LineChartLegend extends StatelessWidget {
+  const LineChartLegend({
+    Key? key,
+    required this.text,
+    required this.gradientColors,
+  }) : super(key: key);
+
+  final String text;
+  final List<Color> gradientColors;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          width: 18,
+          height: 5,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(colors: gradientColors),
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        SizedBox(width: 6),
+        Text(text),
+      ],
     );
   }
 }

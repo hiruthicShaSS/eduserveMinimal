@@ -17,15 +17,15 @@ class AttendanceSummary extends StatelessWidget {
 
   final Map dummyData = {
     "basicInfo": [
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
+      "loading",
+      "loading",
+      "loading",
+      "loading",
+      "loading",
+      "loading",
+      "loading",
+      "loading",
+      "loading",
       Random().nextInt(90).toString(),
       Random().nextInt(10).toString()
     ],

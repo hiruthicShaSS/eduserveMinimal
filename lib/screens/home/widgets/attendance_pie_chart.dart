@@ -79,21 +79,24 @@ class AttendancePieChart extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                       recognizer: TapGestureRecognizer()
-                        ..onTap = () => showDialog(
-                            context: context,
-                            builder: (_) => AlertDialog(
-                                  content: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Text("Total Hours: ${data[7]}"),
-                                      Text("Actual: ${data[10]}"),
-                                      Text("OD Corrected: ${data[11]}"),
-                                      Text("ML Corrected: ${data[12]}"),
-                                      Text("Leave Hours: ${data[14]}"),
-                                    ],
-                                  ),
-                                )),
+                        ..onTap = data[0] == "loading"
+                            ? null
+                            : () => showDialog(
+                                context: context,
+                                builder: (_) => AlertDialog(
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Text("Total Hours: ${data[7]}"),
+                                          Text("Actual: ${data[10]}"),
+                                          Text("OD Corrected: ${data[11]}"),
+                                          Text("ML Corrected: ${data[12]}"),
+                                          Text("Leave Hours: ${data[14]}"),
+                                        ],
+                                      ),
+                                    )),
                     ),
                   ])),
                 ],
