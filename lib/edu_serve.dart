@@ -151,7 +151,8 @@ class AutoFillFeedback extends StatelessWidget {
       future: autoFill(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          Navigator.of(context).pushNamed("/home");
+          Future.delayed(
+              Duration.zero, () => Navigator.of(context).pushNamed("/home"));
           return SizedBox();
         }
         return Center(

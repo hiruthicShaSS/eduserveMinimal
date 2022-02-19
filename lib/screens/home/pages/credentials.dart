@@ -245,6 +245,7 @@ class _CredentialsState extends State<Credentials> {
                           await SharedPreferences.getInstance();
                       await prefs.remove("username");
                       await prefs.remove("password");
+                      await prefs.remove("autoFillFeedbackValue");
                       Scraper.cache = {};
 
                       Fluttertoast.showToast(msg: "Logout completed");
@@ -275,5 +276,9 @@ class _CredentialsState extends State<Credentials> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _usernameController.text = prefs.getString("username") ?? "";
     _passwordController.text = prefs.getString("password") ?? "";
+    setState(() {
+      _autoFillFedbackForm = prefs.containsKey("autoFillFeedbackValue");
+      _autoFillFeedbackValue = prefs.getInt("autoFillFeedbackValue") ?? 1;
+    });
   }
 }
