@@ -71,5 +71,8 @@ Future<bool> fillFeedbackForm(Map rating) async {
       }
     }
   }
+
+  await get(Uri.parse(
+      "https://eduserve.karunya.edu/Student/Home.aspx")); // Making another request coz sometimes homepage doesnt load after feedback form
   return feedbackSubmitted;
 }

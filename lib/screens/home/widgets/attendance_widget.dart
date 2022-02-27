@@ -3,11 +3,9 @@ import 'package:flutter/material.dart';
 
 // 📦 Package imports:
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 // 🌎 Project imports:
-import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:eduserveMinimal/providers/theme.dart';
 import 'package:eduserveMinimal/service/attendence.dart';
 
@@ -20,8 +18,6 @@ class AttendanceContainer extends StatelessWidget {
       future: getAttendance(),
       builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          Provider.of<AppState>(context, listen: false).attendance =
-              snapshot.data;
           return containerWithData(context, snapshot.data!);
         }
         return containerWithData(context, ["0", "0", ""], true);

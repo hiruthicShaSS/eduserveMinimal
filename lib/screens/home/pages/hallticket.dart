@@ -23,18 +23,6 @@ class _HallTicketViewState extends State<HallTicketView> {
       appBar: AppBar(
         title: Text("Download Hall Ticket"),
         centerTitle: true,
-        // actions: [
-        //   Visibility(
-        //       visible: dataLoaded,
-        //       child: IconButton(
-        //           onPressed: () async {
-        //             await Provider.of<AppState>(context, listen: false)
-        //                 .scraper
-        //                 .downloadHallTicket(
-        //                     term: selectedTermValue, download: true);
-        //           },
-        //           icon: Icon(Icons.save)))
-        // ],
       ),
       body: SafeArea(
         child: Column(

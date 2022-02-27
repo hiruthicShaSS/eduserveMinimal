@@ -82,9 +82,7 @@ class HomeController extends StatelessWidget {
                       }
                       if (snapshot.data!["loginError"]) return Credentials();
 
-                      return ChangeNotifierProvider(
-                          create: (_) => AppState(),
-                          builder: (context, _) => HomePage());
+                      return HomePage();
                     }
 
                     return Credentials();

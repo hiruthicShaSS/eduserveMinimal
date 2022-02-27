@@ -32,9 +32,6 @@ class _LeaveInformationState extends State<LeaveInformation>
 
   @override
   Widget build(BuildContext context) {
-    // Provider.of<AppState>(context, listen: false).scraper.getLeaveInfo();
-    // return Container();
-
     Leave fakeLeaveData = Leave.generateFakeLeave();
 
     return Container(
@@ -62,9 +59,6 @@ class _LeaveInformationState extends State<LeaveInformation>
                   if (snapshot.hasError) {
                     print(snapshot);
                   }
-
-                  Provider.of<AppState>(context, listen: false).leaveInfo =
-                      snapshot.data;
 
                   if (snapshot.data == null)
                     return Text("No records to display.");

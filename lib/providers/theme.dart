@@ -61,10 +61,6 @@ class ThemeProvider extends ChangeNotifier {
         ? dark
         : light;
     platformBrightness = SchedulerBinding.instance!.window.platformBrightness;
-    // currentThemeData =
-    //     SchedulerBinding.instance!.window.platformBrightness == Brightness.dark
-    //         ? dark
-    //         : light;
     currentThemeMode = this.themeMode;
 
     notifyListeners();
