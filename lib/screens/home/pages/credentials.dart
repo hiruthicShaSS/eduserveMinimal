@@ -121,8 +121,12 @@ class _CredentialsState extends State<Credentials> {
                           "username", _usernameController.text);
                       await prefs.setString(
                           "password", _passwordController.text);
-                      await prefs.setInt(
-                          "autoFillFeedbackValue", _autoFillFeedbackValue);
+
+                      if (_autoFillFedbackForm) {
+                        await prefs.setInt(
+                            "autoFillFeedbackValue", _autoFillFeedbackValue);
+                      }
+
                       Fluttertoast.showToast(
                           msg: "Credentials updated successfully");
 

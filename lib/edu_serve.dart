@@ -1,4 +1,6 @@
 // 🐦 Flutter imports:
+import 'dart:developer';
+
 import 'package:eduserveMinimal/service/fill_feedback_form.dart';
 import 'package:eduserveMinimal/service/get_feedback_form.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +13,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // 🌎 Project imports:
 import 'package:eduserveMinimal/global/gloabls.dart';
-import 'package:eduserveMinimal/global/widgets/restart_widget.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:eduserveMinimal/providers/theme.dart';
 import 'package:eduserveMinimal/screens/home/pages/pages.dart';
@@ -26,23 +27,26 @@ class eduserveMinimal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<AppState>(context)..initPlatformState();
-
-    return MaterialApp(
-      debugShowCheckedModeBanner: flavor == "development",
-      home: HomeController(),
-      routes: {
-        "/home": (BuildContext context) => HomePage(),
-        "/feedbackForm": (BuildContext context) => FeedbackForm(),
-        "/timetable": (BuildContext context) => TimeTable(),
-        "/apply_leave": (BuildContext context) => ApplyLeaveView(),
-        "/fees": (BuildContext context) => FeesView(),
-        "/credentials": (BuildContext context) => Credentials(),
-        "/user": (BuildContext context) => User(),
-      },
-      darkTheme: ThemeProvider.dark,
-      title: "eduserveMinimal",
-      themeMode: Provider.of<ThemeProvider>(context).themeMode,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<ThemeProvider>(create: (_) => ThemeProvider()),
+      ],
+      builder: (context, child) => MaterialApp(
+        debugShowCheckedModeBanner: flavor == "development",
+        home: HomeController(),
+        routes: {
+          "/home": (BuildContext context) => HomePage(),
+          "/feedbackForm": (BuildContext context) => FeedbackForm(),
+          "/timetable": (BuildContext context) => TimeTable(),
+          "/apply_leave": (BuildContext context) => ApplyLeaveView(),
+          "/fees": (BuildContext context) => FeesView(),
+          "/credentials": (BuildContext context) => Credentials(),
+          "/user": (BuildContext context) => User(),
+        },
+        darkTheme: ThemeProvider.dark,
+        title: "eduserveMinimal",
+        themeMode: Provider.of<ThemeProvider>(context).themeMode,
+      ),
     );
   }
 }
@@ -54,34 +58,40 @@ class HomeController extends StatelessWidget {
   Widget build(BuildContext context) {
     initQuickActions(context);
 
-    return Scaffold(
-      body: FutureBuilder(
-        future: SharedPreferences.getInstance(),
-        builder: (context, AsyncSnapshot<SharedPreferences> snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            SharedPreferences prefs = snapshot.data!;
+    return FutureBuilder(
+      future: SharedPreferences.getInstance(),
+      builder: (context, AsyncSnapshot<SharedPreferences> snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          SharedPreferences prefs = snapshot.data!;
 
-            if (credentialsExist(prefs))
-              return FutureBuilder(
-                  future: isLoggedIn(prefs),
-                  builder: (context, AsyncSnapshot<Map> snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      if (snapshot.data!["isLoggedIn"]) {
-                        if (snapshot.data!["feedBackFormFound"]) {
-                          if (prefs.getInt("autoFillFeedbackValue") != null) {
-                            return AutoFillFeedback();
-                          }
-                          return FeedbackForm();
+          if (credentialsExist(prefs))
+            return FutureBuilder(
+                future: isLoggedIn(prefs),
+                builder: (context, AsyncSnapshot<Map> snapshot) {
+                  if (snapshot.hasError) {
+                    log("Error on edu_serve.dart", error: snapshot.error);
+                  }
+
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.data!["isLoggedIn"]) {
+                      if (snapshot.data!["feedBackFormFound"]) {
+                        if (prefs.getInt("autoFillFeedbackValue") != null) {
+                          return AutoFillFeedback();
                         }
-                        if (snapshot.data!["loginError"]) return Credentials();
-
-                        return RestartWidget(child: HomePage());
+                        return FeedbackForm();
                       }
+                      if (snapshot.data!["loginError"]) return Credentials();
 
-                      return Credentials();
+                      return ChangeNotifierProvider(
+                          create: (_) => AppState(),
+                          builder: (context, _) => HomePage());
                     }
 
-                    return Center(
+                    return Credentials();
+                  }
+
+                  return Material(
+                    child: Center(
                         child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -94,13 +104,13 @@ class HomeController extends StatelessWidget {
                           ),
                         ),
                       ],
-                    ));
-                  });
-            return Credentials();
-          }
-          return Container();
-        },
-      ),
+                    )),
+                  );
+                });
+          return Credentials();
+        }
+        return Container();
+      },
     );
   }
 

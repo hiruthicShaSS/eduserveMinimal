@@ -1,4 +1,5 @@
 // 🐦 Flutter imports:
+import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
@@ -9,6 +10,7 @@ import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:new_version/new_version.dart';
 import 'package:package_info/package_info.dart';
+import 'package:provider/provider.dart';
 import 'package:quick_actions/quick_actions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -46,43 +48,46 @@ class HomePage extends StatelessWidget {
           children: buildDrawer(context),
         ),
       ),
-      body: RefreshIndicator(
-        displacement: 100,
-        child: CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              expandedHeight: MediaQuery.of(context).size.height * 0.25,
-              title: Text("eduserveMinimal"),
-              pinned: true,
-              snap: true,
-              floating: true,
-              flexibleSpace: FlexibleSpaceBar(
-                background: Padding(
-                  padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * (0.25 * 0.46)),
-                  child: AttendanceContainer(),
+      body: Consumer(builder: (context, AppState appState, child) {
+        return RefreshIndicator(
+          displacement: 100,
+          child: CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                expandedHeight: MediaQuery.of(context).size.height * 0.25,
+                title: Text("eduserveMinimal"),
+                pinned: true,
+                snap: true,
+                floating: true,
+                flexibleSpace: FlexibleSpaceBar(
+                  background: Padding(
+                    padding: EdgeInsets.only(
+                        top:
+                            MediaQuery.of(context).size.height * (0.25 * 0.46)),
+                    child: AttendanceContainer(),
+                  ),
+                  stretchModes: [
+                    StretchMode.blurBackground,
+                  ],
                 ),
-                stretchModes: [
-                  StretchMode.blurBackground,
-                ],
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15)),
               ),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15)),
-            ),
-            SliverList(
-              delegate: SliverChildListDelegate([
-                LeaveInformation(),
-                AttendanceSummary(),
-              ]),
-            ),
-          ],
-        ),
-        onRefresh: () => login().then((value) {
-          Scraper.cache.clear();
-          RestartWidget.restartApp(context);
-          Fluttertoast.showToast(msg: "Refresh complete");
-        }),
-      ),
+              SliverList(
+                delegate: SliverChildListDelegate([
+                  LeaveInformation(),
+                  AttendanceSummary(),
+                ]),
+              ),
+            ],
+          ),
+          onRefresh: () => login().then((value) {
+            Scraper.cache.clear();
+            appState.refresh();
+            Fluttertoast.showToast(msg: "Refresh complete");
+          }),
+        );
+      }),
     );
   }
 

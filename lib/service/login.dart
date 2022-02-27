@@ -8,10 +8,12 @@ import 'package:http/http.dart' as http;
 import 'package:eduserveMinimal/global/gloabls.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:eduserveMinimal/service/scrap.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future<String> login(
     [String? username, String? password, Function? callback]) async {
-  // Login
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+
   var connection = await (Connectivity().checkConnectivity());
   if (connection == ConnectivityResult.none) {
     Fluttertoast.showToast(
@@ -28,9 +30,9 @@ Future<String> login(
     "__VIEWSTATEGENERATOR": "",
     "__EVENTVALIDATION": "",
     "ctl00\$mainContent\$Login1\$UserName":
-        AppState.prefs!.getString("username") ?? username,
+        prefs.getString("username") ?? username,
     "ctl00\$mainContent\$Login1\$Password":
-        AppState.prefs!.getString("password") ?? password,
+        prefs.getString("password") ?? password,
     "ctl00\$mainContent\$Login1\$LoginButton": "Log In"
   };
   var res = await http.get(Uri.parse(

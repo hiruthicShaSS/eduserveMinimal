@@ -9,17 +9,20 @@ import 'package:http/http.dart';
 import 'package:eduserveMinimal/global/gloabls.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:eduserveMinimal/service/scrap.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future<Map?> getTimetable({bool force = false}) async {
-  if (AppState.prefs!.containsKey("timetable"))
-    return jsonDecode(AppState.prefs!.getString("timetable")!);
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  if (prefs.containsKey("timetable"))
+    return jsonDecode(prefs.getString("timetable")!);
 
   Scraper scraper = Scraper();
   await scraper.initAsyncMethods();
   await scraper.login();
   final timetable = await scraper.getTimetable();
 
-  await AppState.prefs!.setString("timetable", jsonEncode(timetable));
+  await prefs.setString("timetable", jsonEncode(timetable));
 
   return timetable;
 
@@ -30,8 +33,8 @@ Future<Map?> getTimetable({bool force = false}) async {
   Map formData = httpFormData;
   formData.remove("ctl00\$mainContent\$DDLEXAM");
 
-  if (AppState.prefs!.containsKey("timetable"))
-    return jsonDecode(AppState.prefs!.getString("timetable")!);
+  if (prefs.containsKey("timetable"))
+    return jsonDecode(prefs.getString("timetable")!);
 
   final String timetableURL = "/Student/TimeTable.aspx";
 
@@ -84,7 +87,7 @@ Future<Map?> getTimetable({bool force = false}) async {
     data[day] = tempList;
   });
 
-  await AppState.prefs!.setString("timetable", jsonEncode(data));
+  await prefs.setString("timetable", jsonEncode(data));
 
   return data;
 }
