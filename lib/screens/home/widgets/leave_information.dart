@@ -1,12 +1,8 @@
 // 🐦 Flutter imports:
 import 'package:flutter/material.dart';
 
-// 📦 Package imports:
-import 'package:provider/provider.dart';
-
 // 🌎 Project imports:
 import 'package:eduserveMinimal/models/leave.dart';
-import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:eduserveMinimal/providers/theme.dart';
 import 'package:eduserveMinimal/screens/home/widgets/dot_tab_bar_indeicator.dart';
 import 'package:eduserveMinimal/screens/home/widgets/leave_list.dart';

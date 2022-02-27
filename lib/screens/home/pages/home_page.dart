@@ -1,22 +1,18 @@
 // 🐦 Flutter imports:
-import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 // 📦 Package imports:
 import 'package:beautifulsoup/beautifulsoup.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:new_version/new_version.dart';
 import 'package:package_info/package_info.dart';
-import 'package:provider/provider.dart';
 import 'package:quick_actions/quick_actions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // 🌎 Project imports:
 import 'package:eduserveMinimal/global/gloabls.dart';
-import 'package:eduserveMinimal/global/widgets/restart_widget.dart';
 import 'package:eduserveMinimal/screens/home/pages/fees.dart';
 import 'package:eduserveMinimal/screens/home/pages/hallticket.dart';
 import 'package:eduserveMinimal/screens/home/pages/internals.dart';

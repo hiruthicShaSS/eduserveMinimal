@@ -4,12 +4,11 @@ import 'dart:convert';
 // 📦 Package imports:
 import 'package:beautifulsoup/beautifulsoup.dart';
 import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // 🌎 Project imports:
 import 'package:eduserveMinimal/global/gloabls.dart';
-import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:eduserveMinimal/service/scrap.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 Future<Map?> getTimetable({bool force = false}) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
