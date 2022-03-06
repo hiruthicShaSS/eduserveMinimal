@@ -42,11 +42,11 @@ Distributed under the BSD-3-CLAUSE License. See LICENSE for more information.
 ## Screenshots
 
 <div align="center">
-<img src="https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/screenshot1.png" width=200px>
-<img src="https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/screenshot2.png" width=200px>
-<img src="https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/screenshot3.png" width=200px>
-<img src="https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/screenshot4.png" width=200px>
-<img src="https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/screenshot5.png" width=200px>
+<img src="https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/screenshot1.png" width=200px alt="Important inforamtion first">
+<img src="https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/screenshot2.png" width=200px alt="Student page">
+<img src="https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/screenshot3.png" width=200px alt="Fees page">
+<img src="https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/screenshot4.png" width=200px alt="Hallticket elegibility">
+<img src="https://raw.githubusercontent.com/hiruthicShaSS/eduserveMinimal/main/screenshots/screenshot5.png" width=200px alt="Dark theme available">
 </div>
 
 ## Support
