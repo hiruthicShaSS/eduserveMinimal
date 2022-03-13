@@ -1,5 +1,6 @@
 // 📦 Package imports:
 import 'package:beautifulsoup/beautifulsoup.dart';
+import 'package:eduserveMinimal/service/login.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,11 +23,8 @@ Future<Fees?> getFeesDetails({bool force = false}) async {
       headers: headers);
 
   if (page.body.indexOf("Login") != -1) {
-    Fluttertoast.showToast(
-        msg: "eduserveMinimal: Session expired. Refresh data!");
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool("isLoggedIn", false);
-    return null;
+    await login();
+    return getFeesDetails();
   }
 
   Response dues = await get(

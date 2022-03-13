@@ -41,7 +41,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     processExcessInfo(context);
-    initQuickActionsEvents(context);
     super.initState();
   }
 
@@ -90,26 +89,6 @@ class _HomePageState extends State<HomePage> {
         }),
       ),
     );
-  }
-
-  void initQuickActionsEvents(BuildContext context) {
-    final quickActions = QuickActions();
-    quickActions.initialize((type) {
-      switch (type) {
-        case "timetable":
-          Navigator.of(context).pushNamed("/timetable");
-          break;
-        case "fees":
-          Navigator.of(context).pushNamed("/fees");
-          break;
-        case "apply_leave":
-          Navigator.of(context).pushNamed("/apply_leave");
-          break;
-        case "user":
-          Navigator.of(context).pushNamed("/user");
-          break;
-      }
-    });
   }
 
   Future<void> cacheBirthDate() async {

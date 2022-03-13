@@ -51,13 +51,50 @@ class eduserveMinimal extends StatelessWidget {
   }
 }
 
-class HomeController extends StatelessWidget {
+class HomeController extends StatefulWidget {
   const HomeController({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    initQuickActions(context);
+  State<HomeController> createState() => _HomeControllerState();
+}
 
+class _HomeControllerState extends State<HomeController> {
+  void initQuickActionsEvents(BuildContext context) {
+    final quickActions = QuickActions();
+    quickActions.initialize((type) {
+      print(type);
+
+      switch (type) {
+        case "timetable":
+          Navigator.of(context).pushNamed("/timetable");
+          break;
+        case "fees":
+          Navigator.of(context).pushNamed("/fees");
+          break;
+        case "apply_leave":
+          Navigator.of(context).pushNamed("/apply_leave");
+          break;
+        case "user":
+          Navigator.of(context).pushNamed("/user");
+          break;
+      }
+    });
+  }
+
+  void initQuickActions(BuildContext context) {
+    final quickActions = QuickActions();
+    quickActions.setShortcutItems(ShortcutItems.items);
+    initQuickActionsEvents(context);
+  }
+
+  @override
+  void didChangeDependencies() {
+    initQuickActions(context);
+    super.didChangeDependencies();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return FutureBuilder(
       future: SharedPreferences.getInstance(),
       builder: (context, AsyncSnapshot<SharedPreferences> snapshot) {
@@ -112,11 +149,6 @@ class HomeController extends StatelessWidget {
     );
   }
 
-  void initQuickActions(BuildContext context) {
-    final quickActions = QuickActions();
-    quickActions.setShortcutItems(ShortcutItems.items);
-  }
-
   bool credentialsExist(SharedPreferences prefs) =>
       prefs.containsKey("username") && prefs.containsKey("password");
 
@@ -155,24 +187,26 @@ class AutoFillFeedback extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<bool>(
-      future: autoFill(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          Future.delayed(
-              Duration.zero, () => Navigator.of(context).pushNamed("/home"));
-          return SizedBox();
-        }
-        return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Lottie.asset("assets/lottie/submitting_feedback.json"),
-              Text("Sit tight, we are submitting your feedback form!"),
-            ],
-          ),
-        );
-      },
+    return Scaffold(
+      body: FutureBuilder<bool>(
+        future: autoFill(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            Future.delayed(
+                Duration.zero, () => Navigator.of(context).pushNamed("/home"));
+            return SizedBox();
+          }
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Lottie.asset("assets/lottie/submitting_feedback.json"),
+                Text("Sit tight, we are submitting your feedback form!"),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 
