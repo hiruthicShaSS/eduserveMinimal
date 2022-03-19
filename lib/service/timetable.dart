@@ -12,9 +12,18 @@ import 'package:eduserveMinimal/service/scrap.dart';
 
 Future<Map?> getTimetable({bool force = false}) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
+  DateTime today = DateTime.now();
+  int lastUpdate = 100;
 
-  if (prefs.containsKey("timetable"))
+  if (prefs.containsKey("timetable_last_update")) {
+    lastUpdate = today
+        .difference(DateTime.parse(prefs.getString("timetable_last_update")!))
+        .inDays;
+  }
+
+  if (prefs.containsKey("timetable") && lastUpdate < 90) {
     return jsonDecode(prefs.getString("timetable")!);
+  }
 
   Scraper scraper = Scraper();
   await scraper.initAsyncMethods();
@@ -22,6 +31,7 @@ Future<Map?> getTimetable({bool force = false}) async {
   final timetable = await scraper.getTimetable();
 
   await prefs.setString("timetable", jsonEncode(timetable));
+  await prefs.setString("timetable_last_update", DateTime.now().toString());
 
   return timetable;
 
