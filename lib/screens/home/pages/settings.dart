@@ -90,7 +90,7 @@ class Settings extends StatelessWidget {
               children: [
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 2),
                     child: ElevatedButton(
                         child: Text("About"),
                         onPressed: () async {
@@ -105,7 +105,7 @@ class Settings extends StatelessWidget {
                 ),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 2),
                     child: ElevatedButton(
                         child: Text("Attributions"),
                         onPressed: () => Navigator.of(context).push(
@@ -115,7 +115,7 @@ class Settings extends StatelessWidget {
                 ),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 2),
                     child: ElevatedButton(
                       child: Text("Author"),
                       onPressed: () {

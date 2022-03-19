@@ -1,7 +1,11 @@
 // 🎯 Dart imports:
 import 'dart:math';
+import 'dart:typed_data';
 
 // 🐦 Flutter imports:
+import 'package:eduserveMinimal/screens/settings/widgets/user_detail.dart';
+import 'package:eduserveMinimal/screens/settings/widgets/user_header.dart';
+import 'package:eduserveMinimal/screens/settings/widgets/user_main_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -30,44 +34,10 @@ class User extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(height: 10.0),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Hero(
-                            tag: "hero-userImage",
-                            child: CircleAvatar(
-                              radius: 80,
-                              backgroundImage:
-                                  MemoryImage(snapshot.data!["studentIMG"]),
-                              backgroundColor: Colors.transparent,
-                              onBackgroundImageError: (_, __) =>
-                                  Image.asset("assets/placeholder_profile.png"),
-                            ),
-                          ),
-                          InkWell(
-                            child: Image.memory(snapshot.data!["qrImage"]),
-                            onTap: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (_) => Scaffold(
-                                    body: Center(
-                                      child: InteractiveViewer(
-                                        clipBehavior: Clip.none,
-                                        minScale: 1,
-                                        maxScale: 4,
-                                        child: AspectRatio(
-                                          aspectRatio: 1,
-                                          child: Image.memory(
-                                              snapshot.data!["qrImage"]),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ],
+                      UserHeader(
+                        studentImg: snapshot.data!["studentIMG"],
+                        qrCode: snapshot.data!["qrImage"],
+                        reg: snapshot.data!["reg"],
                       ),
                       Padding(
                         padding: const EdgeInsets.all(20),
@@ -217,64 +187,5 @@ class User extends StatelessWidget {
           }
           return Center(child: CircularProgressIndicator());
         });
-  }
-}
-
-class UserDetailWidget extends StatelessWidget {
-  const UserDetailWidget({
-    Key? key,
-    required this.child,
-  }) : super(key: key);
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10, bottom: 10, right: 20, left: 20),
-      child: Container(
-        padding: EdgeInsets.all(10),
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: Colors.transparent.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: child,
-      ),
-    );
-  }
-}
-
-class MainContainer extends StatelessWidget {
-  const MainContainer({
-    Key? key,
-    required this.title,
-    required this.data,
-    this.color,
-  }) : super(key: key);
-
-  final String title;
-  final String? data;
-  final Color? color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: Container(
-        padding: EdgeInsets.all(20),
-        width: 120,
-        decoration: BoxDecoration(
-          color: (color ?? Colors.transparent).withOpacity(0.3),
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Column(
-          children: [
-            Text(title, style: TextStyle(fontSize: 20)),
-            SizedBox(height: 10),
-            Text(data!),
-          ],
-        ),
-      ),
-    );
   }
 }

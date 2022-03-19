@@ -1,4 +1,5 @@
 // 🐦 Flutter imports:
+import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
@@ -8,6 +9,7 @@ import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:new_version/new_version.dart';
 import 'package:package_info/package_info.dart';
+import 'package:provider/provider.dart';
 import 'package:quick_actions/quick_actions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -257,11 +259,15 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _checkUpdates(BuildContext context) async {
+    if (Provider.of<AppState>(context, listen: false).checkedForUpdate) return;
+
     PackageInfo info = await PackageInfo.fromPlatform();
     if (info.packageName.contains("dev") || info.packageName.contains("stg"))
       return;
 
     final newVersion = NewVersion(androidId: info.packageName);
     newVersion.showAlertIfNecessary(context: context);
+
+    Provider.of<AppState>(context, listen: false).checkedForUpdate = true;
   }
 }

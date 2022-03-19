@@ -2,6 +2,7 @@
 import 'dart:developer';
 
 // 🐦 Flutter imports:
+import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:flutter/material.dart';
 
 // 📦 Package imports:
@@ -29,6 +30,7 @@ class eduserveMinimal extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider<AppState>(create: (_) => AppState()),
         ChangeNotifierProvider<ThemeProvider>(create: (_) => ThemeProvider()),
       ],
       builder: (context, child) => MaterialApp(

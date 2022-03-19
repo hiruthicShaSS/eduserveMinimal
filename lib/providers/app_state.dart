@@ -12,5 +12,7 @@ class AppState extends ChangeNotifier {
   List? attendance = [];
   Leave? leaveInfo = Leave();
 
+  bool checkedForUpdate = false;
+
   void refresh() => notifyListeners();
 }
