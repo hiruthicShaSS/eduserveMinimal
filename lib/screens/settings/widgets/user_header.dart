@@ -11,9 +11,9 @@ class UserHeader extends StatefulWidget {
     required this.reg,
   }) : super(key: key);
 
-  final Uint8List studentImg;
-  final Uint8List qrCode;
-  final String reg;
+  final Uint8List? studentImg;
+  final Uint8List? qrCode;
+  final String? reg;
 
   @override
   State<UserHeader> createState() => _UserHeaderState();
@@ -32,7 +32,7 @@ class _UserHeaderState extends State<UserHeader> {
             tag: "hero-userImage",
             child: CircleAvatar(
               radius: showBarCode ? 30 : 80,
-              backgroundImage: MemoryImage(widget.studentImg),
+              backgroundImage: MemoryImage(widget.studentImg ?? Uint8List(0)),
               backgroundColor: Colors.transparent,
               onBackgroundImageError: (_, __) =>
                   Image.asset("assets/placeholder_profile.png"),
@@ -48,10 +48,11 @@ class _UserHeaderState extends State<UserHeader> {
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width * 0.8,
                       height: MediaQuery.of(context).size.height * 0.1,
-                      child: SfBarcodeGenerator(value: widget.reg),
+                      child:
+                          SfBarcodeGenerator(value: widget.reg ?? "URKblabla"),
                     ),
                   )
-                : Image.memory(widget.qrCode),
+                : Image.memory(widget.qrCode ?? Uint8List(0)),
             onTap: () => setState(() => showBarCode = !showBarCode),
             onLongPress: () {
               Navigator.of(context).push(
@@ -66,7 +67,7 @@ class _UserHeaderState extends State<UserHeader> {
                           aspectRatio: 1,
                           child: showBarCode
                               ? SfBarcodeGenerator(value: widget.reg)
-                              : Image.memory(widget.qrCode),
+                              : Image.memory(widget.qrCode ?? Uint8List(0)),
                         ),
                       ),
                     ),

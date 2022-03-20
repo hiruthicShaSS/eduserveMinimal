@@ -1,21 +1,23 @@
 // 📦 Package imports:
+import 'dart:convert';
+
 import 'package:beautifulsoup/beautifulsoup.dart';
+import 'package:eduserveMinimal/models/user.dart';
 import 'package:http/http.dart';
 
 // 🌎 Project imports:
 import 'package:eduserveMinimal/global/gloabls.dart';
 import 'package:eduserveMinimal/service/login.dart';
 import 'package:eduserveMinimal/service/scrap.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-Future<Map> getInfo() async {
-  if (Scraper.cache.containsKey("user")) return Scraper.cache["user"];
-
+Future<User> getInfo() async {
   String studentHomePage = await login();
 
-  if (studentHomePage == "") return {};
+  if (studentHomePage == "") return User();
 
   var soup = Beautifulsoup(studentHomePage);
-  List basicInfo =
+  List<String?> basicInfo =
       soup.find_all("span").map((e) => (e.innerHtml)).toList().sublist(53);
   String? studentImage =
       soup.find_all("img").map((e) => (e.attributes["src"])).toList()[2];
@@ -76,46 +78,41 @@ Future<Map> getInfo() async {
       (element) => element.toString() == ""); // Remove empty elements
   basicInfo.remove("Academic Performance Summary");
 
-  List basicInfoKeys = [
-    "reg",
-    "kmail",
-    "name",
-    "mobile",
-    "programme",
-    "mentor",
-    "semester",
-    "att",
-    "asm",
-    "cgpa",
-    "arrears",
-    "resultOf",
-    "credits",
-    "cgpa",
-    "sgpa",
-    "nonAcademicCredits",
-    "studentIMG",
-    "qrImage"
-  ];
+  User user = User(
+    registerNumber: basicInfo[0],
+    kmail: basicInfo[1],
+    name: basicInfo[2],
+    mobile: basicInfo[3],
+    programme: basicInfo[4],
+    mentor: basicInfo[5],
+    semester: int.parse(basicInfo[6] ?? "0"),
+    attendance: double.parse(basicInfo[7]?.replaceAll("%", "") ?? "0"),
+    assemblyAttendance: double.parse(basicInfo[8]?.replaceAll("%", "") ?? "0"),
+    cgpa: double.parse(basicInfo[9] ?? "0"),
+    sgpa: double.parse(basicInfo[14] ?? "0"),
+    arrears: int.parse(basicInfo[10] ?? "0"),
+    resultOf: basicInfo[11],
+    credits: double.parse(basicInfo[12] ?? "0"),
+    nonAcademicCredits: double.parse(basicInfo[15] ?? "0"),
+  );
 
-  // generate Map of infromation
-  Map data = new Map();
-
-  for (int i = 0; i < basicInfoKeys.length; i++)
-    data[basicInfoKeys[i]] = basicInfo[i];
-
-  data["leaveApplications"] = leaveApplication;
+  user.leaveApplications = leaveApplication;
 
   Response imageResponse = await get(
       Uri.parse(
-          "https://eduserve.karunya.edu/${data["studentIMG"].replaceAll("../", "")}"),
+          "https://eduserve.karunya.edu/${basicInfo[16]?.replaceAll("../", "")}"),
       headers: httpHeaders);
-  data["studentIMG"] = imageResponse.bodyBytes;
+  user.image = imageResponse.bodyBytes;
   Response qrCodeResponse = await get(
       Uri.parse(
-          "https://eduserve.karunya.edu/${data["qrImage"].replaceAll("../", "")}"),
+          "https://eduserve.karunya.edu/${basicInfo[17]?.replaceAll("../", "")}"),
       headers: httpHeaders);
-  data["qrImage"] = qrCodeResponse.bodyBytes;
+  user.qrCode = qrCodeResponse.bodyBytes;
 
-  Scraper.cache["user"] = data;
-  return data;
+  Scraper.cache["user"] = user.toMap();
+
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setString("userData", jsonEncode(user.toMap()));
+
+  return user;
 }

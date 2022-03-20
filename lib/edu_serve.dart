@@ -15,7 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:eduserveMinimal/global/gloabls.dart';
 import 'package:eduserveMinimal/providers/theme.dart';
 import 'package:eduserveMinimal/screens/home/pages/pages.dart';
-import 'package:eduserveMinimal/screens/settings/pages/user.dart';
+import 'package:eduserveMinimal/screens/home/pages/user.dart';
 import 'package:eduserveMinimal/service/fill_feedback_form.dart';
 import 'package:eduserveMinimal/service/get_feedback_form.dart';
 import 'package:eduserveMinimal/service/login.dart';
@@ -43,7 +43,7 @@ class eduserveMinimal extends StatelessWidget {
           "/apply_leave": (BuildContext context) => ApplyLeaveView(),
           "/fees": (BuildContext context) => FeesView(),
           "/credentials": (BuildContext context) => Credentials(),
-          "/user": (BuildContext context) => User(),
+          "/user": (BuildContext context) => UserScreen(),
         },
         darkTheme: ThemeProvider.dark,
         title: "eduserveMinimal",

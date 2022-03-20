@@ -1,4 +1,7 @@
 // 🐦 Flutter imports:
+import 'dart:typed_data';
+
+import 'package:eduserveMinimal/models/user.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -25,7 +28,7 @@ import 'package:eduserveMinimal/screens/home/widgets/attendance_summary_basic.da
 import 'package:eduserveMinimal/screens/home/widgets/attendance_widget.dart';
 import 'package:eduserveMinimal/screens/home/widgets/birthday.dart';
 import 'package:eduserveMinimal/screens/home/widgets/leave_information.dart';
-import 'package:eduserveMinimal/screens/settings/pages/user.dart';
+import 'package:eduserveMinimal/screens/home/pages/user.dart';
 import 'package:eduserveMinimal/service/download_hallticket.dart';
 import 'package:eduserveMinimal/service/fees_details.dart';
 import 'package:eduserveMinimal/service/login.dart';
@@ -144,13 +147,15 @@ class _HomePageState extends State<HomePage> {
                   tag: "hero-userImage",
                   child: FutureBuilder(
                       future: getInfo(),
-                      builder: (context, AsyncSnapshot snapshot) {
+                      builder: (context, AsyncSnapshot<User> snapshot) {
                         return snapshot.hasData
                             ? CircleAvatar(
                                 maxRadius: 50,
-                                backgroundImage:
-                                    MemoryImage(snapshot.data!["studentIMG"]),
+                                backgroundImage: MemoryImage(
+                                    snapshot.data?.image ?? Uint8List(0)),
                                 backgroundColor: Colors.transparent,
+                                onBackgroundImageError: (_, __) => Image.asset(
+                                    "assets/placeholder_profile.png"),
                               )
                             : Container(
                                 height: 50,
@@ -163,7 +168,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 onTap: () {
                   Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (_) => User()));
+                      .push(MaterialPageRoute(builder: (_) => UserScreen()));
                 },
               ),
             ],
