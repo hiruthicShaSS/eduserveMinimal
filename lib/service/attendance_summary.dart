@@ -1,11 +1,13 @@
-// 📦 Package imports:
 import 'package:beautifulsoup/beautifulsoup.dart';
+import 'package:eduserveMinimal/models/class_attendance.dart';
 import 'package:http/http.dart';
 
 // 🌎 Project imports:
 import 'package:eduserveMinimal/global/gloabls.dart';
+import 'package:html/dom.dart';
+import 'package:intl/intl.dart';
 
-Future<Map<String, List>> getAttendanceSummary([retries = 0]) async {
+Future<SemesterAttendance> getAttendanceSummary([retries = 0]) async {
   Map<String, String> headers = httpHeaders;
   Map formData = httpFormData;
   formData.remove("ctl00\$mainContent\$DDLEXAM");
@@ -21,7 +23,7 @@ Future<Map<String, List>> getAttendanceSummary([retries = 0]) async {
   final academicTerms =
       soup.find_all("option").map((e) => e.text.trim()).toSet().toList();
   int maxAcademicTerm = academicTerms.length -
-      1; // -1 for for compensating 0 indexing and to remove the option 'Select the Academic Term'
+      2; // -1 for for compensating 0 indexing and to remove the option 'Select the Academic Term'
 
   inputs.forEach((element) {
     // Populate form data
@@ -38,40 +40,92 @@ Future<Map<String, List>> getAttendanceSummary([retries = 0]) async {
       Uri.parse("https://eduserve.karunya.edu/Student/AttSummary.aspx"),
       headers: headers,
       body: formData);
-  soup = Beautifulsoup(res.body);
 
-  const basicInfoStart = 46;
-  const summaryDataStart = 38;
+  Document html = Document.html(res.body);
+  List<Attendance> allAttendance = [];
 
-  List basicInfo = soup.find_all("span").map((e) => e.text).toList();
-
-  if (basicInfo.length == 0 && retries == 0)
-    return getAttendanceSummary(++retries);
-  basicInfo = basicInfo.sublist(basicInfoStart);
-  // basicInfo [Semester, email, phone, ANDREW, SRA, Status, Total Hours : , total_hour_value, Present Hours : , present_hour_value, actual, od_corrected, ml_corrected, Leave Hours : , leave_hours_value, Absent Hours : , absent_hours_value]
-
-  List summary = soup.find_all("td").map((e) => e.text.trim()).toList();
-  summary = summary.sublist(summaryDataStart);
-
-  List<List> summaryData = [];
-  for (int i = 0; i < summary.length; i += 14) {
+  for (int i = 0; i < 100; i++) {
     try {
-      summaryData.add(summary.sublist(i, i + 14));
-    } catch (e) {}
+      final attendanceData = html
+          .querySelectorAll("#ctl00_mainContent_grdData_ctl00__$i > td")
+          .map((e) => e.innerHtml.trim())
+          .toList();
+
+      if (attendanceData.isEmpty) break;
+
+      int totalPresent = attendanceData.where((e) => e == "P").toList().length;
+      int totalAbsent = attendanceData.where((e) => e == "A").toList().length;
+      int totalUnAttended =
+          attendanceData.where((e) => e == "U").toList().length;
+
+      AttendanceSummary attendanceSummary = AttendanceSummary(
+        totalAttended: totalPresent,
+        totalAbsent: totalAbsent,
+        totalUnAttended: totalUnAttended,
+      );
+
+      Attendance attendance = Attendance(
+        date: DateFormat("dd MMM yyyy").parse(attendanceData[0]),
+        assemblyAttended: attendanceData[1] == "P",
+        hour0: attendanceData[2] == "P",
+        hour1: attendanceData[3] == "P",
+        hour2: attendanceData[4] == "P",
+        hour3: attendanceData[5] == "P",
+        hour4: attendanceData[6] == "P",
+        hour5: attendanceData[7] == "P",
+        hour6: attendanceData[8] == "P",
+        hour7: attendanceData[9] == "P",
+        hour8: attendanceData[10] == "P",
+        hour9: attendanceData[11] == "P",
+        hour10: attendanceData[12] == "P",
+        hour11: attendanceData[13] == "P",
+        attendanceSummary: attendanceSummary,
+      );
+
+      allAttendance.add(attendance);
+    } on RangeError {
+      break;
+    }
   }
 
-  for (int i = 0; i < summaryData.length; i++) {
-    int totalPresent = summaryData[i].where((e) => e == "P").toList().length;
-    int totalAbsent = summaryData[i].where((e) => e == "A").toList().length;
-    int totalUnAttended = summaryData[i].where((e) => e == "U").toList().length;
+  SemesterAttendance semesterAttendance = SemesterAttendance(
+    attendance: allAttendance,
+    totalHours: double.parse(html
+            .querySelector("#mainContent_UCStudentAttendance_LBLTOTALDAYS")
+            ?.innerHtml
+            .trim() ??
+        "0"),
+    presentHours: double.parse(html
+            .querySelector("#mainContent_UCStudentAttendance_LBLPRESENT")
+            ?.innerHtml
+            .trim() ??
+        "0"),
+    actual: double.parse(html
+            .querySelector("#mainContent_UCStudentAttendance_LBLACTUAL")
+            ?.innerHtml
+            .trim() ??
+        "0"),
+    odCorrected: double.parse(html
+            .querySelector("#mainContent_UCStudentAttendance_LBLOD")
+            ?.innerHtml
+            .trim() ??
+        "0"),
+    mlCorrected: double.parse(html
+            .querySelector("#mainContent_UCStudentAttendance_LBLML")
+            ?.innerHtml
+            .trim() ??
+        "0"),
+    leaveHours: double.parse(html
+            .querySelector("#mainContent_UCStudentAttendance_LBLLEAVE")
+            ?.innerHtml
+            .trim() ??
+        "0"),
+    absentHours: double.parse(html
+            .querySelector("#mainContent_UCStudentAttendance_LBLABSENT")
+            ?.innerHtml
+            .trim() ??
+        "0"),
+  );
 
-    summaryData[i].add(totalPresent.toString());
-    summaryData[i].add(totalAbsent.toString());
-    summaryData[i].add(totalUnAttended.toString());
-  }
-
-  return {
-    "basicInfo": basicInfo,
-    "summaryData": summaryData,
-  };
+  return semesterAttendance;
 }

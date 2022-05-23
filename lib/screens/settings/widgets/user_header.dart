@@ -52,7 +52,9 @@ class _UserHeaderState extends State<UserHeader> {
                           SfBarcodeGenerator(value: widget.reg ?? "URKblabla"),
                     ),
                   )
-                : Image.memory(widget.qrCode ?? Uint8List(0)),
+                : widget.qrCode == null
+                    ? Text("No QR code available for now!")
+                    : Image.memory(widget.qrCode ?? Uint8List(0)),
             onTap: () => setState(() => showBarCode = !showBarCode),
             onLongPress: () {
               Navigator.of(context).push(

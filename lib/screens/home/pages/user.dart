@@ -1,4 +1,5 @@
 import 'package:eduserveMinimal/models/user.dart';
+import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:eduserveMinimal/screens/home/widgets/semester_summary_widget.dart';
 import 'package:eduserveMinimal/screens/settings/widgets/user_detail.dart';
 import 'package:eduserveMinimal/screens/settings/widgets/user_header.dart';
@@ -10,7 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 // 🌎 Project imports:
-import 'package:eduserveMinimal/service/student_info.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserScreen extends StatelessWidget {
@@ -19,10 +20,12 @@ class UserScreen extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: FutureBuilder(
-            future: getInfo(),
+            future: Provider.of<AppState>(context).user,
             builder: (context, AsyncSnapshot<User> snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 User user = snapshot.data!;
+
+                Provider.of<AppState>(context).setUser = user;
 
                 return _MainScreen(user: user, cached: false);
               }

@@ -83,7 +83,7 @@ class _HomePageState extends State<HomePage> {
             SliverList(
               delegate: SliverChildListDelegate([
                 LeaveInformation(),
-                AttendanceSummary(),
+                AttendanceSummaryView(),
               ]),
             ),
           ],
@@ -148,7 +148,7 @@ class _HomePageState extends State<HomePage> {
                 child: Hero(
                   tag: "hero-userImage",
                   child: FutureBuilder(
-                      future: getInfo(),
+                      future: Provider.of<AppState>(context).user,
                       builder: (context, AsyncSnapshot<User> snapshot) {
                         return snapshot.hasData
                             ? CircleAvatar(
@@ -255,7 +255,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<Map> fetchAllData() async {
     await getFeesDetails();
-    await getInfo();
+    await getStudentInfo();
     List? hallTicketData = await downloadHallTicket();
     if (hallTicketData != null) {
       await downloadHallTicket(

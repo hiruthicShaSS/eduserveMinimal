@@ -1,16 +1,17 @@
 class Leave {
-  List<OtherLeave> allLeave = [];
+  List<OtherLeave> allNormalLeave = [];
   List<OnDutyLeave> allOnDuty = [];
 
   void addOtherLeave(List<String> leave) {
-    allLeave.add(OtherLeave(
-      leaveType: leave[0],
-      reason: leave[1],
-      fromDate: leave[2],
-      fromSession: leave[3],
+    allNormalLeave.add(OtherLeave(
+      id: int.tryParse(leave[0]) ?? 0,
+      leaveType: leave[1],
+      reason: leave[2],
+      fromDate: leave[3],
       toDate: leave[4],
-      toSession: leave[5],
-      status: leave[6],
+      fromSession: leave[5],
+      toSession: leave[6],
+      status: leave[7],
     ));
   }
 
@@ -35,8 +36,8 @@ class Leave {
   static Leave generateFakeLeave([otherLeaveAmount = 3, onDutyAmount = 2]) {
     Leave leave = Leave();
 
-    List.generate(
-            otherLeaveAmount, (index) => ["", "", "", "", "", "", "      "])
+    List.generate(otherLeaveAmount,
+            (index) => ["-1", "", "", "", "", "", "", "      "])
         .forEach((element) => leave.addOtherLeave(element));
 
     List.generate(
@@ -62,28 +63,35 @@ class Leave {
 }
 
 class OtherLeave {
+  int id;
   String leaveType;
   String reason;
+  String fromDate;
+  String toDate;
   String fromSession;
   String toSession;
   late String session;
-  String fromDate;
-  String toDate;
   String status;
 
   OtherLeave({
+    required this.id,
     required this.leaveType,
     required this.reason,
-    required this.fromSession,
-    required this.toSession,
     required this.fromDate,
     required this.toDate,
+    required this.fromSession,
+    required this.toSession,
     required this.status,
   }) {
     if (this.fromSession == this.toSession)
       this.session = fromSession;
     else
       this.session = "${this.fromSession} - ${this.toSession}";
+  }
+
+  @override
+  String toString() {
+    return 'OtherLeave(id: $id, leaveType: $leaveType, reason: $reason, fromDate: $fromDate, toDate: $toDate, fromSession: $fromSession, toSession: $toSession, session: $session, status: $status)';
   }
 }
 

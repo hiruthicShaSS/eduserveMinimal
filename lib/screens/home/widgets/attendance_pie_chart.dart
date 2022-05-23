@@ -1,4 +1,5 @@
 // 🐦 Flutter imports:
+import 'package:eduserveMinimal/models/class_attendance.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -10,12 +11,10 @@ import 'package:eduserveMinimal/global/widgets/dot_container.dart';
 import 'package:eduserveMinimal/providers/theme.dart';
 
 class AttendancePieChart extends StatelessWidget {
-  const AttendancePieChart({
-    Key? key,
-    required this.data,
-  }) : super(key: key);
+  const AttendancePieChart({Key? key, required this.semesterAttendance})
+      : super(key: key);
 
-  final List<String> data;
+  final SemesterAttendance semesterAttendance;
 
   @override
   Widget build(BuildContext context) {
@@ -41,15 +40,15 @@ class AttendancePieChart extends StatelessWidget {
                 startDegreeOffset: -45,
                 sections: [
                   PieChartSectionData(
-                    title: data[9],
+                    title: semesterAttendance.presentHours.toString(),
                     color: Colors.green,
-                    value: double.tryParse(data[9]) ?? 0,
+                    value: semesterAttendance.actual,
                     radius: 60,
                   ),
                   PieChartSectionData(
-                    title: data.last,
+                    title: semesterAttendance.absentHours.toString(),
                     color: Colors.red,
-                    value: double.tryParse(data.last) ?? 0,
+                    value: semesterAttendance.absentHours,
                     radius: 70,
                   ),
                 ],
@@ -71,34 +70,41 @@ class AttendancePieChart extends StatelessWidget {
                     ],
                   ),
                   RichText(
-                      text: TextSpan(children: [
-                    TextSpan(
-                      text: "More",
-                      style: TextStyle(
-                        color: ThemeProvider.currentThemeData!.primaryColor,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = data[0] == "loading"
-                            ? null
-                            : () => showDialog(
-                                context: context,
-                                builder: (_) => AlertDialog(
-                                      content: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Text("Total Hours: ${data[7]}"),
-                                          Text("Actual: ${data[10]}"),
-                                          Text("OD Corrected: ${data[11]}"),
-                                          Text("ML Corrected: ${data[12]}"),
-                                          Text("Leave Hours: ${data[14]}"),
-                                        ],
-                                      ),
-                                    )),
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: "More",
+                          style: TextStyle(
+                            color: ThemeProvider.currentThemeData!.primaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () => showDialog(
+                                  context: context,
+                                  builder: (_) => AlertDialog(
+                                    content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                            "Total Hours: ${semesterAttendance.totalHours}"),
+                                        Text(
+                                            "Actual: ${semesterAttendance.actual}"),
+                                        Text(
+                                            "OD Corrected: ${semesterAttendance.odCorrected}"),
+                                        Text(
+                                            "ML Corrected: ${semesterAttendance.mlCorrected}"),
+                                        Text(
+                                            "Leave Hours: ${semesterAttendance.leaveHours}"),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                        ),
+                      ],
                     ),
-                  ])),
+                  ),
                 ],
               ),
             ),

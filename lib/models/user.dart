@@ -85,9 +85,6 @@ class User {
       image: map['image'] != null
           ? Uint8List.fromList(List<int>.from(jsonDecode(map['image'])))
           : null,
-      qrCode: map['qrCode'] != null
-          ? Uint8List.fromList(List<int>.from(jsonDecode(map['qrCode'])))
-          : null,
       leaveApplications: map['leaveApplications'] != null
           ? jsonDecode(map['leaveApplications'])
           : null,

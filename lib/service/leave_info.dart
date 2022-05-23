@@ -1,6 +1,6 @@
 // 📦 Package imports:
-import 'package:beautifulsoup/beautifulsoup.dart';
 import 'package:http/http.dart';
+import 'package:html/dom.dart';
 
 // 🌎 Project imports:
 import 'package:eduserveMinimal/global/gloabls.dart';
@@ -11,69 +11,74 @@ Future<Leave> getLeaveInfo() async {
   if (Scraper.cache.containsKey("leave")) return Scraper.cache["leave"];
   Map<String, String> headers = httpHeaders;
 
-  Leave parsePage(String page) {
-    String onDutySection = page.toString().split("Leave Type")[1];
+  Response home_page = await get(
+    Uri.parse("https://eduserve.karunya.edu/Student/Home.aspx"),
+    headers: headers,
+  );
 
-    Beautifulsoup onDutySoup = Beautifulsoup(onDutySection);
-    List onDuties = onDutySoup.find_all("td").map((e) => e.text).toList();
+  Scraper.pages["home"] = home_page.body;
 
-    Beautifulsoup leaveSoup = Beautifulsoup(page.toString());
-    List leavest = leaveSoup.find_all("td").map((e) => e.text).toList();
-    leavest = leavest.sublist(leavest.indexOf("Medical Leave"));
+  Document html = Document.html(home_page.body);
 
-    Leave allLeave = Leave();
-    // onDuty structure [From Date, From Session, To Date, To Session, Reason, Status, Pending with, Created by, Created on, Approval by,
-    // Approval on, Availed by, Availed on]
-    List<String> onDuty = [];
-    RegExp dateRegExp =
-        RegExp(r"\d{1,2}\/\d{1,2}\/\d{4} \d{1,2}:\d{1,2}:\d{1,2} \w{2}");
+  List<OtherLeave> normalLeaves = [];
+  List<OnDutyLeave> odLeaves = [];
 
-    List<String> leave = [];
-    int leaveEntryCount = 0;
-    for (int i = 0; i < leavest.length; i++) {
-      if (int.tryParse(leavest[i]) == null) {
-        leave.add(leavest[i]);
-        leaveEntryCount++;
-        if (leaveEntryCount > 8) {
-          allLeave.addOtherLeave(leave);
-          break;
-        }
-      } else {
-        allLeave.addOtherLeave(leave);
-        leave = [];
-        leaveEntryCount = 0;
-      }
-    }
-
-    onDuties.forEach((element) {
-      final datetimesOnTable = onDuty
-          .map((e) =>
-              (dateRegExp.allMatches(e.toString()).length > 0) ? e : null)
+  for (int i = 0; i < 100; i++) {
+    try {
+      final leaves = html
+          .querySelectorAll("#ctl00_mainContent_grdData_ctl00__$i > td")
+          .map((e) => e.innerHtml.trim())
           .toList();
-      datetimesOnTable.removeWhere((element) => element == null);
 
-      if (onDuty.length == 13) {
-        if (onDuty.first == "") {
-          onDuty.removeAt(0);
-          onDuty.add(element);
-          return;
-        }
-        allLeave.addOnDuty(onDuty);
-        onDuty = [element];
-        return;
-      }
+      OtherLeave normalLeave = OtherLeave(
+        id: int.tryParse(leaves[0]) ?? 0,
+        leaveType: leaves[1],
+        reason: leaves[2],
+        fromDate: leaves[3],
+        toDate: leaves[4],
+        fromSession: leaves[5],
+        toSession: leaves[6],
+        status: leaves[7],
+      );
 
-      if (element.toString().trim() == "No records to display.") return;
-      onDuty.add(element.toString().trim());
-    });
-
-    Scraper.cache["leave"] = allLeave;
-    return allLeave;
+      normalLeaves.add(normalLeave);
+    } on RangeError {
+      break;
+    }
   }
 
-  Response home_page = await get(
-      Uri.parse("https://eduserve.karunya.edu/Student/Home.aspx"),
-      headers: headers);
-  Scraper.pages["home"] = home_page.body;
-  return parsePage(home_page.body);
+  for (int i = 0; i < 100; i++) {
+    try {
+      final ods = html
+          .querySelectorAll("#ctl00_mainContent_grdStudentOD_ctl00__$i > td")
+          .map((e) => e.innerHtml.trim())
+          .toList();
+
+      OnDutyLeave onDutyLeave = OnDutyLeave(
+        fromDate: ods[0],
+        fromSession: ods[1],
+        toDate: ods[2],
+        toSession: ods[3],
+        reason: ods[4],
+        status: ods[5],
+        pendingWith: ods[6],
+        createdBy: ods[7],
+        createdOn: ods[8],
+        approvalBy: ods[9],
+        approvalOn: ods[10],
+        availedBy: ods[11],
+        availedOn: ods[12],
+      );
+
+      odLeaves.add(onDutyLeave);
+    } on RangeError {
+      break;
+    }
+  }
+
+  Leave leave = Leave();
+  leave.allNormalLeave = normalLeaves;
+  leave.allOnDuty = odLeaves;
+
+  return leave;
 }

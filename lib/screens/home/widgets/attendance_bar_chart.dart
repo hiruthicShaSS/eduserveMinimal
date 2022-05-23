@@ -1,19 +1,24 @@
 // 🐦 Flutter imports:
+import 'package:eduserveMinimal/models/class_attendance.dart';
 import 'package:flutter/material.dart';
 
 // 📦 Package imports:
 import 'package:fl_chart/fl_chart.dart';
+import 'package:intl/intl.dart';
 
 class AttendanceBarChart extends StatelessWidget {
-  AttendanceBarChart({Key? key, required this.data}) : super(key: key);
+  const AttendanceBarChart({Key? key, required this.semesterAttendance})
+      : super(key: key);
 
-  final List<List<String>> data;
-  final List<Color> _presentGradient = [Colors.green, Colors.greenAccent];
-  final List<Color> _absentGradient = [Colors.red, Colors.redAccent];
-  final List<Color> _unAttendedGradient = [Colors.grey, Colors.white];
+  final SemesterAttendance semesterAttendance;
+  final List<Color> _presentGradient = const [Colors.green, Colors.greenAccent];
+  final List<Color> _absentGradient = const [Colors.red, Colors.redAccent];
+  final List<Color> _unAttendedGradient = const [Colors.grey, Colors.white];
 
   @override
   Widget build(BuildContext context) {
+    List<Attendance> attendance = semesterAttendance.attendance.sublist(0, 7);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Container(
@@ -69,8 +74,8 @@ class AttendanceBarChart extends StatelessWidget {
                     leftTitles: SideTitles(showTitles: false),
                     bottomTitles: SideTitles(
                       showTitles: true,
-                      getTitles: (double value) =>
-                          data[value.toInt()][0].substring(0, 6),
+                      getTitles: (double value) => DateFormat("dd MMM")
+                          .format(attendance[value.toInt()].date),
                       rotateAngle: -55,
                       getTextStyles: (context, _) => TextStyle(fontSize: 12),
                     ),
@@ -79,15 +84,22 @@ class AttendanceBarChart extends StatelessWidget {
                     show: true,
                     bottomTitle: AxisTitle(
                         titleText: "Day", showTitle: true, margin: 20),
-                    leftTitle: AxisTitle(titleText: "Hour", showTitle: true),
+                    leftTitle: AxisTitle(
+                      titleText: "Hour",
+                      showTitle: true,
+                      margin: 20,
+                    ),
                   ),
                   barGroups: List.generate(
-                    data.length,
+                    attendance.sublist(0, 7).length,
                     (index) => BarChartGroupData(
                       x: index,
                       barRods: [
                         BarChartRodData(
-                          y: double.parse(data[index][14]),
+                          y: attendance[index]
+                              .attendanceSummary
+                              .totalAttended
+                              .toDouble(),
                           colors: _presentGradient,
                           width: 15,
                           borderRadius: BorderRadius.only(
@@ -96,7 +108,10 @@ class AttendanceBarChart extends StatelessWidget {
                           ),
                         ),
                         BarChartRodData(
-                          y: double.parse(data[index][15]),
+                          y: attendance[index]
+                              .attendanceSummary
+                              .totalAbsent
+                              .toDouble(),
                           backDrawRodData: BackgroundBarChartRodData(
                             colors: _absentGradient.reversed
                                 .map((color) => color.withOpacity(0.01))
@@ -111,7 +126,10 @@ class AttendanceBarChart extends StatelessWidget {
                           ),
                         ),
                         BarChartRodData(
-                          y: double.parse(data[index][16]),
+                          y: attendance[index]
+                              .attendanceSummary
+                              .totalUnAttended
+                              .toDouble(),
                           backDrawRodData: BackgroundBarChartRodData(
                             colors: _unAttendedGradient.reversed
                                 .map((color) => color.withOpacity(0.01))

@@ -1,4 +1,5 @@
 // 🐦 Flutter imports:
+import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:flutter/material.dart';
 
 // 🌎 Project imports:
@@ -8,6 +9,7 @@ import 'package:eduserveMinimal/screens/home/widgets/dot_tab_bar_indeicator.dart
 import 'package:eduserveMinimal/screens/home/widgets/leave_list.dart';
 import 'package:eduserveMinimal/screens/home/widgets/on_duty_list.dart';
 import 'package:eduserveMinimal/service/leave_info.dart';
+import 'package:provider/provider.dart';
 
 class LeaveInformation extends StatefulWidget {
   const LeaveInformation({Key? key}) : super(key: key);
@@ -59,7 +61,9 @@ class _LeaveInformationState extends State<LeaveInformation>
                   if (snapshot.data == null)
                     return Text("No records to display.");
 
-                  List<OtherLeave>? leave = snapshot.data?.allLeave;
+                  Provider.of<AppState>(context).leave = snapshot.data!;
+
+                  List<OtherLeave>? leave = snapshot.data?.allNormalLeave;
                   List<OnDutyLeave>? onDuty = snapshot.data?.allOnDuty;
 
                   return TabBarView(
@@ -73,7 +77,8 @@ class _LeaveInformationState extends State<LeaveInformation>
                 return TabBarView(
                   controller: _tabController,
                   children: [
-                    LeaveList(leave: fakeLeaveData.allLeave, isLoading: true),
+                    LeaveList(
+                        leave: fakeLeaveData.allNormalLeave, isLoading: true),
                     OnDutyList(leave: fakeLeaveData.allOnDuty, isLoading: true),
                   ],
                 );
