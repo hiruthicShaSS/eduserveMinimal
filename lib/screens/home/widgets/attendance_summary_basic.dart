@@ -41,6 +41,13 @@ class AttendanceSummaryView extends StatelessWidget {
           }
 
           if (snapshot.hasData) {
+            if (snapshot.data!.attendance.isEmpty) {
+              return Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: Center(child: Text("No records found!")),
+              );
+            }
+
             return Column(
               children: [
                 AttendancePieChart(semesterAttendance: snapshot.data!),

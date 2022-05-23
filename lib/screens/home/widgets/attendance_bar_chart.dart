@@ -17,7 +17,11 @@ class AttendanceBarChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Attendance> attendance = semesterAttendance.attendance.sublist(0, 7);
+    List<Attendance> attendance = semesterAttendance.attendance.sublist(
+        0,
+        semesterAttendance.attendance.length >= 7
+            ? 7
+            : semesterAttendance.attendance.length);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
