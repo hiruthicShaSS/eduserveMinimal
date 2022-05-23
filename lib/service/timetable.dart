@@ -35,7 +35,7 @@ Future<Map?> getTimetable({bool force = false}) async {
 
   return timetable;
 
-  // I dont know why the below implementation works and I spent a lot of time than I should have.
+  // I dont know why the below implementation not works and I spent a lot of time than I should have.
   // So, I am using the old code(the above code) which was working before.
 
   Map<String, String> headers = httpHeaders;

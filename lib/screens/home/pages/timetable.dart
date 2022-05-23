@@ -1,8 +1,10 @@
 // 🐦 Flutter imports:
+import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:flutter/material.dart';
 
 // 🌎 Project imports:
 import 'package:eduserveMinimal/service/timetable.dart';
+import 'package:lottie/lottie.dart';
 
 class TimeTable extends StatefulWidget {
   @override
@@ -21,7 +23,20 @@ class _TimeTableState extends State<TimeTable> {
           child: FutureBuilder(
             future: getTimetable(),
             builder: (context, AsyncSnapshot<Map?> snapshot) {
-              if (snapshot.hasData) {
+              if (snapshot.hasError) {
+                if (snapshot.error.runtimeType == NoRecordsInTimetable) {
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: Center(
+                      child: Text(
+                        snapshot.error.toString(),
+                      ),
+                    ),
+                  );
+                }
+              }
+
+              if (snapshot.connectionState == ConnectionState.done) {
                 days.addAll(snapshot.data!.keys.toList());
 
                 if (days.contains("__error__"))
@@ -61,7 +76,8 @@ class _TimeTableState extends State<TimeTable> {
 
                 return buildTimeTable(context, dataCell);
               } else {
-                return Center(child: CircularProgressIndicator());
+                return Center(
+                    child: Lottie.asset("assets/lottie/timetable.json"));
               }
             },
           ),

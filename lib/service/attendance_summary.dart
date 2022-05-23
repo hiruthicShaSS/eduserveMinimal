@@ -1,4 +1,5 @@
 import 'package:beautifulsoup/beautifulsoup.dart';
+import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/models/class_attendance.dart';
 import 'package:http/http.dart';
 
@@ -23,7 +24,7 @@ Future<SemesterAttendance> getAttendanceSummary([retries = 0]) async {
   final academicTerms =
       soup.find_all("option").map((e) => e.text.trim()).toSet().toList();
   int maxAcademicTerm = academicTerms.length -
-      2; // -1 for for compensating 0 indexing and to remove the option 'Select the Academic Term'
+      1; // -1 for for compensating 0 indexing and to remove the option 'Select the Academic Term'
 
   inputs.forEach((element) {
     // Populate form data
@@ -40,6 +41,10 @@ Future<SemesterAttendance> getAttendanceSummary([retries = 0]) async {
       Uri.parse("https://eduserve.karunya.edu/Student/AttSummary.aspx"),
       headers: headers,
       body: formData);
+
+  if (res.body.contains("No records to display.")) {
+    throw NoRecordsInAttendance("No attendance records to display.");
+  }
 
   Document html = Document.html(res.body);
   List<Attendance> allAttendance = [];

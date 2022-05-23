@@ -1,4 +1,5 @@
 // 🐦 Flutter imports:
+import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:flutter/material.dart';
 
 // 📦 Package imports:
@@ -207,6 +208,10 @@ class Scraper {
     headers["referer"] = "https://eduserve.karunya.edu/Student/TimeTable.aspx";
     Response res =
         await client.get(Uri.parse("$hostname$timetableURL"), headers: headers);
+
+    if (res.body.contains("No records to display.")) {
+      throw NoRecordsInTimetable("No timetable is provided in the eduserve!");
+    }
 
     if (res.body.indexOf("Login") != -1) {
       Fluttertoast.showToast(

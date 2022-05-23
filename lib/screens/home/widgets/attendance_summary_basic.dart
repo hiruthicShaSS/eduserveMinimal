@@ -3,6 +3,7 @@ import 'dart:developer' as dev;
 import 'dart:math';
 
 // 🐦 Flutter imports:
+import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/models/class_attendance.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,17 @@ class AttendanceSummaryView extends StatelessWidget {
       builder: (context, AsyncSnapshot<SemesterAttendance> snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasError) {
+            if (snapshot.error.runtimeType == NoRecordsInAttendance) {
+              return Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: Center(
+                  child: Text(
+                    snapshot.error.toString(),
+                  ),
+                ),
+              );
+            }
+
             dev.log("Error: ", error: snapshot.error);
           }
 
