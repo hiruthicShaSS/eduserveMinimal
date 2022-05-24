@@ -1,4 +1,5 @@
 // 🐦 Flutter imports:
+import 'package:eduserveMinimal/models/semester_summary_result.dart';
 import 'package:flutter/material.dart';
 
 // 📦 Package imports:
@@ -10,16 +11,10 @@ import 'package:eduserveMinimal/global/widgets/dot_container.dart';
 class SemesterSummaryGraph extends StatelessWidget {
   SemesterSummaryGraph({
     Key? key,
-    required this.months,
-    required this.arrears,
-    required this.scgpa,
-    required this.cgpa,
+    required this.result,
   }) : super(key: key);
 
-  final List months;
-  final List arrears;
-  final List scgpa;
-  final List cgpa;
+  final List<SemesterSummaryResult> result;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +29,7 @@ class SemesterSummaryGraph extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               DotContainer(color: Colors.red, text: "Arrear"),
-              DotContainer(color: Colors.orange, text: "Semester CGPA"),
+              DotContainer(color: Colors.orange, text: "Semester GPA"),
               DotContainer(color: Colors.green, text: "CGPA"),
             ],
           ),
@@ -58,8 +53,7 @@ class SemesterSummaryGraph extends StatelessWidget {
                       showTitles: true,
                       rotateAngle: -45,
                       getTitles: (index) {
-                        if (index > months.length - 1) return "";
-                        return months[index.toInt()];
+                        return result[index.toInt()].monthAndYear;
                       },
                     ),
                   ),
@@ -69,10 +63,10 @@ class SemesterSummaryGraph extends StatelessWidget {
                       barWidth: 5,
                       colors: [Colors.orange, Colors.orangeAccent],
                       spots: List.generate(
-                        scgpa.length,
+                        result.length,
                         (index) => FlSpot(
                           index.toDouble(),
-                          double.parse(scgpa[index]),
+                          result[index].sgpa,
                         ),
                       ),
                     ),
@@ -81,10 +75,10 @@ class SemesterSummaryGraph extends StatelessWidget {
                       barWidth: 5,
                       colors: [Colors.green, Colors.greenAccent],
                       spots: List.generate(
-                        cgpa.length,
+                        result.length,
                         (index) => FlSpot(
                           index.toDouble(),
-                          double.parse(cgpa[index]),
+                          result[index].cgpa,
                         ),
                       ),
                     ),
@@ -93,10 +87,10 @@ class SemesterSummaryGraph extends StatelessWidget {
                       barWidth: 5,
                       colors: [Colors.red, Colors.redAccent],
                       spots: List.generate(
-                        arrears.length,
+                        result.length,
                         (index) => FlSpot(
                           index.toDouble(),
-                          double.parse(arrears[index]),
+                          result[index].arrears.toDouble(),
                         ),
                       ),
                       belowBarData: BarAreaData(show: true, colors: [
