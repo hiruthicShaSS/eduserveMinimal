@@ -8,13 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 // 📦 Package imports:
-import 'package:beautifulsoup/beautifulsoup.dart';
+import 'package:html/dom.dart' as dom;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:new_version/new_version.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 // 🌎 Project imports:
 import 'package:eduserveMinimal/global/gloabls.dart';
@@ -97,26 +97,26 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> cacheBirthDate() async {
     Response res = await get(
-        Uri.parse("https://eduserve.karunya.edu/Student/PersonalInfo.aspx"),
-        headers: httpHeaders);
-    Beautifulsoup soup = Beautifulsoup(res.body);
+      Uri.parse("https://eduserve.karunya.edu/Student/PersonalInfo.aspx"),
+      headers: AuthService.headers,
+    );
 
-    String? dateString = soup
-        .find_all("input")
-        .where((element) => element.id == "ctl00_mainContent_TXTDOB_dateInput")
-        .first
-        .attributes["value"];
+    dom.Document html = dom.Document.html(res.body);
+
+    String? dateString = html
+        .querySelector("#ctl00_mainContent_TXTDOB_dateInput")
+        ?.attributes["value"];
 
     if (dateString != null) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString("birthDay", dateString);
+      final FlutterSecureStorage storage = FlutterSecureStorage();
+      storage.write(key: "birthDay", value: dateString);
     }
   }
 
   Future<void> checkBirthday(BuildContext context) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (prefs.containsKey("birthDay")) {
-      String? birthday = prefs.getString("birthDay");
+    final FlutterSecureStorage storage = FlutterSecureStorage();
+    if (await storage.containsKey(key: "birthDay")) {
+      String? birthday = await storage.read(key: "birthDay");
 
       if (birthday != null) {
         DateFormat dateFormat = DateFormat("dd MMM yyyy");
@@ -179,7 +179,7 @@ class _HomePageState extends State<HomePage> {
       ListTile(
         title: Text("Timetable"),
         onTap: () => Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => TimeTable())),
+            .push(MaterialPageRoute(builder: (context) => TimeTableView())),
       ),
       ListTile(
         title: Text("Fees"),

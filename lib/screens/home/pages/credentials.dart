@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 // 📦 Package imports:
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -86,8 +87,10 @@ class _CredentialsState extends State<Credentials> {
                     onPressed: () async {
                       if (!_formKey.currentState!.validate()) return;
 
-                      SharedPreferences prefs =
+                      final SharedPreferences prefs =
                           await SharedPreferences.getInstance();
+                      final FlutterSecureStorage storage =
+                          FlutterSecureStorage();
 
                       showDialog(
                           context: context,
@@ -120,10 +123,10 @@ class _CredentialsState extends State<Credentials> {
                         return;
                       }
 
-                      await prefs.setString(
-                          "username", _usernameController.text);
-                      await prefs.setString(
-                          "password", _passwordController.text);
+                      await storage.write(
+                          key: "username", value: _usernameController.text);
+                      await storage.write(
+                          key: "password", value: _passwordController.text);
 
                       if (_autoFillFedbackForm) {
                         await prefs.setInt(
@@ -178,12 +181,12 @@ class _CredentialsState extends State<Credentials> {
                   ),
                   SizedBox(height: 50),
                   FutureBuilder(
-                      future: SharedPreferences.getInstance(),
-                      builder:
-                          (context, AsyncSnapshot<SharedPreferences> snapshot) {
+                      future:
+                          FlutterSecureStorage().containsKey(key: "username"),
+                      builder: (context, AsyncSnapshot<bool> snapshot) {
                         return snapshot.hasData
                             ? Visibility(
-                                visible: snapshot.data!.containsKey("username"),
+                                visible: snapshot.data ?? false,
                                 child: ElevatedButton(
                                   onPressed: () => Fluttertoast.showToast(
                                       msg: "Press and hold for action"),
@@ -248,10 +251,13 @@ class _CredentialsState extends State<Credentials> {
                   TextButton(
                     onPressed: () async {
                       setState(() => isLogOutClicked = true);
-                      SharedPreferences prefs =
+                      final SharedPreferences prefs =
                           await SharedPreferences.getInstance();
-                      await prefs.remove("username");
-                      await prefs.remove("password");
+                      final FlutterSecureStorage storage =
+                          FlutterSecureStorage();
+
+                      await storage.delete(key: "username");
+                      await storage.delete(key: "password");
                       await prefs.remove("autoFillFeedbackValue");
                       Scraper.cache = {};
 
@@ -281,11 +287,16 @@ class _CredentialsState extends State<Credentials> {
 
   void setDefaults() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    _usernameController.text = prefs.getString("username") ?? "";
-    _passwordController.text = prefs.getString("password") ?? "";
-    setState(() {
-      _autoFillFedbackForm = prefs.containsKey("autoFillFeedbackValue");
-      _autoFillFeedbackValue = prefs.getInt("autoFillFeedbackValue") ?? 1;
-    });
+    FlutterSecureStorage storage = FlutterSecureStorage();
+
+    _usernameController.text = await storage.read(key: "username") ?? "";
+    _passwordController.text = await storage.read(key: "password") ?? "";
+
+    if (mounted) {
+      setState(() {
+        _autoFillFedbackForm = prefs.containsKey("autoFillFeedbackValue");
+        _autoFillFeedbackValue = prefs.getInt("autoFillFeedbackValue") ?? 1;
+      });
+    }
   }
 }

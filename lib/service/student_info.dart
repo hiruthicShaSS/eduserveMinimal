@@ -3,13 +3,12 @@ import 'dart:convert';
 
 import 'package:eduserveMinimal/models/user.dart';
 import 'package:eduserveMinimal/service/auth.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
 import 'package:html/dom.dart';
 
 // 🌎 Project imports:
-import 'package:eduserveMinimal/global/gloabls.dart';
 import 'package:eduserveMinimal/service/scrap.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 Future<User> getStudentInfo() async {
   String studentHomePage = await AuthService().login();
@@ -64,8 +63,8 @@ Future<User> getStudentInfo() async {
 
   Scraper.cache["user"] = user.toMap();
 
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.setString("userData", jsonEncode(user.toMap()));
+  final FlutterSecureStorage storage = FlutterSecureStorage();
+  await storage.write(key: "userData", value: jsonEncode(user.toMap()));
 
   return user;
 }

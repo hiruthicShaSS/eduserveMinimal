@@ -1,10 +1,8 @@
 // 📦 Package imports:
-import 'package:beautifulsoup/beautifulsoup.dart';
 import 'package:eduserveMinimal/models/semester_summary_result.dart';
 import 'package:eduserveMinimal/service/auth.dart';
 import 'package:http/http.dart';
 import 'package:html/dom.dart';
-import 'package:intl/intl.dart';
 
 Future<List<SemesterSummaryResult>> getSemesterSummary() async {
   Response res = await get(

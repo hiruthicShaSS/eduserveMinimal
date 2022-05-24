@@ -1,9 +1,9 @@
 // 🐦 Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 // 📦 Package imports:
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class CacheDataView extends StatelessWidget {
   const CacheDataView({Key? key}) : super(key: key);
@@ -20,9 +20,10 @@ class CacheDataView extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                     onPressed: () async {
-                      SharedPreferences prefs =
-                          await SharedPreferences.getInstance();
-                      await prefs.remove("timetable");
+                      final FlutterSecureStorage storage =
+                          FlutterSecureStorage();
+
+                      await storage.delete(key: "timetable");
                       Fluttertoast.showToast(msg: "Timetable data resetted!");
                     },
                     child: Text("Reset Timtable Data")),

@@ -1,8 +1,8 @@
 import 'package:beautifulsoup/beautifulsoup.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:eduserveMinimal/service/scrap.dart';
 
@@ -12,10 +12,10 @@ class AuthService {
 
   Future<String> login(
       {String? username, String? password, Function? callback}) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final FlutterSecureStorage storage = FlutterSecureStorage();
 
-    username = prefs.getString("username") ?? username;
-    password = prefs.getString("password") ?? password;
+    username = await storage.read(key: "username") ?? username;
+    password = await storage.read(key: "password") ?? password;
 
     var connection = await (Connectivity().checkConnectivity());
     if (connection == ConnectivityResult.none) {

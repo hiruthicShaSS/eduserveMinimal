@@ -6,6 +6,7 @@ import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:eduserveMinimal/providers/cache.dart';
 import 'package:eduserveMinimal/service/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 // 📦 Package imports:
 import 'package:lottie/lottie.dart';
@@ -14,7 +15,6 @@ import 'package:quick_actions/quick_actions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // 🌎 Project imports:
-import 'package:eduserveMinimal/global/gloabls.dart';
 import 'package:eduserveMinimal/providers/theme.dart';
 import 'package:eduserveMinimal/screens/home/pages/pages.dart';
 import 'package:eduserveMinimal/screens/home/pages/user.dart';
@@ -41,7 +41,7 @@ class eduserveMinimal extends StatelessWidget {
         routes: {
           "/home": (BuildContext context) => HomePage(),
           "/feedbackForm": (BuildContext context) => FeedbackForm(),
-          "/timetable": (BuildContext context) => TimeTable(),
+          "/timetable": (BuildContext context) => TimeTableView(),
           "/apply_leave": (BuildContext context) => ApplyLeaveView(),
           "/fees": (BuildContext context) => FeesView(),
           "/credentials": (BuildContext context) => Credentials(),
@@ -105,56 +105,69 @@ class _HomeControllerState extends State<HomeController> {
         if (snapshot.connectionState == ConnectionState.done) {
           SharedPreferences prefs = snapshot.data!;
 
-          if (credentialsExist(prefs))
-            return FutureBuilder(
-                future: isLoggedIn(prefs),
-                builder: (context, AsyncSnapshot<Map> snapshot) {
-                  if (snapshot.hasError) {
-                    log("Error on edu_serve.dart", error: snapshot.error);
-                  }
-
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    if (snapshot.data!["isLoggedIn"]) {
-                      if (snapshot.data!["feedBackFormFound"]) {
-                        if (prefs.getInt("autoFillFeedbackValue") != null) {
-                          return AutoFillFeedback();
+          return FutureBuilder(
+              future: credentialsExist(),
+              builder: (context, AsyncSnapshot<bool> snapshot) {
+                if (snapshot.data ?? false) {
+                  return FutureBuilder(
+                      future: isLoggedIn(prefs),
+                      builder: (context, AsyncSnapshot<Map> snapshot) {
+                        if (snapshot.hasError) {
+                          log("Error on edu_serve.dart", error: snapshot.error);
                         }
-                        return FeedbackForm();
-                      }
-                      if (snapshot.data!["loginError"]) return Credentials();
 
-                      return HomePage();
-                    }
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          if (snapshot.data!["isLoggedIn"]) {
+                            if (snapshot.data!["feedBackFormFound"]) {
+                              if (prefs.getInt("autoFillFeedbackValue") !=
+                                  null) {
+                                return AutoFillFeedback();
+                              }
+                              return FeedbackForm();
+                            }
+                            if (snapshot.data!["loginError"])
+                              return Credentials();
 
-                    return Credentials();
-                  }
+                            return HomePage();
+                          }
 
-                  return Material(
-                    child: Center(
-                        child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Lottie.asset("assets/lottie/log_in.json"),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            "Logging In...",
-                            style: TextStyle(fontSize: 25),
-                          ),
-                        ),
-                      ],
-                    )),
-                  );
-                });
-          return Credentials();
+                          return Credentials();
+                        }
+
+                        return Material(
+                          child: Center(
+                              child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Lottie.asset("assets/lottie/log_in.json"),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "Logging In...",
+                                  style: TextStyle(fontSize: 25),
+                                ),
+                              ),
+                            ],
+                          )),
+                        );
+                      });
+                }
+
+                return Credentials();
+              });
         }
         return Container();
       },
     );
   }
 
-  bool credentialsExist(SharedPreferences prefs) =>
-      prefs.containsKey("username") && prefs.containsKey("password");
+  Future<bool> credentialsExist() async {
+    final FlutterSecureStorage storage = FlutterSecureStorage();
+    bool userNameExist = await storage.containsKey(key: "username");
+    bool passwordExist = await storage.containsKey(key: "password");
+
+    return userNameExist && passwordExist;
+  }
 
   Future<Map> isLoggedIn(SharedPreferences prefs) async {
     Duration lastLogin = DateTime.parse(
