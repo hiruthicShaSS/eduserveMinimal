@@ -1,12 +1,12 @@
 // 📦 Package imports:
 import 'package:beautifulsoup/beautifulsoup.dart';
+import 'package:eduserveMinimal/service/auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // 🌎 Project imports:
 import 'package:eduserveMinimal/global/gloabls.dart';
-import 'package:eduserveMinimal/service/login.dart';
 import 'package:eduserveMinimal/service/scrap.dart';
 
 Future<List?> downloadHallTicket(
@@ -96,7 +96,7 @@ Future<List?> downloadHallTicket(
     if (endFlag.length == 0) {
       Fluttertoast.showToast(
           msg: "Something went wrong please restart the app");
-      login();
+      AuthService().login();
       if (retry == 2) return [];
       return downloadHallTicket(term: term, retry: retry + 1);
     }

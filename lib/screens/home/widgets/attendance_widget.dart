@@ -1,13 +1,17 @@
 // 🐦 Flutter imports:
+import 'dart:developer';
+
+import 'package:eduserveMinimal/models/user.dart';
+import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:flutter/material.dart';
 
 // 📦 Package imports:
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 // 🌎 Project imports:
 import 'package:eduserveMinimal/providers/theme.dart';
-import 'package:eduserveMinimal/service/attendence.dart';
 
 class AttendanceContainer extends StatelessWidget {
   const AttendanceContainer({Key? key}) : super(key: key);
@@ -15,17 +19,22 @@ class AttendanceContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: getAttendance(),
-      builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+      future: Provider.of<AppState>(context).user,
+      builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+        if (snapshot.hasError) {
+          log("", error: snapshot.error);
+        }
+
         if (snapshot.connectionState == ConnectionState.done) {
           return containerWithData(context, snapshot.data!);
         }
-        return containerWithData(context, ["0", "0", ""], true);
+        return containerWithData(
+            context, User(assemblyAttendance: 0, attendance: 0), true);
       },
     );
   }
 
-  Container containerWithData(BuildContext context, List data,
+  Container containerWithData(BuildContext context, User user,
       [bool isLoading = false]) {
     return Container(
       decoration: BoxDecoration(
@@ -38,15 +47,15 @@ class AttendanceContainer extends StatelessWidget {
               ? Shimmer.fromColors(
                   baseColor: Colors.grey,
                   highlightColor: Colors.grey[900]!,
-                  child: buildAttendenceContainer(data, context),
+                  child: buildAttendenceContainer(user, context),
                 )
-              : buildAttendenceContainer(data, context),
+              : buildAttendenceContainer(user, context),
         ],
       ),
     );
   }
 
-  Widget buildAttendenceContainer(List<dynamic> data, BuildContext context) {
+  Widget buildAttendenceContainer(User user, BuildContext context) {
     final double _height = MediaQuery.of(context).size.height;
     final double _width = MediaQuery.of(context).size.width;
 
@@ -75,15 +84,15 @@ class AttendanceContainer extends StatelessWidget {
                     ),
                     Spacer(),
                     AutoSizeText(
-                      data[0].toString(),
-                      minFontSize: data[1] == "Out-of-rolls" ? 20 : 30,
+                      user.attendance.toString() + "%",
+                      minFontSize: 30,
                       maxFontSize: 40,
                     ),
                   ],
                 ),
               ),
               Visibility(
-                visible: (double.tryParse(data[0].split("%")[0]) ?? 0) < 85,
+                visible: (user.attendance ?? 0) < 85,
                 child: Padding(
                   padding: const EdgeInsets.all(10),
                   child: Icon(Icons.warning_amber_outlined, color: Colors.red),
@@ -111,15 +120,15 @@ class AttendanceContainer extends StatelessWidget {
                     ),
                     Spacer(),
                     AutoSizeText(
-                      data[1].toString(),
-                      minFontSize: data[1] == "Out-of-rolls" ? 20 : 30,
+                      user.assemblyAttendance.toString() + "%",
+                      minFontSize: 30,
                       maxFontSize: 40,
                     ),
                   ],
                 ),
               ),
               Visibility(
-                visible: (double.tryParse(data[1].split("%")[0]) ?? 0) < 85,
+                visible: (user.assemblyAttendance ?? 0) < 85,
                 child: Padding(
                   padding: const EdgeInsets.all(10),
                   child: Icon(Icons.warning_amber_outlined, color: Colors.red),

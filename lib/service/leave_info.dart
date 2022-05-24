@@ -1,24 +1,29 @@
 // 📦 Package imports:
+import 'package:eduserveMinimal/service/auth.dart';
 import 'package:http/http.dart';
 import 'package:html/dom.dart';
 
 // 🌎 Project imports:
-import 'package:eduserveMinimal/global/gloabls.dart';
 import 'package:eduserveMinimal/models/leave.dart';
 import 'package:eduserveMinimal/service/scrap.dart';
 
 Future<Leave> getLeaveInfo() async {
   if (Scraper.cache.containsKey("leave")) return Scraper.cache["leave"];
-  Map<String, String> headers = httpHeaders;
+  Map<String, String> headers = AuthService.headers;
 
-  Response home_page = await get(
+  Response res = await get(
     Uri.parse("https://eduserve.karunya.edu/Student/Home.aspx"),
     headers: headers,
   );
 
-  Scraper.pages["home"] = home_page.body;
+  if (res.body.contains("User Login")) {
+    await AuthService().login();
+    headers = AuthService.headers;
+  }
 
-  Document html = Document.html(home_page.body);
+  Scraper.pages["home"] = res.body;
+
+  Document html = Document.html(res.body);
 
   List<OtherLeave> normalLeaves = [];
   List<OnDutyLeave> odLeaves = [];

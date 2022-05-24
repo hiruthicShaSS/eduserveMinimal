@@ -3,6 +3,8 @@ import 'dart:developer';
 
 // 🐦 Flutter imports:
 import 'package:eduserveMinimal/providers/app_state.dart';
+import 'package:eduserveMinimal/providers/cache.dart';
+import 'package:eduserveMinimal/service/auth.dart';
 import 'package:flutter/material.dart';
 
 // 📦 Package imports:
@@ -18,7 +20,6 @@ import 'package:eduserveMinimal/screens/home/pages/pages.dart';
 import 'package:eduserveMinimal/screens/home/pages/user.dart';
 import 'package:eduserveMinimal/service/fill_feedback_form.dart';
 import 'package:eduserveMinimal/service/get_feedback_form.dart';
-import 'package:eduserveMinimal/service/login.dart';
 import 'package:eduserveMinimal/service/scrap.dart';
 import 'package:eduserveMinimal/shortcuts.dart';
 
@@ -32,6 +33,7 @@ class eduserveMinimal extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<AppState>(create: (_) => AppState()),
         ChangeNotifierProvider<ThemeProvider>(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider<CacheProvider>(create: (_) => CacheProvider()),
       ],
       builder: (context, child) => MaterialApp(
         debugShowCheckedModeBanner: flavor == "development",
@@ -169,8 +171,7 @@ class _HomeControllerState extends State<HomeController> {
       };
     }
 
-    String loginData = await login();
-    await scraper.login();
+    String loginData = await AuthService().login();
 
     if (!loginData.contains("Login error"))
       prefs.setString("lastLogin", DateTime.now().toString());

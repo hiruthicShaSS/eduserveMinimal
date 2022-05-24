@@ -1,4 +1,5 @@
 // 🐦 Flutter imports:
+import 'package:eduserveMinimal/service/auth.dart';
 import 'package:flutter/material.dart';
 
 // 📦 Package imports:
@@ -9,7 +10,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // 🌎 Project imports:
 import 'package:eduserveMinimal/edu_serve.dart';
-import 'package:eduserveMinimal/service/login.dart';
 import 'package:eduserveMinimal/service/scrap.dart';
 
 class Credentials extends StatefulWidget {
@@ -108,8 +108,11 @@ class _CredentialsState extends State<Credentials> {
                                   ],
                                 ),
                               ));
-                      String loginStatus = await login(
-                          _usernameController.text, _passwordController.text);
+                      String loginStatus = await AuthService().login(
+                        username: _usernameController.text,
+                        password: _passwordController.text,
+                      );
+
                       Navigator.of(context).pop();
 
                       if (loginStatus == "Login error") {

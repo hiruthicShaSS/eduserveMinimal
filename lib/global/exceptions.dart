@@ -16,3 +16,7 @@ class NoRecordsInAttendance extends NoRecordsException {
 class NoRecordsInTimetable extends NoRecordsException {
   const NoRecordsInTimetable([String? messgae]) : super(messgae);
 }
+
+class NoRecordsInInternalMarks extends NoRecordsException {
+  const NoRecordsInInternalMarks([String? messgae]) : super(messgae);
+}

@@ -53,11 +53,11 @@ class _LeaveInformationState extends State<LeaveInformation>
             child: FutureBuilder(
               future: getLeaveInfo(),
               builder: (context, AsyncSnapshot<Leave> snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  if (snapshot.hasError) {
-                    print(snapshot);
-                  }
+                if (snapshot.hasError) {
+                  print(snapshot.error);
+                }
 
+                if (snapshot.connectionState == ConnectionState.done) {
                   if (snapshot.data == null)
                     return Text("No records to display.");
 
