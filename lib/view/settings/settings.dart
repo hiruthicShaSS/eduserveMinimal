@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 // 📦 Package imports:
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:new_version/new_version.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -130,22 +131,50 @@ class Settings extends StatelessWidget {
               ],
             ),
             Spacer(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 5),
-                  child: Text("♥️"),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 5),
+                      child: Text("♥️"),
+                    ),
+                    GestureDetector(
+                      child: Text("Contribute",
+                          style: TextStyle(
+                              decoration: TextDecoration.underline,
+                              color: Colors.blue)),
+                      onTap: () => launch(
+                          "https://github.com/hiruthicShaSS/eduserveMinimal"),
+                    ),
+                    Text(" to this project"),
+                  ],
                 ),
-                GestureDetector(
-                  child: Text("Contribute",
-                      style: TextStyle(
-                          decoration: TextDecoration.underline,
-                          color: Colors.blue)),
-                  onTap: () => launch(
-                      "https://github.com/hiruthicShaSS/eduserveMinimal"),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 5),
+                      child: Text("⭐"),
+                    ),
+                    GestureDetector(
+                      child: Text("Post a review",
+                          style: TextStyle(
+                              decoration: TextDecoration.underline,
+                              color: Colors.blue)),
+                      onTap: () async {
+                        final InAppReview inAppReview = InAppReview.instance;
+
+                        if (await inAppReview.isAvailable()) {
+                          inAppReview.requestReview();
+                        }
+                      },
+                    ),
+                    Text(" for this project"),
+                  ],
                 ),
-                Text(" to this project"),
               ],
             ),
           ],
