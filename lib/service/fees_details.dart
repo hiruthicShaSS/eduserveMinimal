@@ -1,67 +1,65 @@
-// 📦 Package imports:
-import 'package:beautifulsoup/beautifulsoup.dart';
 import 'package:eduserveMinimal/service/auth.dart';
 import 'package:http/http.dart';
+import 'package:html/dom.dart';
 
 // 🌎 Project imports:
-import 'package:eduserveMinimal/global/gloabls.dart';
 import 'package:eduserveMinimal/models/fees.dart';
 import 'package:eduserveMinimal/service/scrap.dart';
+import 'package:intl/intl.dart';
 
-Future<Fees?> getFeesDetails({bool force = false}) async {
-  if (Scraper.cache.containsKey("fees")) return Scraper.cache["fees"];
-  Map<String, String> headers = httpHeaders;
+Future<Fees> getFeesDetails() async {
+  // if (Scraper.cache.containsKey("fees")) return Scraper.cache["fees"];
 
   String feesDownload = "/Student/Fees/DownloadReceipt.aspx";
   String feesOverallStatement = "/Student/Fees/FeesStatement.aspx";
-  Fees fees = new Fees();
 
   Response page = await get(
-      Uri.parse("https://eduserve.karunya.edu${feesDownload}"),
-      headers: headers);
+    Uri.parse("https://eduserve.karunya.edu${feesDownload}"),
+    headers: AuthService.headers,
+  );
 
   if (page.body.indexOf("Login") != -1) {
     await AuthService().login();
-    return getFeesDetails();
   }
 
-  Response dues = await get(
-      Uri.parse("https://eduserve.karunya.edu${feesOverallStatement}"),
-      headers: headers);
-  var dueSoup = Beautifulsoup(dues.body);
-  List dueslist = dueSoup
-      .find_all("span")
-      .map((e) => (e.attributes["id"] == "mainContent_LBLDUES" ||
-              e.attributes["id"] == "mainContent_LBLEXCESS")
-          ? e.text
-          : "")
-      .toSet()
+  Response res = await get(
+    Uri.parse("https://eduserve.karunya.edu${feesOverallStatement}"),
+    headers: AuthService.headers,
+  );
+
+  Document html = Document.html(res.body);
+
+  double totalDues =
+      double.parse(html.querySelector("#mainContent_LBLDUES")?.text ?? "0");
+  double advance =
+      double.parse(html.querySelector("#mainContent_LBLEXCESS")?.text ?? "0");
+
+  List<Element> rows = html
+      .querySelectorAll("tr")
+      .where((e) => e.className == "rgRow" || e.className == "rgAltRow")
       .toList();
-  dueslist.removeWhere((element) => element == "");
 
-  var soup = Beautifulsoup(page.body);
-  List table = soup.find_all("tr").map((e) => e.innerHtml).toSet().toList();
+  Fees fees = Fees(totalDues: totalDues, advance: advance);
 
-  bool flagReached = false;
-  table.forEach((element) {
-    if (element.indexOf("Total Amount") != -1) {
-      flagReached = true;
-      return;
-    }
-    if (flagReached) {
-      element = element.trim().replaceAll("<td>", "");
-      element = element.trim().replaceAll('<td style="display:none;">', "");
-      element = element.trim().replaceAll("</td>", "<space>");
+  for (var row in rows) {
+    List<String> rowData = html
+        .querySelectorAll("#${row.id} > td")
+        .map((e) => e.text.trim())
+        .toList();
 
-      List<String>? temp = [];
-      temp = element.split("<space>");
-      temp!.removeRange(0, 3);
-      temp.removeWhere((element) => element.length == 0);
-      fees.add(temp[1], temp);
-    }
-  });
+    fees.add = SingleFee(
+      description: rowData[3],
+      semester: rowData[4],
+      toPay: double.tryParse(rowData[5]) ?? 0,
+      lastDate: DateFormat("dd-MM-yyyy").parse(rowData[6]),
+      currency: rowData[8],
+      paid: double.tryParse(rowData[9]) ?? 0,
+      recieptNo: rowData[10],
+      dateOfPayment: DateFormat("dd-MM-yyyy").parse(rowData[11]),
+      netDues: double.tryParse(rowData[13]) ?? 0,
+    );
+  }
 
-  fees.dues = dueslist;
   Scraper.cache["fees"] = fees;
   return fees;
 }

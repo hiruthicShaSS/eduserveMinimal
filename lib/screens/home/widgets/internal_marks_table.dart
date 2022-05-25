@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:ui';
 
 import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/models/internal_mark.dart';
@@ -8,7 +7,6 @@ import 'package:eduserveMinimal/service/internal_marks.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:table_sticky_headers/table_sticky_headers.dart';
 import 'package:eduserveMinimal/screens/home/widgets/table_cell.dart'
