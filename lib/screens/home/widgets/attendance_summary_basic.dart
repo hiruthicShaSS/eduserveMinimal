@@ -44,7 +44,8 @@ class AttendanceSummaryView extends StatelessWidget {
             if (snapshot.data!.attendance.isEmpty) {
               return Padding(
                 padding: const EdgeInsets.only(top: 20),
-                child: Center(child: Text("No records found!")),
+                child:
+                    Center(child: Text("No attendance summary records found!")),
               );
             }
 

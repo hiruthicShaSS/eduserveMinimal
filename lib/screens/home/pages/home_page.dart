@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:eduserveMinimal/models/user.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:eduserveMinimal/service/auth.dart';
+import 'package:eduserveMinimal/service/timetable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
@@ -204,7 +205,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> processExcessInfo(BuildContext context) async {
-    checkBirthday(context);
+    await checkBirthday(context);
+    getTimetable();
     _checkUpdates(context);
 
     Map dataCache = await fetchAllData();
