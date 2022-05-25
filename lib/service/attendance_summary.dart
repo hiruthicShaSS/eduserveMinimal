@@ -26,7 +26,7 @@ Future<SemesterAttendance> getAttendanceSummary([retries = 0]) async {
       .toList();
 
   int maxAcademicTerm = academicTerms.length -
-      2; // -1 for for compensating 0 indexing and to remove the option 'Select the Academic Term'
+      1; // -1 for for compensating 0 indexing and to remove the option 'Select the Academic Term'
 
   List inputs = html
       .querySelectorAll("input")

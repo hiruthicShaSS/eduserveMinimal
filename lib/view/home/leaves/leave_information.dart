@@ -32,7 +32,7 @@ class _LeaveInformationWidgetState extends State<LeaveInformationWidget>
     Leave fakeLeaveData = Leave.generateFakeLeave();
 
     return Container(
-      height: MediaQuery.of(context).size.height * 0.60,
+      height: MediaQuery.of(context).size.height * 0.55,
       child: Column(
         children: [
           TabBar(

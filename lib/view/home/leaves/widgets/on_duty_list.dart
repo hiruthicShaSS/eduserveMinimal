@@ -6,9 +6,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:shimmer/shimmer.dart';
 
 // 🌎 Project imports:
-import 'package:eduserveMinimal/global/enum.dart';
 import 'package:eduserveMinimal/models/leave.dart';
-import 'package:eduserveMinimal/view/home/apply_leave.dart';
 
 class OnDutyList extends StatelessWidget {
   const OnDutyList({Key? key, required this.leave, this.isLoading = false})
@@ -23,23 +21,8 @@ class OnDutyList extends StatelessWidget {
       child: Container(
         child: ListView.builder(
           padding: EdgeInsets.zero,
-          itemCount: leave!.length + 1,
+          itemCount: leave!.length,
           itemBuilder: (BuildContext context, int index) {
-            if (index == 0)
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton.icon(
-                    icon: Icon(Icons.add),
-                    label: Text("Apply leave"),
-                    onPressed: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (_) =>
-                                ApplyLeaveView(leaveType: LeaveType.OnDuty))),
-                  ),
-                ],
-              );
-
             if (isLoading)
               return Shimmer.fromColors(
                 child: onDutyTile(context, 1),
@@ -76,7 +59,7 @@ class OnDutyList extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   AutoSizeText(
-                    leave![index - 1].reason.toString(),
+                    leave![index].reason.toString(),
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                         color: Theme.of(context)
@@ -86,11 +69,11 @@ class OnDutyList extends StatelessWidget {
                             .withOpacity(0.3)),
                   ),
                   Text(
-                    "${leave![index - 1].fromDate} - ${leave![index - 1].toDate}",
+                    "${leave![index].fromDate} - ${leave![index].toDate}",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    leave![index - 1].session,
+                    leave![index].session,
                     style: TextStyle(
                         color: Theme.of(context).colorScheme.secondary),
                   ),
@@ -104,15 +87,15 @@ class OnDutyList extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.all(2),
                   decoration: BoxDecoration(
-                    color: leave![index - 1].status.contains("AVAILED")
+                    color: leave![index].status.contains("AVAILED")
                         ? Colors.greenAccent.withOpacity(0.8)
-                        : leave![index - 1].status.contains("REJECTED")
+                        : leave![index].status.contains("REJECTED")
                             ? Colors.redAccent.withOpacity(0.8)
                             : Colors.orangeAccent.withOpacity(0.8),
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: Text(
-                    leave![index - 1].status,
+                    leave![index].status,
                     style: TextStyle(color: Colors.black),
                   ),
                 ),
@@ -130,36 +113,36 @@ class OnDutyList extends StatelessWidget {
                     showDialog(
                         context: context,
                         builder: (_) => AlertDialog(
-                              title: Text(leave![index - 1].reason.toString()),
+                              title: Text(leave![index].reason.toString()),
                               content: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
-                                    "Duration: ${leave![index - 1].fromDate} - ${leave![index - 1].toDate}",
+                                    "Duration: ${leave![index].fromDate} - ${leave![index].toDate}",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                   SizedBox(height: 10),
                                   Text(
-                                      "Created on: ${leave![index - 1].createdOn.toString()}"),
+                                      "Created on: ${leave![index].createdOn.toString()}"),
                                   Text(
-                                      "From Session: ${leave![index - 1].fromSession}"),
+                                      "From Session: ${leave![index].fromSession}"),
                                   Text(
-                                      "To Session: ${leave![index - 1].toSession}"),
-                                  Text("Status: ${leave![index - 1].status}"),
+                                      "To Session: ${leave![index].toSession}"),
+                                  Text("Status: ${leave![index].status}"),
                                   SizedBox(height: 10),
                                   Text(
-                                      "Created by: ${leave![index - 1].createdBy}"),
+                                      "Created by: ${leave![index].createdBy}"),
                                   Text(
-                                      "Approval by: ${leave![index - 1].approvalBy}"),
+                                      "Approval by: ${leave![index].approvalBy}"),
                                   Text(
-                                      "Approval on: ${leave![index - 1].approvalOn}"),
+                                      "Approval on: ${leave![index].approvalOn}"),
                                   Text(
-                                      "Availed by: ${leave![index - 1].availedBy}"),
+                                      "Availed by: ${leave![index].availedBy}"),
                                   Text(
-                                      "Availed on: ${leave![index - 1].availedOn}"),
+                                      "Availed on: ${leave![index].availedOn}"),
                                   Center(
                                     child: TextButton(
                                         onPressed: () =>
