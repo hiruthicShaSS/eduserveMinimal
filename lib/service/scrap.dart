@@ -210,7 +210,7 @@ class Scraper {
         await client.get(Uri.parse("$hostname$timetableURL"), headers: headers);
 
     if (res.body.contains("No records to display.")) {
-      throw NoRecordsInTimetable("No timetable is provided in the eduserve!");
+      throw NoRecordsException("No timetable is provided in the eduserve!");
     }
 
     if (res.body.indexOf("Login") != -1) {

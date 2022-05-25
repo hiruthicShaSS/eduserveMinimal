@@ -78,7 +78,11 @@ Future<List<TimeTable>> getTimetable({bool force = false}) async {
   );
 
   if (res.body.contains("No records to display.")) {
-    throw NoRecordsInTimetable("No records to display.");
+    throw NoRecordsException("No timetable records to display.");
+  }
+
+  if (res.body.contains("Object moved to")) {
+    throw MiscellaneousErrorInEduserve("Error fetching timetable data.");
   }
 
   html = Document.html(res.body);
@@ -97,17 +101,17 @@ Future<List<TimeTable>> getTimetable({bool force = false}) async {
 
     TimeTable timeTable = TimeTable(
       day: rowData[0],
-      hour1: rowData[1],
-      hour2: rowData[2],
-      hour3: rowData[3],
-      hour4: rowData[4],
-      hour5: rowData[5],
-      hour6: rowData[6],
-      hour7: rowData[7],
-      hour8: rowData[8],
-      hour9: rowData[9],
-      hour10: rowData[10],
-      hour11: rowData[11],
+      hour1: TimeTableSubject.fromString(rowData[1]),
+      hour2: TimeTableSubject.fromString(rowData[2]),
+      hour3: TimeTableSubject.fromString(rowData[3]),
+      hour4: TimeTableSubject.fromString(rowData[4]),
+      hour5: TimeTableSubject.fromString(rowData[5]),
+      hour6: TimeTableSubject.fromString(rowData[6]),
+      hour7: TimeTableSubject.fromString(rowData[7]),
+      hour8: TimeTableSubject.fromString(rowData[8]),
+      hour9: TimeTableSubject.fromString(rowData[9]),
+      hour10: TimeTableSubject.fromString(rowData[10]),
+      hour11: TimeTableSubject.fromString(rowData[11]),
     );
 
     table.add(timeTable);

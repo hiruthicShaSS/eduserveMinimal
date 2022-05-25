@@ -1,4 +1,4 @@
-abstract class NoRecordsException implements Exception {
+class NoRecordsException implements Exception {
   const NoRecordsException([this.message]);
 
   final String? message;
@@ -9,14 +9,13 @@ abstract class NoRecordsException implements Exception {
   }
 }
 
-class NoRecordsInAttendance extends NoRecordsException {
-  const NoRecordsInAttendance([String? messgae]) : super(messgae);
-}
+class MiscellaneousErrorInEduserve implements Exception {
+  const MiscellaneousErrorInEduserve([this.message]);
 
-class NoRecordsInTimetable extends NoRecordsException {
-  const NoRecordsInTimetable([String? messgae]) : super(messgae);
-}
+  final String? message;
 
-class NoRecordsInInternalMarks extends NoRecordsException {
-  const NoRecordsInInternalMarks([String? messgae]) : super(messgae);
+  @override
+  String toString() {
+    return message ?? "No error message provided!";
+  }
 }

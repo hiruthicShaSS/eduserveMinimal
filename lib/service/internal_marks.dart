@@ -67,7 +67,7 @@ class InternalMarksService {
     }
 
     if (res.body.contains("No records to display.")) {
-      throw NoRecordsInInternalMarks("No internal marks data found!");
+      throw NoRecordsException("No internal marks data found!");
     }
 
     Document html = Document.html(res.body);

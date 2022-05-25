@@ -43,7 +43,7 @@ Future<SemesterAttendance> getAttendanceSummary([retries = 0]) async {
       body: formData);
 
   if (res.body.contains("No records to display.")) {
-    throw NoRecordsInAttendance("No attendance records to display.");
+    throw NoRecordsException("No attendance records to display.");
   }
 
   Document html = Document.html(res.body);

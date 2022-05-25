@@ -26,7 +26,7 @@ class AttendanceSummaryView extends StatelessWidget {
       builder: (context, AsyncSnapshot<SemesterAttendance> snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasError) {
-            if (snapshot.error.runtimeType == NoRecordsInAttendance) {
+            if (snapshot.error.runtimeType == NoRecordsException) {
               return Padding(
                 padding: const EdgeInsets.only(top: 20),
                 child: Center(

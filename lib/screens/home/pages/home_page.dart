@@ -17,7 +17,6 @@ import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 
 // 🌎 Project imports:
-import 'package:eduserveMinimal/global/gloabls.dart';
 import 'package:eduserveMinimal/screens/home/pages/fees.dart';
 import 'package:eduserveMinimal/screens/home/pages/hallticket.dart';
 import 'package:eduserveMinimal/screens/home/pages/internals.dart';

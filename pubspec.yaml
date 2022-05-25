@@ -45,6 +45,7 @@ dependencies:
   new_version: ^0.2.3
   quick_actions: ^0.6.0+8
   syncfusion_flutter_barcodes: ^19.4.56
+  table_sticky_headers: ^2.0.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

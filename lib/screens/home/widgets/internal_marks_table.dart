@@ -50,7 +50,7 @@ class _InternalMarksTableState extends State<InternalMarksTable> {
           if (snapshot.hasError) {
             log("", error: snapshot.error);
 
-            if (snapshot.error.runtimeType == NoRecordsInInternalMarks) {
+            if (snapshot.error.runtimeType == NoRecordsException) {
               return Center(
                 child: Text(snapshot.error.toString()),
               );
