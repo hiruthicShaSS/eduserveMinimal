@@ -1,52 +1,57 @@
-import 'package:beautifulsoup/beautifulsoup.dart';
 import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/models/class_attendance.dart';
+import 'package:eduserveMinimal/service/auth.dart';
 import 'package:http/http.dart';
 
 // 🌎 Project imports:
-import 'package:eduserveMinimal/global/gloabls.dart';
 import 'package:html/dom.dart';
 import 'package:intl/intl.dart';
 
 Future<SemesterAttendance> getAttendanceSummary([retries = 0]) async {
-  Map<String, String> headers = httpHeaders;
-  Map formData = httpFormData;
+  Map<String, String> headers = AuthService.headers;
+  Map formData = AuthService.formData;
   formData.remove("ctl00\$mainContent\$DDLEXAM");
 
   headers["referer"] = "https://eduserve.karunya.edu/Student/AttSummary.aspx";
   Response res = await get(
-      Uri.parse("https://eduserve.karunya.edu/Student/AttSummary.aspx"),
-      headers: headers);
+    Uri.parse("https://eduserve.karunya.edu/Student/AttSummary.aspx"),
+    headers: headers,
+  );
 
-  var soup = Beautifulsoup(res.body);
-  final inputs = soup.find_all("input").map((e) => e.attributes).toList();
+  Document html = Document.html(res.body);
 
-  final academicTerms =
-      soup.find_all("option").map((e) => e.text.trim()).toSet().toList();
+  List<String> academicTerms = html
+      .querySelectorAll("#mainContent_DDLACADEMICTERM > option")
+      .map((node) => node.innerHtml.trim())
+      .toList();
+
   int maxAcademicTerm = academicTerms.length -
-      1; // -1 for for compensating 0 indexing and to remove the option 'Select the Academic Term'
+      2; // -1 for for compensating 0 indexing and to remove the option 'Select the Academic Term'
 
-  inputs.forEach((element) {
-    // Populate form data
-    if (formData[element["name"]] == "") {
-      formData[element["name"]] =
-          (element["value"] == "Clear" || element["value"] == null)
-              ? ""
-              : element["value"];
-    }
-  });
+  List inputs = html
+      .querySelectorAll("input")
+      .map((e) => {e.attributes["name"]: e.attributes["value"]})
+      .toList();
+
+  inputs.removeWhere(
+      (element) => element.keys.first == null || element.values.first == null);
+
+  for (var input in inputs) {
+    formData[input.keys.first!] = input.values.first;
+  }
 
   formData["ctl00\$mainContent\$DDLACADEMICTERM"] = maxAcademicTerm.toString();
   res = await post(
-      Uri.parse("https://eduserve.karunya.edu/Student/AttSummary.aspx"),
-      headers: headers,
-      body: formData);
+    Uri.parse("https://eduserve.karunya.edu/Student/AttSummary.aspx"),
+    headers: headers,
+    body: formData,
+  );
 
   if (res.body.contains("No records to display.")) {
     throw NoRecordsException("No attendance records to display.");
   }
 
-  Document html = Document.html(res.body);
+  html = Document.html(res.body);
   List<Attendance> allAttendance = [];
 
   for (int i = 0; i < 100; i++) {

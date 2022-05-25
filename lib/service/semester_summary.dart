@@ -1,4 +1,5 @@
 // 📦 Package imports:
+import 'package:eduserveMinimal/global/service/month_to_int.dart';
 import 'package:eduserveMinimal/models/semester_summary_result.dart';
 import 'package:eduserveMinimal/service/auth.dart';
 import 'package:http/http.dart';
@@ -34,9 +35,14 @@ Future<List<SemesterSummaryResult>> getSemesterSummary() async {
         .map((e) => e.text.trim())
         .toList();
 
+    DateTime monthAndYear = DateTime(
+      int.tryParse(result[0].split(" ").last) ?? 2002,
+      monthToInt(result[0].split(" ").first),
+    );
+
     semesterSummary.add(
       SemesterSummaryResult(
-          monthAndYear: result[0],
+          monthAndYear: monthAndYear,
           arrears: int.tryParse(result[2]) ?? 0,
           sgpa: double.tryParse(result[3]) ?? 0,
           cgpa: double.tryParse(result[4]) ?? 0),

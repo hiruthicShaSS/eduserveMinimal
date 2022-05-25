@@ -4,17 +4,12 @@ import 'dart:typed_data';
 import 'package:eduserveMinimal/global/service/birthday_service.dart';
 import 'package:eduserveMinimal/models/user.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
-import 'package:eduserveMinimal/service/auth.dart';
 import 'package:eduserveMinimal/service/timetable.dart';
 import 'package:eduserveMinimal/view/home/widgets/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 // 📦 Package imports:
-import 'package:html/dom.dart' as dom;
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:http/http.dart';
-import 'package:intl/intl.dart';
 import 'package:new_version/new_version.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
@@ -67,6 +62,7 @@ class _HomePageState extends State<HomePage> {
         ),
         body: PageView(
           controller: _pageController,
+          physics: NeverScrollableScrollPhysics(),
           onPageChanged: (index) {
             setState(() => _selectedIndex = index);
           },

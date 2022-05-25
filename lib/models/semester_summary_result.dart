@@ -1,5 +1,5 @@
 class SemesterSummaryResult {
-  String monthAndYear;
+  DateTime monthAndYear;
   int arrears;
   double sgpa;
   double cgpa;

@@ -73,25 +73,21 @@ class AttendanceBarChart extends StatelessWidget {
                   barTouchData: BarTouchData(enabled: true),
                   borderData: FlBorderData(show: false),
                   titlesData: FlTitlesData(
-                    topTitles: SideTitles(showTitles: false),
-                    rightTitles: SideTitles(showTitles: false),
-                    leftTitles: SideTitles(showTitles: false),
-                    bottomTitles: SideTitles(
-                      showTitles: true,
-                      getTitles: (double value) => DateFormat("dd MMM")
-                          .format(attendance[value.toInt()].date),
-                      rotateAngle: -55,
-                      getTextStyles: (context, _) => TextStyle(fontSize: 12),
-                    ),
-                  ),
-                  axisTitleData: FlAxisTitleData(
-                    show: true,
-                    bottomTitle: AxisTitle(
-                        titleText: "Day", showTitle: true, margin: 20),
-                    leftTitle: AxisTitle(
-                      titleText: "Hour",
-                      showTitle: true,
-                      margin: 20,
+                    topTitles:
+                        AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    rightTitles:
+                        AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    leftTitles:
+                        AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    bottomTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        getTitlesWidget: (double value, _) => Text(
+                          DateFormat("dd MMM")
+                              .format(attendance[value.toInt()].date),
+                          style: TextStyle(fontSize: 12),
+                        ),
+                      ),
                     ),
                   ),
                   barGroups: List.generate(
@@ -100,11 +96,15 @@ class AttendanceBarChart extends StatelessWidget {
                       x: index,
                       barRods: [
                         BarChartRodData(
-                          y: attendance[index]
+                          toY: attendance[index]
                               .attendanceSummary
                               .totalAttended
                               .toDouble(),
-                          colors: _presentGradient,
+                          gradient: LinearGradient(
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.topCenter,
+                            colors: _presentGradient,
+                          ),
                           width: 15,
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(6),
@@ -112,17 +112,25 @@ class AttendanceBarChart extends StatelessWidget {
                           ),
                         ),
                         BarChartRodData(
-                          y: attendance[index]
+                          toY: attendance[index]
                               .attendanceSummary
                               .totalAbsent
                               .toDouble(),
                           backDrawRodData: BackgroundBarChartRodData(
-                            colors: _absentGradient.reversed
-                                .map((color) => color.withOpacity(0.01))
-                                .toList(),
+                            gradient: LinearGradient(
+                              begin: Alignment.bottomCenter,
+                              end: Alignment.topCenter,
+                              colors: _absentGradient.reversed
+                                  .map((color) => color.withOpacity(0.01))
+                                  .toList(),
+                            ),
                             show: true,
                           ),
-                          colors: _absentGradient,
+                          gradient: LinearGradient(
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.topCenter,
+                            colors: _absentGradient,
+                          ),
                           width: 12,
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(6),
@@ -130,17 +138,25 @@ class AttendanceBarChart extends StatelessWidget {
                           ),
                         ),
                         BarChartRodData(
-                          y: attendance[index]
+                          toY: attendance[index]
                               .attendanceSummary
                               .totalUnAttended
                               .toDouble(),
                           backDrawRodData: BackgroundBarChartRodData(
-                            colors: _unAttendedGradient.reversed
-                                .map((color) => color.withOpacity(0.01))
-                                .toList(),
+                            gradient: LinearGradient(
+                              begin: Alignment.bottomCenter,
+                              end: Alignment.topCenter,
+                              colors: _unAttendedGradient.reversed
+                                  .map((color) => color.withOpacity(0.01))
+                                  .toList(),
+                            ),
                             show: true,
                           ),
-                          colors: _unAttendedGradient,
+                          gradient: LinearGradient(
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.topCenter,
+                            colors: _unAttendedGradient,
+                          ),
                           width: 10,
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(6),

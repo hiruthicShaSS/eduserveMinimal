@@ -7,6 +7,7 @@ import 'package:fl_chart/fl_chart.dart';
 
 // 🌎 Project imports:
 import 'package:eduserveMinimal/global/widgets/dot_container.dart';
+import 'package:intl/intl.dart';
 
 class SemesterSummaryGraph extends StatelessWidget {
   SemesterSummaryGraph({
@@ -45,23 +46,36 @@ class SemesterSummaryGraph extends StatelessWidget {
                   maxY: 10,
                   titlesData: FlTitlesData(
                     show: true,
-                    rightTitles: SideTitles(showTitles: false),
-                    leftTitles: SideTitles(showTitles: true, margin: 20),
-                    topTitles: SideTitles(showTitles: false),
-                    bottomTitles: SideTitles(
-                      reservedSize: 30,
-                      showTitles: true,
-                      rotateAngle: -45,
-                      getTitles: (index) {
-                        return result[index.toInt()].monthAndYear;
-                      },
+                    rightTitles:
+                        AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    leftTitles:
+                        AxisTitles(sideTitles: SideTitles(showTitles: true)),
+                    topTitles:
+                        AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    bottomTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        reservedSize: 40,
+                        showTitles: true,
+                        // rotateAngle: -45,
+                        getTitlesWidget: (index, _) {
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 20),
+                            child: RotationTransition(
+                              turns: const AlwaysStoppedAnimation(-35 / 360),
+                              child: Text(DateFormat("MM/yyyy")
+                                  .format(result[index.toInt()].monthAndYear)),
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
                   lineBarsData: [
                     LineChartBarData(
                       isCurved: true,
                       barWidth: 5,
-                      colors: [Colors.orange, Colors.orangeAccent],
+                      gradient: LinearGradient(
+                          colors: [Colors.orange, Colors.orangeAccent]),
                       spots: List.generate(
                         result.length,
                         (index) => FlSpot(
@@ -73,7 +87,8 @@ class SemesterSummaryGraph extends StatelessWidget {
                     LineChartBarData(
                       isCurved: true,
                       barWidth: 5,
-                      colors: [Colors.green, Colors.greenAccent],
+                      gradient: LinearGradient(
+                          colors: [Colors.green, Colors.greenAccent]),
                       spots: List.generate(
                         result.length,
                         (index) => FlSpot(
@@ -85,7 +100,8 @@ class SemesterSummaryGraph extends StatelessWidget {
                     LineChartBarData(
                       isCurved: true,
                       barWidth: 5,
-                      colors: [Colors.red, Colors.redAccent],
+                      gradient: LinearGradient(
+                          colors: [Colors.red, Colors.redAccent]),
                       spots: List.generate(
                         result.length,
                         (index) => FlSpot(
@@ -93,10 +109,13 @@ class SemesterSummaryGraph extends StatelessWidget {
                           result[index].arrears.toDouble(),
                         ),
                       ),
-                      belowBarData: BarAreaData(show: true, colors: [
-                        Colors.red.withOpacity(0.1),
-                        Colors.redAccent.withOpacity(0.1)
-                      ]),
+                      belowBarData: BarAreaData(
+                        show: true,
+                        gradient: LinearGradient(colors: [
+                          Colors.red.withOpacity(0.1),
+                          Colors.redAccent.withOpacity(0.1)
+                        ]),
+                      ),
                     ),
                   ],
                 ),

@@ -53,7 +53,8 @@ class AttributionScreen extends StatelessWidget {
             itemBuilder: (context, index) => Row(
                   children: [
                     TextButton(
-                      onPressed: () => launch(attributions[index].url),
+                      onPressed: () =>
+                          launchUrl(Uri.parse(attributions[index].url)),
                       child: Text(
                         describeEnum(attributions[index].type),
                       ),
@@ -62,7 +63,8 @@ class AttributionScreen extends StatelessWidget {
                     Text(attributions[index].author),
                     Text(" by"),
                     TextButton(
-                        onPressed: () => launch(attributions[index].sourceUrl),
+                        onPressed: () =>
+                            launchUrl(Uri.parse(attributions[index].sourceUrl)),
                         child: Text(attributions[index].source)),
                   ],
                 )),

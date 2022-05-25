@@ -43,7 +43,7 @@ class Settings extends StatelessWidget {
               child: ElevatedButton(
                 child: Text("Open EduServe"),
                 onPressed: () async {
-                  await launch(eduserveURL);
+                  await launchUrl(Uri.parse(eduserveURL));
                 },
               ),
             ),
@@ -145,8 +145,8 @@ class Settings extends StatelessWidget {
                           style: TextStyle(
                               decoration: TextDecoration.underline,
                               color: Colors.blue)),
-                      onTap: () => launch(
-                          "https://github.com/hiruthicShaSS/eduserveMinimal"),
+                      onTap: () => launchUrl(Uri.parse(
+                          "https://github.com/hiruthicShaSS/eduserveMinimal")),
                     ),
                     Text(" to this project"),
                   ],

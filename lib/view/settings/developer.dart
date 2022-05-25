@@ -53,7 +53,8 @@ class Developer extends StatelessWidget {
                 children: [
                   IconButton(
                     icon: Icon(Icons.email),
-                    onPressed: () => launch("mailto:hiruthic@karunya.edu"),
+                    onPressed: () =>
+                        launchUrl(Uri.parse("mailto:hiruthic@karunya.edu")),
                   ),
                   SizedBox(width: 10),
                   Text(
@@ -73,8 +74,8 @@ class Developer extends StatelessWidget {
                   "Request Feature",
                   style: GoogleFonts.kanit(fontSize: 25, color: Colors.black),
                 ),
-                onPressed: () => launch(
-                    "https://github.com/hiruthicShaSS/eduserveMinimal/issues/new?assignees=&labels=&template=feature_request.md&title="),
+                onPressed: () => launchUrl(Uri.parse(
+                    "https://github.com/hiruthicShaSS/eduserveMinimal/issues/new?assignees=&labels=&template=feature_request.md&title=")),
               ),
               Spacer(),
               buildSocialIcons()
@@ -95,7 +96,8 @@ Row buildSocialIcons() {
           size: 40,
           color: Colors.blue,
         ),
-        onPressed: () => launch("https://twitter.com/_hiruthicSha"),
+        onPressed: () =>
+            launchUrl(Uri.parse("https://twitter.com/_hiruthicSha")),
         tooltip: "Twitter",
       ),
       Spacer(),
@@ -105,7 +107,8 @@ Row buildSocialIcons() {
           size: 40,
           color: Colors.blueAccent,
         ),
-        onPressed: () => launch("https://in.linkedin.com/in/hiruthicsha/"),
+        onPressed: () =>
+            launchUrl(Uri.parse("https://in.linkedin.com/in/hiruthicsha/")),
         tooltip: "LinkedIn",
       ),
       Spacer(),
@@ -115,7 +118,8 @@ Row buildSocialIcons() {
           size: 40,
           color: Colors.black,
         ),
-        onPressed: () => launch("https://github.com/hiruthicShaSS"),
+        onPressed: () =>
+            launchUrl(Uri.parse("https://github.com/hiruthicShaSS")),
         tooltip: "GitHub",
       ),
       Spacer(),
@@ -125,7 +129,7 @@ Row buildSocialIcons() {
           size: 40,
           color: Colors.blueAccent,
         ),
-        onPressed: () => launch("http://hiruthicsha.com"),
+        onPressed: () => launchUrl(Uri.parse("http://hiruthicsha.com")),
         tooltip: "GitHub",
       ),
     ],

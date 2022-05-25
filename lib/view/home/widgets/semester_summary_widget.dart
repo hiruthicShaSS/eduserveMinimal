@@ -29,9 +29,9 @@ class SemesterSummaryWidget extends StatelessWidget {
           }
 
           List<SemesterSummaryResult> result = List.generate(
-            4,
+            5,
             (index) => SemesterSummaryResult(
-              monthAndYear: "",
+              monthAndYear: DateTime(2002, 5, 18),
               arrears: Random().nextInt(10),
               sgpa: Random().nextInt(10).toDouble(),
               cgpa: Random().nextInt(10).toDouble(),
