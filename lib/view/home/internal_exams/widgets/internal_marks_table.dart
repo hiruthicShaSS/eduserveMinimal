@@ -9,8 +9,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:table_sticky_headers/table_sticky_headers.dart';
-import 'package:eduserveMinimal/screens/home/widgets/table_cell.dart'
-    as tableCell;
+import 'package:eduserveMinimal/view/misc/widgets/table_cell.dart' as tableCell;
 
 class InternalMarksTable extends StatefulWidget {
   const InternalMarksTable({

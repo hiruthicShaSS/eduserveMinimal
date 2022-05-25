@@ -1,10 +1,12 @@
 // 🐦 Flutter imports:
 import 'dart:typed_data';
 
+import 'package:eduserveMinimal/global/service/birthday_service.dart';
 import 'package:eduserveMinimal/models/user.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:eduserveMinimal/service/auth.dart';
 import 'package:eduserveMinimal/service/timetable.dart';
+import 'package:eduserveMinimal/view/home/widgets/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
@@ -18,17 +20,14 @@ import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 
 // 🌎 Project imports:
-import 'package:eduserveMinimal/screens/home/pages/fees.dart';
-import 'package:eduserveMinimal/screens/home/pages/hallticket.dart';
-import 'package:eduserveMinimal/screens/home/pages/internals.dart';
-import 'package:eduserveMinimal/screens/home/pages/issues.dart';
-import 'package:eduserveMinimal/screens/home/pages/settings.dart';
-import 'package:eduserveMinimal/screens/home/pages/timetable.dart';
-import 'package:eduserveMinimal/screens/home/widgets/attendance_summary_basic.dart';
-import 'package:eduserveMinimal/screens/home/widgets/attendance_widget.dart';
-import 'package:eduserveMinimal/screens/home/widgets/birthday.dart';
-import 'package:eduserveMinimal/screens/home/widgets/leave_information.dart';
-import 'package:eduserveMinimal/screens/home/pages/user.dart';
+import 'package:eduserveMinimal/view/fees/fees.dart';
+import 'package:eduserveMinimal/view/home/hallticket.dart';
+import 'package:eduserveMinimal/view/home/internal_exams/internals_screen.dart';
+import 'package:eduserveMinimal/view/misc/issues.dart';
+import 'package:eduserveMinimal/view/settings/settings.dart';
+import 'package:eduserveMinimal/view/home/timetable.dart';
+import 'package:eduserveMinimal/view/misc/birthday.dart';
+import 'package:eduserveMinimal/view/settings/user.dart';
 import 'package:eduserveMinimal/service/download_hallticket.dart';
 import 'package:eduserveMinimal/service/fees_details.dart';
 import 'package:eduserveMinimal/service/scrap.dart';
@@ -50,9 +49,9 @@ class _HomePageState extends State<HomePage> {
 
   int _selectedIndex = 0;
   List<Widget> _screens = [
-    Home(),
-    TimeTableView(),
-    InternalMarks(),
+    HomeScreen(),
+    TimeTableScreen(),
+    InternalMarksScreen(),
     UserScreen(),
   ];
   final PageController _pageController = PageController();
@@ -68,6 +67,9 @@ class _HomePageState extends State<HomePage> {
         ),
         body: PageView(
           controller: _pageController,
+          onPageChanged: (index) {
+            setState(() => _selectedIndex = index);
+          },
           children: _screens,
         ),
         bottomNavigationBar: BottomNavigationBar(
@@ -77,7 +79,6 @@ class _HomePageState extends State<HomePage> {
           unselectedItemColor:
               Theme.of(context).colorScheme.secondary.withOpacity(0.6),
           onTap: (index) {
-            _selectedIndex = index;
             _pageController.animateToPage(
               index,
               duration: const Duration(milliseconds: 500),
@@ -96,46 +97,6 @@ class _HomePageState extends State<HomePage> {
         ),
       );
     });
-  }
-
-  Future<void> cacheBirthDate() async {
-    Response res = await get(
-      Uri.parse("https://eduserve.karunya.edu/Student/PersonalInfo.aspx"),
-      headers: AuthService.headers,
-    );
-
-    dom.Document html = dom.Document.html(res.body);
-
-    String? dateString = html
-        .querySelector("#ctl00_mainContent_TXTDOB_dateInput")
-        ?.attributes["value"];
-
-    if (dateString != null) {
-      final FlutterSecureStorage storage = FlutterSecureStorage();
-      storage.write(key: "birthDay", value: dateString);
-    }
-  }
-
-  Future<void> checkBirthday(BuildContext context) async {
-    final FlutterSecureStorage storage = FlutterSecureStorage();
-    if (await storage.containsKey(key: "birthDay")) {
-      String? birthday = await storage.read(key: "birthDay");
-
-      if (birthday != null) {
-        DateFormat dateFormat = DateFormat("dd MMM yyyy");
-        DateTime birthDay = dateFormat.parse(birthday);
-        DateTime today = DateTime.now();
-
-        if (birthDay.month == today.month && birthDay.day == today.day) {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (_) => BirthDayWidget()));
-        }
-      } else {
-        cacheBirthDate();
-      }
-    } else {
-      cacheBirthDate();
-    }
   }
 
   List<StatelessWidget> buildDrawer(BuildContext context) {
@@ -198,7 +159,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> processExcessInfo(BuildContext context) async {
-    await checkBirthday(context);
+    bool todayIsMyBirthDay = await checkBirthday();
+    if (todayIsMyBirthDay) {
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (_) => BirthDayWidget()));
+    }
+
     try {
       getTimetable();
     } catch (_) {}
@@ -214,9 +180,6 @@ class _HomePageState extends State<HomePage> {
           ? false
           : dataCache["hallticket"].first.where((e) => e == "Eligible").length <
               3;
-
-      print("Fees due: $feesDue");
-      print("Uneligible for exam: $hallTicketUnEligile");
 
       if (feesDue || hallTicketUnEligile) {
         ScaffoldMessenger.of(context).showMaterialBanner(MaterialBanner(
@@ -271,51 +234,5 @@ class _HomePageState extends State<HomePage> {
     newVersion.showAlertIfNecessary(context: context);
 
     Provider.of<AppState>(context, listen: false).checkedForUpdate = true;
-  }
-}
-
-class Home extends StatelessWidget {
-  const Home({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return RefreshIndicator(
-      displacement: 100,
-      onRefresh: () => AuthService().login().then((value) {
-        Scraper.cache.clear();
-        Provider.of<AppState>(context, listen: false).refresh();
-      }),
-      child: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            expandedHeight: MediaQuery.of(context).size.height * 0.25,
-            title: Text("eduserveMinimal"),
-            pinned: true,
-            snap: true,
-            floating: true,
-            flexibleSpace: FlexibleSpaceBar(
-              background: Padding(
-                padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * (0.25 * 0.46)),
-                child: AttendanceContainer(),
-              ),
-              stretchModes: [
-                StretchMode.blurBackground,
-              ],
-            ),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          ),
-          SliverList(
-            delegate: SliverChildListDelegate([
-              LeaveInformation(),
-              AttendanceSummaryView(),
-            ]),
-          ),
-        ],
-      ),
-    );
   }
 }

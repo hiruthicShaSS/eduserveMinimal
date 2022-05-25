@@ -8,15 +8,14 @@ import 'package:flutter/material.dart';
 import 'package:eduserveMinimal/service/timetable.dart';
 import 'package:lottie/lottie.dart';
 import 'package:table_sticky_headers/table_sticky_headers.dart';
-import 'package:eduserveMinimal/screens/home/widgets/table_cell.dart'
-    as tableCell;
+import 'package:eduserveMinimal/view/misc/widgets/table_cell.dart' as tableCell;
 
-class TimeTableView extends StatefulWidget {
+class TimeTableScreen extends StatefulWidget {
   @override
-  State<TimeTableView> createState() => _TimeTableViewState();
+  State<TimeTableScreen> createState() => _TimeTableScreenState();
 }
 
-class _TimeTableViewState extends State<TimeTableView> {
+class _TimeTableScreenState extends State<TimeTableScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

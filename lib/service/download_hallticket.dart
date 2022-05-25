@@ -3,27 +3,24 @@ import 'package:beautifulsoup/beautifulsoup.dart';
 import 'package:eduserveMinimal/service/auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 // 🌎 Project imports:
-import 'package:eduserveMinimal/global/gloabls.dart';
 import 'package:eduserveMinimal/service/scrap.dart';
 
 Future<List?> downloadHallTicket(
     {String? term, bool download = false, int retry = 0}) async {
   final String hallticketURL = "/Student/CBCS/HallTicketDownload.aspx";
-  Map<String, String> headers = httpHeaders;
-  Map formData = httpFormData;
+  Map<String, String> headers = AuthService.headers;
+  Map formData = AuthService.formData;
 
   if (term == null) {
     Response res = await get(
-        Uri.parse("https://eduserve.karunya.edu$hallticketURL"),
-        headers: headers);
-    if (res.body.indexOf("Login") != -1) {
-      Fluttertoast.showToast(msg: "Session expired. Refresh data!");
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setBool("isLoggedIn", false);
-      return null;
+      Uri.parse("https://eduserve.karunya.edu$hallticketURL"),
+      headers: headers,
+    );
+
+    if (res.body.contains("User Login")) {
+      await AuthService().login();
     }
 
     var soup = Beautifulsoup(res.body);
@@ -52,14 +49,6 @@ Future<List?> downloadHallTicket(
     if (download) {
       headers["referer"] =
           "https://eduserve.karunya.edu/Student/CBCS/HallTicketDownload.aspx";
-      headers["Sec-Fetch-Dest"] = "document";
-      headers["sec-ch-ua"] = ';Not A Brand";v="99", "Chromium";v="94"';
-      headers["sec-ch-ua-mobile"] = "?0";
-      headers["sec-ch-ua-platform"] = "Windows";
-      headers["sec-fetch-dest"] = "document";
-      headers["sec-fetch-mode"] = "navigate";
-      headers["sec-fetch-site"] = "same-origin";
-      headers["sec-fetch-user"] = "?1";
 
       formData["ctl00\$mainContent\$BTNDOWNLOAD"] = "Download";
       formData["__EVENTTARGET"] = "";

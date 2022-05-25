@@ -5,6 +5,12 @@ import 'dart:developer';
 import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:eduserveMinimal/providers/cache.dart';
 import 'package:eduserveMinimal/service/auth.dart';
+import 'package:eduserveMinimal/view/feedback_form/feedback_form.dart';
+import 'package:eduserveMinimal/view/fees/fees.dart';
+import 'package:eduserveMinimal/view/home/apply_leave.dart';
+import 'package:eduserveMinimal/view/home/home.dart';
+import 'package:eduserveMinimal/view/home/timetable.dart';
+import 'package:eduserveMinimal/view/settings/credentials.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -16,8 +22,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // 🌎 Project imports:
 import 'package:eduserveMinimal/providers/theme.dart';
-import 'package:eduserveMinimal/screens/home/pages/pages.dart';
-import 'package:eduserveMinimal/screens/home/pages/user.dart';
+import 'package:eduserveMinimal/view/settings/user.dart';
 import 'package:eduserveMinimal/service/fill_feedback_form.dart';
 import 'package:eduserveMinimal/service/get_feedback_form.dart';
 import 'package:eduserveMinimal/service/scrap.dart';
@@ -41,7 +46,7 @@ class eduserveMinimal extends StatelessWidget {
         routes: {
           "/home": (BuildContext context) => HomePage(),
           "/feedbackForm": (BuildContext context) => FeedbackForm(),
-          "/timetable": (BuildContext context) => TimeTableView(),
+          "/timetable": (BuildContext context) => TimeTableScreen(),
           "/apply_leave": (BuildContext context) => ApplyLeaveView(),
           "/fees": (BuildContext context) => FeesView(),
           "/credentials": (BuildContext context) => Credentials(),

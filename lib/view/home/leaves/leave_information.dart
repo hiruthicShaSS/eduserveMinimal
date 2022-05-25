@@ -1,0 +1,91 @@
+// 🐦 Flutter imports:
+import 'package:eduserveMinimal/providers/app_state.dart';
+import 'package:eduserveMinimal/view/home/leaves/widgets/leave_list.dart';
+import 'package:eduserveMinimal/view/home/leaves/widgets/on_duty_list.dart';
+import 'package:flutter/material.dart';
+
+// 🌎 Project imports:
+import 'package:eduserveMinimal/models/leave.dart';
+import 'package:eduserveMinimal/providers/theme.dart';
+import 'package:eduserveMinimal/view/misc/widgets/dot_tab_bar_indeicator.dart';
+import 'package:provider/provider.dart';
+
+class LeaveInformationWidget extends StatefulWidget {
+  const LeaveInformationWidget({Key? key}) : super(key: key);
+
+  @override
+  _LeaveInformationWidgetState createState() => _LeaveInformationWidgetState();
+}
+
+class _LeaveInformationWidgetState extends State<LeaveInformationWidget>
+    with SingleTickerProviderStateMixin {
+  TabController? _tabController;
+
+  @override
+  void initState() {
+    _tabController = TabController(length: 2, vsync: this);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Leave fakeLeaveData = Leave.generateFakeLeave();
+
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.60,
+      child: Column(
+        children: [
+          TabBar(
+            controller: _tabController,
+            tabs: [
+              Tab(text: "Leave"),
+              Tab(text: "On-Duty Details"),
+            ],
+            indicator: CircleTabIndicator(
+                color: Theme.of(context).primaryColor, radius: 5),
+            labelColor:
+                ThemeProvider.currentThemeData!.textTheme.bodyText1!.color,
+            overlayColor: MaterialStateProperty.resolveWith(
+                (states) => Colors.transparent),
+          ),
+          Expanded(
+            child: FutureBuilder(
+              future: Provider.of<AppState>(context).leaveInfo,
+              builder: (context, AsyncSnapshot<Leave> snapshot) {
+                if (snapshot.hasError) {
+                  print(snapshot.error);
+                }
+
+                if (snapshot.connectionState == ConnectionState.done) {
+                  if (snapshot.data == null)
+                    return Text("No records to display.");
+
+                  Provider.of<AppState>(context).setLeave = snapshot.data!;
+
+                  List<OtherLeave>? leave = snapshot.data?.allNormalLeave;
+                  List<OnDutyLeave>? onDuty = snapshot.data?.allOnDuty;
+
+                  return TabBarView(
+                    controller: _tabController,
+                    children: [
+                      LeaveList(leave: leave),
+                      OnDutyList(leave: onDuty),
+                    ],
+                  );
+                }
+                return TabBarView(
+                  controller: _tabController,
+                  children: [
+                    LeaveList(
+                        leave: fakeLeaveData.allNormalLeave, isLoading: true),
+                    OnDutyList(leave: fakeLeaveData.allOnDuty, isLoading: true),
+                  ],
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

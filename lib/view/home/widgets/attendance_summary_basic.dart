@@ -13,11 +13,11 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 // 🌎 Project imports:
-import 'package:eduserveMinimal/screens/home/widgets/attendance_bar_chart.dart';
-import 'package:eduserveMinimal/screens/home/widgets/attendance_pie_chart.dart';
+import 'package:eduserveMinimal/view/home/widgets/attendance_bar_chart.dart';
+import 'package:eduserveMinimal/view/home/widgets/attendance_pie_chart.dart';
 
-class AttendanceSummaryView extends StatelessWidget {
-  AttendanceSummaryView({Key? key}) : super(key: key);
+class AttendanceSummaryWidget extends StatelessWidget {
+  AttendanceSummaryWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

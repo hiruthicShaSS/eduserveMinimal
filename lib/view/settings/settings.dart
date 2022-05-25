@@ -8,11 +8,11 @@ import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // 🌎 Project imports:
-import 'package:eduserveMinimal/screens/home/pages/cache_data.dart';
-import 'package:eduserveMinimal/screens/home/pages/credentials.dart';
-import 'package:eduserveMinimal/screens/settings/pages/attribution.dart';
-import 'package:eduserveMinimal/screens/settings/pages/developer.dart';
-import 'package:eduserveMinimal/screens/settings/pages/themes.dart';
+import 'package:eduserveMinimal/view/settings/cache_data.dart';
+import 'package:eduserveMinimal/view/settings/credentials.dart';
+import 'package:eduserveMinimal/view/settings/attribution.dart';
+import 'package:eduserveMinimal/view/settings/developer.dart';
+import 'package:eduserveMinimal/view/settings/themes.dart';
 
 class Settings extends StatelessWidget {
   static final thisAppPublishDate = "2020-12-20 19:38:07.569667";

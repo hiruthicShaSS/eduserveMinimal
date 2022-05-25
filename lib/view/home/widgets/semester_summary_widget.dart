@@ -2,8 +2,8 @@ import 'dart:developer' as dev;
 import 'dart:math';
 
 import 'package:eduserveMinimal/models/semester_summary_result.dart';
-import 'package:eduserveMinimal/screens/settings/widgets/semester_summary_graph.dart';
 import 'package:eduserveMinimal/service/semester_summary.dart';
+import 'package:eduserveMinimal/view/settings/widgets/semester_summary_graph.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 

@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 // 🌎 Project imports:
 import 'package:eduserveMinimal/models/leave.dart';
 import 'package:eduserveMinimal/providers/theme.dart';
-import 'package:eduserveMinimal/screens/home/widgets/dot_tab_bar_indeicator.dart';
-import 'package:eduserveMinimal/screens/home/widgets/leave_list.dart';
-import 'package:eduserveMinimal/screens/home/widgets/on_duty_list.dart';
+import 'package:eduserveMinimal/view/misc/widgets/dot_tab_bar_indeicator.dart';
+import 'package:eduserveMinimal/view/home/leaves/widgets/leave_list.dart';
+import 'package:eduserveMinimal/view/home/leaves/widgets/on_duty_list.dart';
 import 'package:provider/provider.dart';
 
 class LeaveInformation extends StatefulWidget {

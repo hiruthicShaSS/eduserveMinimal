@@ -8,7 +8,7 @@ import 'package:shimmer/shimmer.dart';
 // 🌎 Project imports:
 import 'package:eduserveMinimal/global/enum.dart';
 import 'package:eduserveMinimal/models/leave.dart';
-import 'package:eduserveMinimal/screens/home/pages/apply_leave.dart';
+import 'package:eduserveMinimal/view/home/apply_leave.dart';
 
 class LeaveList extends StatelessWidget {
   const LeaveList({Key? key, required this.leave, this.isLoading = false})
