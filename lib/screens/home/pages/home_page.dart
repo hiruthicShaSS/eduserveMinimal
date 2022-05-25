@@ -206,7 +206,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> processExcessInfo(BuildContext context) async {
     await checkBirthday(context);
-    getTimetable();
+    getTimetable().catchError((_) {});
     _checkUpdates(context);
 
     Map dataCache = await fetchAllData();

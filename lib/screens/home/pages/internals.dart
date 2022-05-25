@@ -16,7 +16,6 @@ class _InternalMarksState extends State<InternalMarks> {
   InternalMarksService internalMarksService = InternalMarksService();
   List<String> academicTerms = [];
   int? selectedAcademicTerm;
-  bool rotate = false;
 
   @override
   Widget build(BuildContext context) {
@@ -35,47 +34,38 @@ class _InternalMarksState extends State<InternalMarks> {
                 academicTerms = snapshot.data;
                 academicTerms.remove("Select the Academic Term");
 
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    DropdownButton(
-                      hint: Text("Select the Academic Term"),
-                      icon: Icon(Icons.arrow_downward),
-                      iconSize: 24,
-                      elevation: 16,
-                      underline: Container(height: 2),
-                      value: dropdownSelection,
-                      items: academicTerms
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(
-                            value,
-                            style: value == dropdownSelection
-                                ? TextStyle(
-                                    color: Colors.green,
-                                    fontWeight: FontWeight.bold,
-                                  )
-                                : null,
-                          ),
-                        );
-                      }).toList(),
-                      onChanged: (String? value) async {
-                        setState(() {
-                          dropdownSelection = value.toString();
-                        });
+                return Center(
+                  child: DropdownButton(
+                    hint: Text("Select the Academic Term"),
+                    icon: Icon(Icons.arrow_downward),
+                    iconSize: 24,
+                    elevation: 16,
+                    underline: Container(height: 2),
+                    value: dropdownSelection,
+                    items: academicTerms
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(
+                          value,
+                          style: value == dropdownSelection
+                              ? TextStyle(
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.bold,
+                                )
+                              : null,
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (String? value) async {
+                      setState(() {
+                        dropdownSelection = value.toString();
+                      });
 
-                        selectedAcademicTerm = academicTerms.length -
-                            academicTerms.indexOf(dropdownSelection!);
-                      },
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        setState(() => rotate = !rotate);
-                      },
-                      icon: Icon(Icons.screen_rotation_rounded),
-                    ),
-                  ],
+                      selectedAcademicTerm = academicTerms.length -
+                          academicTerms.indexOf(dropdownSelection!);
+                    },
+                  ),
                 );
               } else {
                 return LinearProgressIndicator();
@@ -84,10 +74,7 @@ class _InternalMarksState extends State<InternalMarks> {
           ),
           if (selectedAcademicTerm != null)
             Expanded(
-              child: RotatedBox(
-                quarterTurns: rotate ? -1 : 0,
-                child: InternalMarksTable(academicTerm: selectedAcademicTerm!),
-              ),
+              child: InternalMarksTable(academicTerm: selectedAcademicTerm!),
             ),
         ],
       ),

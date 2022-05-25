@@ -1,12 +1,18 @@
 import 'dart:developer';
+import 'dart:ui';
 
 import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/models/internal_mark.dart';
 import 'package:eduserveMinimal/providers/cache.dart';
 import 'package:eduserveMinimal/service/internal_marks.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:table_sticky_headers/table_sticky_headers.dart';
+import 'package:eduserveMinimal/screens/home/widgets/table_cell.dart'
+    as tableCell;
 
 class InternalMarksTable extends StatefulWidget {
   const InternalMarksTable({
@@ -24,7 +30,6 @@ class _InternalMarksTableState extends State<InternalMarksTable> {
   InternalMarksService internalMarksService = InternalMarksService();
 
   List tableheader = [
-    "Subject Code",
     "Subject Name",
     "IA Parameter",
     "Total Marks",
@@ -59,110 +64,109 @@ class _InternalMarksTableState extends State<InternalMarksTable> {
 
           if (snapshot.connectionState == ConnectionState.done) {
             final List<InternalMark> internalMarks = snapshot.data!;
+            List<List> data = [];
 
-            return RotatedBox(
-              quarterTurns: 1,
-              child: Container(
-                margin: EdgeInsets.only(top: 2, left: 5, right: 5),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: DataTable(
-                          headingRowColor:
-                              MaterialStateProperty.all(Colors.white70),
-                          dividerThickness: 2,
-                          columns: List.generate(
-                            tableheader.length,
-                            (index) => DataColumn(
-                              label: Text(
-                                tableheader[index].toString(),
-                                style: TextStyle(color: Colors.black),
-                              ),
+            for (var exam in internalMarks) {
+              data.add([
+                exam.subjectName,
+                exam.iaParameter,
+                exam.totalMarks,
+                exam.marksScored,
+                exam.testMarks,
+                exam.onlineExamMarks,
+                exam.attendance,
+                DateFormat("yyyy-MM-dd").format(exam.testDate),
+                exam.markEnteredBy,
+                DateFormat("yyyy-MM-dd hh:mm:ss").format(exam.markEnteredOn),
+              ]);
+            }
+
+            return Container(
+              margin: EdgeInsets.only(top: 2, left: 5, right: 5),
+              child: StickyHeadersTable(
+                columnsLength: data.first.length,
+                rowsLength: internalMarks.length,
+                columnsTitleBuilder: (i) =>
+                    tableCell.TableCell.stickyRow(tableheader[i]),
+                rowsTitleBuilder: (i) => tableCell.TableCell.content(
+                  text: internalMarks[i].subjectCode,
+                  textStyle: TextStyle(fontWeight: FontWeight.bold),
+                  colorBg: internalMarks[i].marksScored < 20
+                      ? Colors.red.withOpacity(0.2)
+                      : internalMarks[i].marksScored >=
+                              internalMarks[i].totalMarks
+                          ? Colors.green.withOpacity(0.2)
+                          : Colors.transparent,
+                ),
+                contentCellBuilder: (i, j) => tableCell.TableCell.content(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 10),
+                    child: Text(
+                      data[j][i].toString(),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: internalMarks[j].marksScored == data[j][i]
+                            ? FontWeight.bold
+                            : null,
+                      ),
+                    ),
+                  ),
+                  colorBg: internalMarks[j].marksScored < 20
+                      ? Colors.red.withOpacity(0.2)
+                      : internalMarks[j].marksScored >=
+                              internalMarks[j].totalMarks
+                          ? Colors.green.withOpacity(0.2)
+                          : Colors.transparent,
+                ),
+                onContentCellPressed: (i, j) {
+                  showDialog(
+                    context: context,
+                    builder: (_) => AlertDialog(
+                      title: Text(internalMarks[j].subjectName),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            internalMarks[j].marksScored.toString(),
+                            style: TextStyle(
+                              fontSize: 80,
+                              color: internalMarks[j].marksScored < 20
+                                  ? Colors.red
+                                  : internalMarks[j].marksScored >=
+                                          internalMarks[j].totalMarks
+                                      ? Colors.green
+                                      : null,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                          rows: List.generate(
-                            internalMarks.length,
-                            (index) {
-                              bool fail = internalMarks[index].marksScored < 20;
-                              bool fullMark =
-                                  internalMarks[index].marksScored >=
-                                      internalMarks[index].totalMarks;
-
-                              return DataRow(
-                                color: MaterialStateProperty.all(
-                                  fail
-                                      ? failedRowColor
-                                      : fullMark
-                                          ? fullMarksRowColor
-                                          : null,
-                                ),
-                                cells: [
-                                  DataCell(
-                                    Text(internalMarks[index].subjectCode),
-                                  ),
-                                  DataCell(
-                                    Text(internalMarks[index].subjectName),
-                                  ),
-                                  DataCell(
-                                    Text(internalMarks[index].iaParameter),
-                                  ),
-                                  DataCell(
-                                    Text(internalMarks[index]
-                                        .totalMarks
-                                        .toString()),
-                                  ),
-                                  DataCell(
-                                    Container(
-                                      color:
-                                          internalMarks[index].marksScored < 20
-                                              ? Colors.red.withOpacity(0.8)
-                                              : null,
-                                      child: Text(internalMarks[index]
-                                          .marksScored
-                                          .toString()),
-                                    ),
-                                  ),
-                                  DataCell(
-                                    Container(
-                                      color: internalMarks[index].testMarks < 20
-                                          ? Colors.red.withOpacity(0.8)
-                                          : null,
-                                      child: Text(internalMarks[index]
-                                          .testMarks
-                                          .toString()),
-                                    ),
-                                  ),
-                                  DataCell(
-                                    Text(internalMarks[index]
-                                        .onlineExamMarks
-                                        .toString()),
-                                  ),
-                                  DataCell(
-                                    Text(internalMarks[index].attendance),
-                                  ),
-                                  DataCell(
-                                    Text(DateFormat("dd MMM yyyy")
-                                        .format(internalMarks[index].testDate)),
-                                  ),
-                                  DataCell(
-                                    Text(internalMarks[index].markEnteredBy),
-                                  ),
-                                  DataCell(
-                                    Text(DateFormat("dd/MM/yyyy hh:mm:ss aa")
-                                        .format(internalMarks[index]
-                                            .markEnteredOn)),
-                                  ),
-                                ],
-                              );
-                            },
+                          const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 30),
+                            child: Divider(thickness: 5, color: Colors.white),
                           ),
-                        ),
+                          Text(
+                            internalMarks[j].totalMarks.toString(),
+                            style: TextStyle(
+                              fontSize: 80,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  );
+
+                  if (internalMarks[j].marksScored.toInt() == 69) {
+                    Fluttertoast.showToast(msg: "Nice... 😏");
+                  }
+                },
+                cellDimensions: CellDimensions.fixed(
+                  stickyLegendWidth: 80,
+                  stickyLegendHeight: 80,
+                  contentCellWidth: 150,
+                  contentCellHeight: 100,
                 ),
+                legendCell: tableCell.TableCell.legend("Subject Code"),
               ),
             );
           }

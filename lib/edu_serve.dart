@@ -108,52 +108,58 @@ class _HomeControllerState extends State<HomeController> {
           return FutureBuilder(
               future: credentialsExist(),
               builder: (context, AsyncSnapshot<bool> snapshot) {
-                if (snapshot.data ?? false) {
-                  return FutureBuilder(
-                      future: isLoggedIn(prefs),
-                      builder: (context, AsyncSnapshot<Map> snapshot) {
-                        if (snapshot.hasError) {
-                          log("Error on edu_serve.dart", error: snapshot.error);
-                        }
-
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          if (snapshot.data!["isLoggedIn"]) {
-                            if (snapshot.data!["feedBackFormFound"]) {
-                              if (prefs.getInt("autoFillFeedbackValue") !=
-                                  null) {
-                                return AutoFillFeedback();
-                              }
-                              return FeedbackForm();
-                            }
-                            if (snapshot.data!["loginError"])
-                              return Credentials();
-
-                            return HomePage();
+                if (snapshot.connectionState == ConnectionState.done) {
+                  if (snapshot.data ?? false) {
+                    return FutureBuilder(
+                        future: isLoggedIn(prefs),
+                        builder: (context, AsyncSnapshot<Map> snapshot) {
+                          if (snapshot.hasError) {
+                            log("Error on edu_serve.dart",
+                                error: snapshot.error);
                           }
 
-                          return Credentials();
-                        }
+                          if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            if (snapshot.data!["isLoggedIn"]) {
+                              if (snapshot.data!["feedBackFormFound"]) {
+                                if (prefs.getInt("autoFillFeedbackValue") !=
+                                    null) {
+                                  return const AutoFillFeedback();
+                                }
+                                return FeedbackForm();
+                              }
+                              if (snapshot.data!["loginError"])
+                                return const Credentials();
 
-                        return Material(
-                          child: Center(
-                              child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Lottie.asset("assets/lottie/log_in.json"),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  "Logging In...",
-                                  style: TextStyle(fontSize: 25),
+                              return const HomePage();
+                            }
+
+                            return const Credentials();
+                          }
+
+                          return Material(
+                            child: Center(
+                                child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Lottie.asset("assets/lottie/log_in.json"),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    "Logging In...",
+                                    style: TextStyle(fontSize: 25),
+                                  ),
                                 ),
-                              ),
-                            ],
-                          )),
-                        );
-                      });
+                              ],
+                            )),
+                          );
+                        });
+                  }
+
+                  return Credentials();
                 }
 
-                return Credentials();
+                return const Center(child: CircularProgressIndicator());
               });
         }
         return Container();
