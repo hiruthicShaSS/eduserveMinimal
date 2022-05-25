@@ -171,7 +171,7 @@ class TableCell extends StatelessWidget {
     this.text, {
     this.child,
     this.textStyle,
-    this.cellDimensions = const CellDimensions.uniform(width: 200, height: 50),
+    this.cellDimensions = const CellDimensions.uniform(width: 200, height: 100),
     this.colorBg = Colors.blueGrey,
     this.onTap,
   })  : cellWidth = cellDimensions.stickyLegendWidth,
@@ -185,7 +185,7 @@ class TableCell extends StatelessWidget {
     this.text, {
     this.child,
     this.textStyle,
-    this.cellDimensions = const CellDimensions.uniform(width: 200, height: 50),
+    this.cellDimensions = const CellDimensions.uniform(width: 200, height: 100),
     this.colorBg = Colors.grey,
     this.onTap,
   })  : cellWidth = cellDimensions.contentCellWidth,
@@ -249,7 +249,6 @@ class TableCell extends StatelessWidget {
                     : Text(
                         text!,
                         style: textStyle,
-                        maxLines: 2,
                         textAlign: _textAlign,
                       ),
               ),
