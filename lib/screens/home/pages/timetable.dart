@@ -73,123 +73,21 @@ class _TimeTableViewState extends State<TimeTableView> {
                               timeTable.length,
                               (index) => DataRow(
                                 cells: [
-                                  DataCell(
-                                    Container(
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                3,
-                                        child: Text(timeTable[index].day)),
+                                  _buildDataCell(
+                                    timeTable[index].day,
+                                    width: 45,
                                   ),
-                                  DataCell(
-                                    Container(
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                3,
-                                        child: Text(
-                                          timeTable[index].hour1,
-                                          style: TextStyle(fontSize: 17),
-                                        )),
-                                  ),
-                                  DataCell(
-                                    Container(
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                3,
-                                        child: Text(
-                                          timeTable[index].hour2,
-                                          style: TextStyle(fontSize: 17),
-                                        )),
-                                  ),
-                                  DataCell(
-                                    Container(
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                3,
-                                        child: Text(
-                                          timeTable[index].hour3,
-                                          style: TextStyle(fontSize: 17),
-                                        )),
-                                  ),
-                                  DataCell(
-                                    Container(
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                3,
-                                        child: Text(
-                                          timeTable[index].hour4,
-                                          style: TextStyle(fontSize: 17),
-                                        )),
-                                  ),
-                                  DataCell(
-                                    Container(
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                3,
-                                        child: Text(
-                                          timeTable[index].hour5,
-                                          style: TextStyle(fontSize: 17),
-                                        )),
-                                  ),
-                                  DataCell(
-                                    Container(
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                3,
-                                        child: Text(
-                                          timeTable[index].hour6,
-                                          style: TextStyle(fontSize: 17),
-                                        )),
-                                  ),
-                                  DataCell(
-                                    Container(
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                3,
-                                        child: Text(
-                                          timeTable[index].hour7,
-                                          style: TextStyle(fontSize: 17),
-                                        )),
-                                  ),
-                                  DataCell(
-                                    Container(
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                3,
-                                        child: Text(
-                                          timeTable[index].hour8,
-                                          style: TextStyle(fontSize: 17),
-                                        )),
-                                  ),
-                                  DataCell(
-                                    Container(
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                3,
-                                        child: Text(
-                                          timeTable[index].hour9,
-                                          style: TextStyle(fontSize: 17),
-                                        )),
-                                  ),
-                                  DataCell(
-                                    Container(
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                3,
-                                        child: Text(
-                                          timeTable[index].hour10,
-                                          style: TextStyle(fontSize: 17),
-                                        )),
-                                  ),
-                                  DataCell(
-                                    Container(
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                3,
-                                        child: Text(
-                                          timeTable[index].hour11,
-                                          style: TextStyle(fontSize: 17),
-                                        )),
-                                  ),
+                                  _buildDataCell(timeTable[index].hour1),
+                                  _buildDataCell(timeTable[index].hour2),
+                                  _buildDataCell(timeTable[index].hour3),
+                                  _buildDataCell(timeTable[index].hour4),
+                                  _buildDataCell(timeTable[index].hour5),
+                                  _buildDataCell(timeTable[index].hour6),
+                                  _buildDataCell(timeTable[index].hour7),
+                                  _buildDataCell(timeTable[index].hour8),
+                                  _buildDataCell(timeTable[index].hour9),
+                                  _buildDataCell(timeTable[index].hour10),
+                                  _buildDataCell(timeTable[index].hour11),
                                 ],
                                 selected: (currentDay == timeTable[index].day)
                                     ? true
@@ -209,6 +107,17 @@ class _TimeTableViewState extends State<TimeTableView> {
             },
           ),
         ),
+      ),
+    );
+  }
+
+  DataCell _buildDataCell(String text, {double? width}) {
+    return DataCell(
+      Container(
+        width: width ?? MediaQuery.of(context).size.width / 3,
+        child: text.isEmpty
+            ? const Placeholder()
+            : Text(text, style: TextStyle(fontSize: 17)),
       ),
     );
   }
