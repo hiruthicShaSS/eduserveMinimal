@@ -59,47 +59,43 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: Drawer(
-        child: Column(
-          children: buildDrawer(context),
+    return Consumer(builder: (context, AppState appState, _) {
+      return Scaffold(
+        drawer: Drawer(
+          child: Column(
+            children: buildDrawer(context),
+          ),
         ),
-      ),
-      body: RefreshIndicator(
-        displacement: 100,
-        child: PageView(
+        body: PageView(
           controller: _pageController,
           children: _screens,
         ),
-        onRefresh: () => AuthService().login().then((value) {
-          Scraper.cache.clear();
-          setState(() {});
-        }),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        showUnselectedLabels: false,
-        currentIndex: _selectedIndex,
-        selectedItemColor: Theme.of(context).colorScheme.primary,
-        unselectedItemColor:
-            Theme.of(context).colorScheme.secondary.withOpacity(0.6),
-        onTap: (index) {
-          _selectedIndex = index;
-          _pageController.animateToPage(
-            index,
-            duration: const Duration(milliseconds: 500),
-            curve: Curves.easeInOutQuad,
-          );
-        },
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_month_sharp), label: "Class Timetable"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.quiz), label: "Internal Marks"),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Student"),
-        ],
-      ),
-    );
+        bottomNavigationBar: BottomNavigationBar(
+          showUnselectedLabels: false,
+          currentIndex: _selectedIndex,
+          selectedItemColor: Theme.of(context).colorScheme.primary,
+          unselectedItemColor:
+              Theme.of(context).colorScheme.secondary.withOpacity(0.6),
+          onTap: (index) {
+            _selectedIndex = index;
+            _pageController.animateToPage(
+              index,
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.easeInOutQuad,
+            );
+          },
+          items: [
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.calendar_month_sharp),
+                label: "Class Timetable"),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.quiz), label: "Internal Marks"),
+            BottomNavigationBarItem(icon: Icon(Icons.person), label: "Student"),
+          ],
+        ),
+      );
+    });
   }
 
   Future<void> cacheBirthDate() async {
@@ -285,34 +281,41 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: [
-        SliverAppBar(
-          expandedHeight: MediaQuery.of(context).size.height * 0.25,
-          title: Text("eduserveMinimal"),
-          pinned: true,
-          snap: true,
-          floating: true,
-          flexibleSpace: FlexibleSpaceBar(
-            background: Padding(
-              padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.height * (0.25 * 0.46)),
-              child: AttendanceContainer(),
+    return RefreshIndicator(
+      displacement: 100,
+      onRefresh: () => AuthService().login().then((value) {
+        Scraper.cache.clear();
+        Provider.of<AppState>(context, listen: false).refresh();
+      }),
+      child: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            expandedHeight: MediaQuery.of(context).size.height * 0.25,
+            title: Text("eduserveMinimal"),
+            pinned: true,
+            snap: true,
+            floating: true,
+            flexibleSpace: FlexibleSpaceBar(
+              background: Padding(
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * (0.25 * 0.46)),
+                child: AttendanceContainer(),
+              ),
+              stretchModes: [
+                StretchMode.blurBackground,
+              ],
             ),
-            stretchModes: [
-              StretchMode.blurBackground,
-            ],
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           ),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        ),
-        SliverList(
-          delegate: SliverChildListDelegate([
-            LeaveInformation(),
-            AttendanceSummaryView(),
-          ]),
-        ),
-      ],
+          SliverList(
+            delegate: SliverChildListDelegate([
+              LeaveInformation(),
+              AttendanceSummaryView(),
+            ]),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -22,7 +22,7 @@ class AttendanceSummaryView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: Provider.of<AppState>(context).getAttendance,
+      future: Provider.of<AppState>(context).attendance,
       builder: (context, AsyncSnapshot<SemesterAttendance> snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasError) {

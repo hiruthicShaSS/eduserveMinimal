@@ -8,7 +8,6 @@ import 'package:eduserveMinimal/providers/theme.dart';
 import 'package:eduserveMinimal/screens/home/widgets/dot_tab_bar_indeicator.dart';
 import 'package:eduserveMinimal/screens/home/widgets/leave_list.dart';
 import 'package:eduserveMinimal/screens/home/widgets/on_duty_list.dart';
-import 'package:eduserveMinimal/service/leave_info.dart';
 import 'package:provider/provider.dart';
 
 class LeaveInformation extends StatefulWidget {
@@ -51,7 +50,7 @@ class _LeaveInformationState extends State<LeaveInformation>
           ),
           Expanded(
             child: FutureBuilder(
-              future: getLeaveInfo(),
+              future: Provider.of<AppState>(context).leaveInfo,
               builder: (context, AsyncSnapshot<Leave> snapshot) {
                 if (snapshot.hasError) {
                   print(snapshot.error);
@@ -61,7 +60,7 @@ class _LeaveInformationState extends State<LeaveInformation>
                   if (snapshot.data == null)
                     return Text("No records to display.");
 
-                  Provider.of<AppState>(context).leave = snapshot.data!;
+                  Provider.of<AppState>(context).setLeave = snapshot.data!;
 
                   List<OtherLeave>? leave = snapshot.data?.allNormalLeave;
                   List<OnDutyLeave>? onDuty = snapshot.data?.allOnDuty;

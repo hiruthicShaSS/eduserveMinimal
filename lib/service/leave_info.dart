@@ -5,10 +5,8 @@ import 'package:html/dom.dart';
 
 // 🌎 Project imports:
 import 'package:eduserveMinimal/models/leave.dart';
-import 'package:eduserveMinimal/service/scrap.dart';
 
 Future<Leave> getLeaveInfo() async {
-  if (Scraper.cache.containsKey("leave")) return Scraper.cache["leave"];
   Map<String, String> headers = AuthService.headers;
 
   Response res = await get(
@@ -20,8 +18,6 @@ Future<Leave> getLeaveInfo() async {
     await AuthService().login();
     headers = AuthService.headers;
   }
-
-  Scraper.pages["home"] = res.body;
 
   Document html = Document.html(res.body);
 
