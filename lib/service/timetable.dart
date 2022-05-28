@@ -32,7 +32,7 @@ Future<List<TimeTable>> getTimetable({bool supressError = false}) async {
       List<TimeTable> timetable =
           timetableList.map((e) => TimeTable.fromMap(e)).toList();
 
-      return timetable;
+      if (timetable.isNotEmpty) return timetable;
     }
   }
 
