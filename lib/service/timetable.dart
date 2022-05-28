@@ -10,7 +10,7 @@ import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:html/dom.dart';
 
-Future<List<TimeTable>> getTimetable([bool supressError = false]) async {
+Future<List<TimeTable>> getTimetable({bool supressError = false}) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   final FlutterSecureStorage storage = FlutterSecureStorage();
   DateTime today = DateTime.now();

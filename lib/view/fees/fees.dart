@@ -1,18 +1,17 @@
 // 🐦 Flutter imports:
 import 'package:eduserveMinimal/global/service/currency_to_unicode.dart';
+import 'package:eduserveMinimal/providers/app_state.dart';
+import 'package:eduserveMinimal/view/fees/widgets/fee_container.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 // 📦 Package imports:
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // 🌎 Project imports:
 import 'package:eduserveMinimal/models/fees.dart';
 import 'package:eduserveMinimal/providers/theme.dart';
-import 'package:eduserveMinimal/service/fees_details.dart';
-import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class FeesView extends StatelessWidget {
   @override
@@ -22,7 +21,7 @@ class FeesView extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: FutureBuilder(
-          future: getFeesDetails(),
+          future: Provider.of<AppState>(context).fees,
           builder: (context, AsyncSnapshot<Fees> snapshot) {
             if (snapshot.hasData) {
               Fees fees = snapshot.data!;
@@ -30,7 +29,7 @@ class FeesView extends StatelessWidget {
               return Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(top: 10, bottom: 20),
+                    padding: const EdgeInsets.only(top: 10, bottom: 10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -68,59 +67,61 @@ class FeesView extends StatelessWidget {
                               borderRadius: BorderRadius.circular(15),
                             ),
                             child: Center(
-                                child: AutoSizeText("Advance: ${fees.advance}",
-                                    minFontSize: 15,
-                                    maxFontSize: 22,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: GoogleFonts.comfortaa(
-                                        fontWeight: FontWeight.bold))),
+                              child: AutoSizeText(
+                                "Advance: ${fees.advance}",
+                                minFontSize: 15,
+                                maxFontSize: 22,
+                                overflow: TextOverflow.ellipsis,
+                                style: GoogleFonts.comfortaa(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
                           ),
                         ),
                       ],
                     ),
+                  ),
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Container(
+                          height: 50,
+                          decoration: BoxDecoration(
+                            color: ThemeProvider.currentThemeData!.primaryColor
+                                .withOpacity(0.3),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Center(
+                            child: AutoSizeText(
+                              "Total spent: ${currencyToUnicode(fees.all.first.currency)} ${fees.all.fold<double>(0, (previousValue, fee) => previousValue + fee.paid)}",
+                              minFontSize: 15,
+                              maxFontSize: 22,
+                              overflow: TextOverflow.ellipsis,
+                              style: GoogleFonts.comfortaa(
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const Spacer(),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: IconButton(
+                          onPressed: () {},
+                          icon: Icon(Icons.download),
+                        ),
+                      )
+                    ],
                   ),
                   Expanded(
                     child: ListView.builder(
                       itemCount: fees.length,
                       itemBuilder: (context, index) {
                         return Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: ListTile(
-                            tileColor:
-                                ThemeProvider.currentThemeData!.cardColor,
-                            title: AutoSizeText(fees.values[index].description),
-                            leading: AutoSizeText(
-                              DateFormat("dd-MM-yyyy")
-                                  .format(fees.all[index].dateOfPayment),
-                              minFontSize: 12,
-                              maxFontSize: 18,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            trailing: Column(
-                              children: [
-                                AutoSizeText(
-                                  "${currencyToUnicode(fees.values[index].currency)} ${fees.values[index].paid}",
-                                  minFontSize: 18,
-                                  maxFontSize: 24,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(color: Colors.red),
-                                ),
-                                AutoSizeText(
-                                  fees.all[index].recieptNo,
-                                  minFontSize: 12,
-                                  maxFontSize: 18,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
-                            ),
-                            onTap: () {
-                              Clipboard.setData(ClipboardData(
-                                  text:
-                                      "${fees.values[index].description}\nReciept no. : ${fees.ids[index]}\nAmount: ${fees.values[index].paid}\nDate Payed: ${fees.values[index].dateOfPayment}"));
-                              Fluttertoast.showToast(
-                                  msg: "Copied to clipboard");
-                            },
-                          ),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 5, horizontal: 15),
+                          child: FeeContainer(fee: fees.all[index]),
                         );
                       },
                     ),

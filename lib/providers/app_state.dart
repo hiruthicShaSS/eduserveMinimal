@@ -2,9 +2,11 @@
 import 'dart:async';
 
 import 'package:eduserveMinimal/models/class_attendance.dart';
+import 'package:eduserveMinimal/models/fees.dart';
 import 'package:eduserveMinimal/models/leave.dart';
 import 'package:eduserveMinimal/models/user.dart';
 import 'package:eduserveMinimal/service/attendance_summary.dart';
+import 'package:eduserveMinimal/service/fees_details.dart';
 import 'package:eduserveMinimal/service/leave_info.dart';
 import 'package:eduserveMinimal/service/student_info.dart';
 import 'package:flutter/cupertino.dart';
@@ -19,6 +21,7 @@ class AppState extends ChangeNotifier {
   User? _user;
   Leave? _leave;
   SemesterAttendance? semesterAttendance;
+  Fees? _fees;
 
   bool checkedForUpdate = false;
 
@@ -50,6 +53,15 @@ class AppState extends ChangeNotifier {
 
     _leave = await getLeaveInfo();
     return _leave!;
+  }
+
+  Future<Fees> get fees async {
+    if (_fees != null) {
+      return _fees!;
+    }
+
+    _fees = await getFeesDetails();
+    return _fees!;
   }
 
   void refresh() {

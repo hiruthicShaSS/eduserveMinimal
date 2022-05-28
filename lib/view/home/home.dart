@@ -1,7 +1,6 @@
 // 🐦 Flutter imports:
 import 'dart:typed_data';
 
-import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/global/service/birthday_service.dart';
 import 'package:eduserveMinimal/models/user.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
@@ -162,60 +161,8 @@ class _HomePageState extends State<HomePage> {
           .push(MaterialPageRoute(builder: (_) => BirthDayWidget()));
     }
 
-    getTimetable();
+    getTimetable(supressError: true);
     _checkUpdates(context);
-
-    Map dataCache = await fetchAllData();
-
-    try {
-      bool feesDue =
-          (double.tryParse(dataCache["fees"]["dues"].first) ?? 0) > 0;
-      bool hallTicketUnEligile = dataCache["hallticket"]
-              .contains("No records to display.")
-          ? false
-          : dataCache["hallticket"].first.where((e) => e == "Eligible").length <
-              3;
-
-      if (feesDue || hallTicketUnEligile) {
-        ScaffoldMessenger.of(context).showMaterialBanner(MaterialBanner(
-          backgroundColor: Colors.redAccent,
-          leading: Icon(Icons.error_outline),
-          content: TextButton(
-              onPressed: () {
-                SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => IssuesView(
-                          outstandingDue: feesDue,
-                          hallTicketUnEligible: hallTicketUnEligile)));
-                  ScaffoldMessenger.of(context).removeCurrentMaterialBanner();
-                });
-              },
-              child: Text("Action required!",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold))),
-          actions: [
-            IconButton(
-                onPressed: () =>
-                    ScaffoldMessenger.of(context).removeCurrentMaterialBanner(),
-                icon: Icon(Icons.close)),
-          ],
-        ));
-      }
-    } catch (e) {}
-  }
-
-  Future<Map> fetchAllData() async {
-    await getFeesDetails();
-    await getStudentInfo();
-    List? hallTicketData = await downloadHallTicket();
-    if (hallTicketData != null) {
-      await downloadHallTicket(
-          term: hallTicketData[1].values.toList()[0]["value"]);
-    }
-
-    return Scraper.cache;
   }
 
   void _checkUpdates(BuildContext context) async {

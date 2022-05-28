@@ -4,12 +4,9 @@ import 'package:html/dom.dart';
 
 // 🌎 Project imports:
 import 'package:eduserveMinimal/models/fees.dart';
-import 'package:eduserveMinimal/service/scrap.dart';
 import 'package:intl/intl.dart';
 
 Future<Fees> getFeesDetails() async {
-  // if (Scraper.cache.containsKey("fees")) return Scraper.cache["fees"];
-
   String feesDownload = "/Student/Fees/DownloadReceipt.aspx";
   String feesOverallStatement = "/Student/Fees/FeesStatement.aspx";
 
@@ -49,17 +46,16 @@ Future<Fees> getFeesDetails() async {
 
     fees.add = SingleFee(
       description: rowData[3],
-      semester: rowData[4],
+      semester: int.tryParse(rowData[4].split(" ").last) ?? 0,
       toPay: double.tryParse(rowData[5]) ?? 0,
       lastDate: DateFormat("dd-MM-yyyy").parse(rowData[6]),
       currency: rowData[8],
       paid: double.tryParse(rowData[9]) ?? 0,
-      recieptNo: rowData[10],
-      dateOfPayment: DateFormat("dd-MM-yyyy").parse(rowData[11]),
+      receiptNo: rowData[10],
+      dateOfPayment: DateFormat("yyyy-MM-dd").parse(rowData[11]),
       netDues: double.tryParse(rowData[13]) ?? 0,
     );
   }
 
-  Scraper.cache["fees"] = fees;
   return fees;
 }
