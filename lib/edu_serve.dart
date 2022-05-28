@@ -170,6 +170,7 @@ class _HomeControllerState extends State<HomeController> {
                 return const Center(child: CircularProgressIndicator());
               });
         }
+
         return Container();
       },
     );

@@ -171,6 +171,9 @@ class _HomePageState extends State<HomePage> {
     Fees fees = await getFeesDetails();
     HallTicket hallTicket = await getHallTicket();
 
+    Provider.of<AppState>(context).setFees = fees;
+    Provider.of<AppState>(context).setHallTicket = hallTicket;
+
     List<Issue> issues = [];
 
     if (fees.totalDues > 0) issues.add(Issue.fees_due);

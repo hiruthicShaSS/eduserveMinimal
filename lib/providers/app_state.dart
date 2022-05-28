@@ -30,6 +30,8 @@ class AppState extends ChangeNotifier {
 
   void set setUser(User user) => _user = user;
   void set setLeave(Leave leave) => _leave = leave;
+  void set setFees(Fees fees) => _fees = fees;
+  void set setHallTicket(HallTicket hallTicket) => _hallTicket = hallTicket;
 
   Future<User> get user async {
     if (_user != null) {
