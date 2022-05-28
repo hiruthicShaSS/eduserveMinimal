@@ -1,4 +1,5 @@
 // 🐦 Flutter imports:
+import 'package:eduserveMinimal/service/auth.dart';
 import 'package:flutter/material.dart';
 
 // 📦 Package imports:
@@ -19,6 +20,7 @@ class Settings extends StatelessWidget {
   static final thisAppPublishDate = "2020-12-20 19:38:07.569667";
   final String eduserveURL =
       "https://eduserve.karunya.edu/Login.aspx?ReturnUrl=%2f";
+  bool _isLogOutClicked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -129,6 +131,61 @@ class Settings extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                icon: Icon(Icons.logout),
+                onPressed: () =>
+                    Fluttertoast.showToast(msg: "Press and hold for action"),
+                onLongPress: () async {
+                  showDialog(
+                    context: context,
+                    builder: (_) => StatefulBuilder(
+                      builder: (context, setState) {
+                        return AlertDialog(
+                          title: Text("Logout"),
+                          content: Text("Are you sure you want to logout?"),
+                          actions: [
+                            TextButton(
+                              onPressed: () async {
+                                setState(() => _isLogOutClicked = true);
+
+                                await AuthService().logout();
+
+                                Fluttertoast.showToast(msg: "Logout completed");
+                                Navigator.of(context).pushNamedAndRemoveUntil(
+                                    "/credentials", (route) => false);
+                              },
+                              child: _isLogOutClicked
+                                  ? SizedBox(
+                                      width: 80,
+                                      child: LinearProgressIndicator())
+                                  : Text(
+                                      "Logout",
+                                      style: TextStyle(color: Colors.red),
+                                    ),
+                            ),
+                            ElevatedButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              child: Text("Cancel"),
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateColor.resolveWith(
+                                    (states) => Colors.green),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  );
+                },
+                label: Text("Logout"),
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                      (states) => Colors.red),
+                ),
+              ),
             ),
             Spacer(),
             Column(

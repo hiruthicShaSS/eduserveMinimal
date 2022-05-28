@@ -5,10 +5,39 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 
 import 'package:eduserveMinimal/service/scrap.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:html/dom.dart';
 
 class AuthService {
   static Map<String, String> headers = {};
   static Map<String, String> formData = {};
+
+  Future<Map> basicFormData([String? htmlPage]) async {
+    Document html;
+
+    if (htmlPage == null) {
+      Response res = await get(Uri.parse("https://eduserve.karunya.edu"));
+      html = Document.html(res.body);
+    } else {
+      html = Document.html(htmlPage);
+    }
+
+    Map<String, String> data = {};
+
+    List inputs = html
+        .querySelectorAll("input")
+        .map((e) => {e.attributes["name"]: e.attributes["value"]})
+        .toList();
+
+    inputs.removeWhere((element) =>
+        element.keys.first == null || element.values.first == null);
+
+    for (var input in inputs) {
+      data[input.keys.first!] = input.values.first;
+    }
+
+    return data;
+  }
 
   Future<String> login(
       {String? username, String? password, Function? callback}) async {
@@ -90,5 +119,55 @@ class AuthService {
     Scraper.cache["home"] = res.body;
 
     return res.body;
+  }
+
+  Future<void> logout() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final FlutterSecureStorage storage = FlutterSecureStorage();
+
+    await storage.delete(key: "username");
+    await storage.delete(key: "password");
+    await prefs.remove("autoFillFeedbackValue");
+  }
+
+  Future forgotPassrword(String username, String dob, String kmail) async {
+    Response res = await get(
+      Uri.parse("https://eduserve.karunya.edu/Online/PasswordReset.aspx"),
+      headers: headers,
+    );
+
+    Map formDataForPasswordReset = await basicFormData(res.body);
+
+    formDataForPasswordReset[r"__EVENTTARGET"] =
+        r"ctl00$mainContent$RBLPASSWORD$1";
+    formDataForPasswordReset["__EVENTARGUMENT"] = "";
+    formDataForPasswordReset["__LASTFOCUS"] = "";
+    formDataForPasswordReset[r"ctl00$mainContent$RBLPASSWORD"] = "2";
+
+    formDataForPasswordReset.remove(r"ctl00$mainContent$Login1$LoginButton");
+
+    await post(
+      Uri.parse("https://eduserve.karunya.edu/Online/PasswordReset.aspx"),
+      headers: headers,
+      body: formDataForPasswordReset,
+    );
+
+    formDataForPasswordReset.addAll(await basicFormData(res.body));
+
+    formDataForPasswordReset[r"ctl00$mainContent$TXTSTUDUSERID"] = username;
+    formDataForPasswordReset[r"ctl00$mainContent$TXTSTUDDOB"] = dob;
+    formDataForPasswordReset[r"ctl00$mainContent$TXTSTUDEMAIL"] = kmail;
+    formDataForPasswordReset[r"ctl00$mainContent$btnStudReset"] =
+        "Reset Password";
+
+    formDataForPasswordReset["__EVENTTARGET"] = "";
+
+    res = await post(
+      Uri.parse("https://eduserve.karunya.edu/Online/PasswordReset.aspx"),
+      headers: headers,
+      body: formDataForPasswordReset,
+    );
+
+    print(res.body);
   }
 }

@@ -11,6 +11,7 @@ import 'package:eduserveMinimal/view/home/apply_leave.dart';
 import 'package:eduserveMinimal/view/home/home.dart';
 import 'package:eduserveMinimal/view/home/timetable.dart';
 import 'package:eduserveMinimal/view/settings/credentials.dart';
+import 'package:eduserveMinimal/view/settings/forgot_password.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -22,7 +23,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // 🌎 Project imports:
 import 'package:eduserveMinimal/providers/theme.dart';
-import 'package:eduserveMinimal/view/settings/user.dart';
+import 'package:eduserveMinimal/view/user/user.dart';
 import 'package:eduserveMinimal/service/fill_feedback_form.dart';
 import 'package:eduserveMinimal/service/get_feedback_form.dart';
 import 'package:eduserveMinimal/service/scrap.dart';
@@ -42,8 +43,9 @@ class eduserveMinimal extends StatelessWidget {
       ],
       builder: (context, child) => MaterialApp(
         debugShowCheckedModeBanner: flavor == "development",
-        home: HomeController(),
+        initialRoute: "/homeController",
         routes: {
+          "/homeController": (BuildContext context) => HomeController(),
           "/home": (BuildContext context) => HomePage(),
           "/feedbackForm": (BuildContext context) => FeedbackForm(),
           "/timetable": (BuildContext context) => TimeTableScreen(),
@@ -51,6 +53,7 @@ class eduserveMinimal extends StatelessWidget {
           "/fees": (BuildContext context) => FeesView(),
           "/credentials": (BuildContext context) => Credentials(),
           "/user": (BuildContext context) => UserScreen(),
+          "/forgotPassword": (BuildContext context) => ForgotPasswordScreen(),
         },
         darkTheme: ThemeProvider.dark,
         title: "eduserveMinimal",
