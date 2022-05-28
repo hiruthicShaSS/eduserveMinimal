@@ -12,7 +12,7 @@ class AuthService {
   static Map<String, String> headers = {};
   static Map<String, String> formData = {};
 
-  Future<Map> basicFormData([String? htmlPage]) async {
+  Future<Map<String, String>> basicFormData([String? htmlPage]) async {
     Document html;
 
     if (htmlPage == null) {

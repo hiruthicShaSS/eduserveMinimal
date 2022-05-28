@@ -19,3 +19,14 @@ class MiscellaneousErrorInEduserve implements Exception {
     return message ?? "No error message provided!";
   }
 }
+
+class NoHallTicketAvailable implements Exception {
+  const NoHallTicketAvailable([this.message]);
+
+  final String? message;
+
+  @override
+  String toString() {
+    return message ?? "No error message provided!";
+  }
+}

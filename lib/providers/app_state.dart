@@ -3,10 +3,12 @@ import 'dart:async';
 
 import 'package:eduserveMinimal/models/class_attendance.dart';
 import 'package:eduserveMinimal/models/fees.dart';
+import 'package:eduserveMinimal/models/hallticket/hallticket.dart';
 import 'package:eduserveMinimal/models/leave.dart';
 import 'package:eduserveMinimal/models/user.dart';
 import 'package:eduserveMinimal/service/attendance_summary.dart';
 import 'package:eduserveMinimal/service/fees_details.dart';
+import 'package:eduserveMinimal/service/get_hallticket.dart';
 import 'package:eduserveMinimal/service/leave_info.dart';
 import 'package:eduserveMinimal/service/student_info.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,6 +24,7 @@ class AppState extends ChangeNotifier {
   Leave? _leave;
   SemesterAttendance? semesterAttendance;
   Fees? _fees;
+  HallTicket? _hallTicket;
 
   bool checkedForUpdate = false;
 
@@ -62,6 +65,15 @@ class AppState extends ChangeNotifier {
 
     _fees = await getFeesDetails();
     return _fees!;
+  }
+
+  Future<HallTicket> get hallTicket async {
+    if (_hallTicket != null) {
+      return _hallTicket!;
+    }
+
+    _hallTicket = await getHallTicket();
+    return _hallTicket!;
   }
 
   void refresh() {

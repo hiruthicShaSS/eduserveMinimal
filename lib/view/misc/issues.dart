@@ -1,4 +1,5 @@
 // 🐦 Flutter imports:
+import 'package:eduserveMinimal/global/enum.dart';
 import 'package:flutter/material.dart';
 
 // 🌎 Project imports:
@@ -6,14 +7,9 @@ import 'package:eduserveMinimal/view/fees/fees.dart';
 import 'package:eduserveMinimal/view/home/hallticket.dart';
 
 class IssuesView extends StatelessWidget {
-  const IssuesView(
-      {Key? key,
-      required this.outstandingDue,
-      required this.hallTicketUnEligible})
-      : super(key: key);
+  const IssuesView({Key? key, required this.issues}) : super(key: key);
 
-  final bool outstandingDue;
-  final bool hallTicketUnEligible;
+  final List<Issue> issues;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +34,7 @@ class IssuesView extends StatelessWidget {
         child: Column(
           children: [
             Visibility(
-              visible: outstandingDue,
+              visible: issues.contains(Issue.fees_due),
               child: ListTile(
                 tileColor: Colors.redAccent.withOpacity(0.6),
                 title: Text("You have outstanding fees due"),
@@ -50,7 +46,7 @@ class IssuesView extends StatelessWidget {
               ),
             ),
             Visibility(
-              visible: hallTicketUnEligible,
+              visible: issues.contains(Issue.hallticket_ineligible),
               child: ListTile(
                 tileColor: Colors.orangeAccent.withOpacity(0.6),
                 title: Text("You might have issues on hallticket download"),

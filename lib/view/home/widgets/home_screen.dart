@@ -38,8 +38,11 @@ class HomeScreen extends StatelessWidget {
                 StretchMode.blurBackground,
               ],
             ),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(15),
+              bottomRight: Radius.circular(15),
+            )),
           ),
           SliverList(
             delegate: SliverChildListDelegate([

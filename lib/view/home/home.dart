@@ -1,11 +1,16 @@
 // 🐦 Flutter imports:
 import 'dart:typed_data';
 
+import 'package:eduserveMinimal/global/enum.dart';
 import 'package:eduserveMinimal/global/service/birthday_service.dart';
+import 'package:eduserveMinimal/models/fees.dart';
+import 'package:eduserveMinimal/models/hallticket/hallticket.dart';
 import 'package:eduserveMinimal/models/user.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
+import 'package:eduserveMinimal/service/get_hallticket.dart';
 import 'package:eduserveMinimal/service/timetable.dart';
 import 'package:eduserveMinimal/view/home/widgets/home_screen.dart';
+import 'package:eduserveMinimal/view/misc/issues.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
@@ -18,15 +23,11 @@ import 'package:provider/provider.dart';
 import 'package:eduserveMinimal/view/fees/fees.dart';
 import 'package:eduserveMinimal/view/home/hallticket.dart';
 import 'package:eduserveMinimal/view/home/internal_exams/internals_screen.dart';
-import 'package:eduserveMinimal/view/misc/issues.dart';
 import 'package:eduserveMinimal/view/settings/settings.dart';
 import 'package:eduserveMinimal/view/home/timetable.dart';
 import 'package:eduserveMinimal/view/misc/birthday.dart';
 import 'package:eduserveMinimal/view/user/user.dart';
-import 'package:eduserveMinimal/service/download_hallticket.dart';
 import 'package:eduserveMinimal/service/fees_details.dart';
-import 'package:eduserveMinimal/service/scrap.dart';
-import 'package:eduserveMinimal/service/student_info.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -162,7 +163,50 @@ class _HomePageState extends State<HomePage> {
     }
 
     getTimetable(supressError: true);
+    checkForIssues();
     _checkUpdates(context);
+  }
+
+  Future<void> checkForIssues() async {
+    Fees fees = await getFeesDetails();
+    HallTicket hallTicket = await getHallTicket();
+
+    List<Issue> issues = [];
+
+    if (fees.totalDues > 0) issues.add(Issue.fees_due);
+
+    if (!hallTicket.isEligibile && !hallTicket.isSubjectsEligibile) {
+      issues.add(Issue.hallticket_ineligible);
+    }
+
+    if (issues.isNotEmpty) {
+      ScaffoldMessenger.of(context).showMaterialBanner(
+        MaterialBanner(
+          backgroundColor: Colors.redAccent,
+          content: Text("We found some issues!"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (_) => IssuesView(issues: issues)),
+                  );
+
+                  ScaffoldMessenger.of(context).removeCurrentMaterialBanner();
+                });
+              },
+              child: Text("Review"),
+            ),
+            IconButton(
+              onPressed: () =>
+                  ScaffoldMessenger.of(context).hideCurrentMaterialBanner(),
+              icon: Icon(Icons.close),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   void _checkUpdates(BuildContext context) async {
