@@ -10,7 +10,7 @@ import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:html/dom.dart';
 
-Future<List<TimeTable>> getTimetable() async {
+Future<List<TimeTable>> getTimetable([bool supressError = false]) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   final FlutterSecureStorage storage = FlutterSecureStorage();
   DateTime today = DateTime.now();
@@ -77,12 +77,14 @@ Future<List<TimeTable>> getTimetable() async {
     body: formData,
   );
 
-  if (res.body.contains("No records to display.")) {
-    throw NoRecordsException("No timetable records to display.");
-  }
+  if (!supressError) {
+    if (res.body.contains("No records to display.")) {
+      throw NoRecordsException("No timetable records to display.");
+    }
 
-  if (res.body.contains("Object moved to")) {
-    throw MiscellaneousErrorInEduserve("Error fetching timetable data.");
+    if (res.body.contains("Object moved to")) {
+      throw MiscellaneousErrorInEduserve("Error fetching timetable data.");
+    }
   }
 
   html = Document.html(res.body);

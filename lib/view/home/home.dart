@@ -1,6 +1,7 @@
 // 🐦 Flutter imports:
 import 'dart:typed_data';
 
+import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/global/service/birthday_service.dart';
 import 'package:eduserveMinimal/models/user.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
@@ -161,9 +162,7 @@ class _HomePageState extends State<HomePage> {
           .push(MaterialPageRoute(builder: (_) => BirthDayWidget()));
     }
 
-    try {
-      getTimetable();
-    } catch (_) {}
+    getTimetable();
     _checkUpdates(context);
 
     Map dataCache = await fetchAllData();

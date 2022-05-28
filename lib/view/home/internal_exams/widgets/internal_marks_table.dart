@@ -27,7 +27,6 @@ class _InternalMarksTableState extends State<InternalMarksTable> {
   InternalMarksService internalMarksService = InternalMarksService();
 
   List tableheader = [
-    "Subject Name",
     "IA Parameter",
     "Total Marks",
     "Marks Scored",
@@ -65,7 +64,6 @@ class _InternalMarksTableState extends State<InternalMarksTable> {
 
             for (var exam in internalMarks) {
               data.add([
-                exam.subjectName,
                 exam.iaParameter,
                 exam.totalMarks,
                 exam.marksScored,
@@ -86,7 +84,20 @@ class _InternalMarksTableState extends State<InternalMarksTable> {
                 columnsTitleBuilder: (i) =>
                     tableCell.TableCell.stickyRow(tableheader[i]),
                 rowsTitleBuilder: (i) => tableCell.TableCell.content(
-                  text: internalMarks[i].subjectCode,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          internalMarks[i].subjectCode,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(internalMarks[i].subjectName),
+                      ],
+                    ),
+                  ),
                   textStyle: TextStyle(fontWeight: FontWeight.bold),
                   colorBg: internalMarks[i].marksScored < 20
                       ? Colors.red.withOpacity(0.2)
@@ -158,12 +169,13 @@ class _InternalMarksTableState extends State<InternalMarksTable> {
                   }
                 },
                 cellDimensions: CellDimensions.fixed(
-                  stickyLegendWidth: 80,
+                  stickyLegendWidth: 110,
                   stickyLegendHeight: 80,
                   contentCellWidth: 150,
                   contentCellHeight: 100,
                 ),
-                legendCell: tableCell.TableCell.legend("Subject Code"),
+                legendCell:
+                    tableCell.TableCell.legend("Subject Code / Subject Name"),
               ),
             );
           }
