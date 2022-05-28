@@ -22,7 +22,7 @@ import 'package:eduserveMinimal/view/misc/issues.dart';
 import 'package:eduserveMinimal/view/settings/settings.dart';
 import 'package:eduserveMinimal/view/home/timetable.dart';
 import 'package:eduserveMinimal/view/misc/birthday.dart';
-import 'package:eduserveMinimal/view/settings/user.dart';
+import 'package:eduserveMinimal/view/user/user.dart';
 import 'package:eduserveMinimal/service/download_hallticket.dart';
 import 'package:eduserveMinimal/service/fees_details.dart';
 import 'package:eduserveMinimal/service/scrap.dart';

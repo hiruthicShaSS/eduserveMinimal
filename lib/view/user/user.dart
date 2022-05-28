@@ -1,9 +1,9 @@
 import 'package:eduserveMinimal/models/user.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:eduserveMinimal/view/home/widgets/semester_summary_widget.dart';
-import 'package:eduserveMinimal/view/settings/widgets/user_detail.dart';
-import 'package:eduserveMinimal/view/settings/widgets/user_header.dart';
-import 'package:eduserveMinimal/view/settings/widgets/user_main_container.dart';
+import 'package:eduserveMinimal/view/user/widgets/user_detail.dart';
+import 'package:eduserveMinimal/view/user/widgets/user_header.dart';
+import 'package:eduserveMinimal/view/user/widgets/user_main_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
