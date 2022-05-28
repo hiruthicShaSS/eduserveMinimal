@@ -31,7 +31,7 @@ class FeeContainer extends StatelessWidget {
                 Text("Paid: ${fee.paid}"),
                 Text("Receipt: ${fee.receiptNo}"),
                 Text(
-                    "Date of Payment: ${DateFormat("yyyy-MM-dd").format(fee.dateOfPayment)}"),
+                    "Date of Payment: ${fee.dateOfPayment == null ? "Yet to be paid" : DateFormat("yyyy-MM-dd").format(fee.dateOfPayment!)}"),
                 Text("Net Dues: ${fee.netDues}"),
               ],
             ),
@@ -39,7 +39,7 @@ class FeeContainer extends StatelessWidget {
               TextButton(
                 onPressed: () {
                   String data =
-                      "${fee.description}\nSemester: ${fee.semester}\nReciept no: ${fee.receiptNo}\nAmount: ${fee.paid}\nDate od Payment: ${DateFormat("yyyy-MM-dd").format(fee.dateOfPayment)}\nCurrency: ${fee.currency}";
+                      "${fee.description}\nSemester: ${fee.semester}\nReciept no: ${fee.receiptNo}\nAmount: ${fee.paid}\nDate of Payment: ${fee.dateOfPayment == null ? "Yet to be paid" : DateFormat("yyyy-MM-dd").format(fee.dateOfPayment!)}\nCurrency: ${fee.currency}";
 
                   Clipboard.setData(ClipboardData(text: data));
                   Fluttertoast.showToast(msg: "Copied to clipboard");
@@ -75,23 +75,25 @@ class FeeContainer extends StatelessWidget {
                   bottomLeft: Radius.circular(15),
                 ),
               ),
-              child: Column(
-                children: [
-                  Text(
-                    DateFormat("dd").format(fee.dateOfPayment),
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.primary,
-                      fontWeight: FontWeight.bold,
+              child: fee.dateOfPayment == null
+                  ? Icon(Icons.label_important, color: Colors.red)
+                  : Column(
+                      children: [
+                        Text(
+                          DateFormat("dd").format(fee.dateOfPayment!),
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          DateFormat("MMM").format(fee.dateOfPayment!),
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  Text(
-                    DateFormat("MMM").format(fee.dateOfPayment),
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
             ),
             const SizedBox(width: 10),
             Expanded(
@@ -107,7 +109,7 @@ class FeeContainer extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    fee.receiptNo,
+                    fee.receiptNo ?? "",
                     style: TextStyle(
                       fontWeight: FontWeight.w300,
                     ),

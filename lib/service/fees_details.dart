@@ -52,7 +52,9 @@ Future<Fees> getFeesDetails() async {
       currency: rowData[8],
       paid: double.tryParse(rowData[9]) ?? 0,
       receiptNo: rowData[10],
-      dateOfPayment: DateFormat("yyyy-MM-dd").parse(rowData[11]),
+      dateOfPayment: rowData[11].isEmpty
+          ? null
+          : DateFormat("yyyy-MM-dd").parse(rowData[11]),
       netDues: double.tryParse(rowData[13]) ?? 0,
     );
   }

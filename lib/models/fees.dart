@@ -12,7 +12,7 @@ class Fees {
 
   int get length => all.length;
 
-  List<String> get ids => all.map((fee) => fee.receiptNo).toList();
+  List<String> get ids => all.map((fee) => fee.receiptNo ?? "").toList();
   List<SingleFee> get values => all;
 }
 
@@ -23,8 +23,8 @@ class SingleFee {
   DateTime lastDate;
   String currency;
   double paid;
-  String receiptNo;
-  DateTime dateOfPayment;
+  String? receiptNo;
+  DateTime? dateOfPayment;
   double netDues;
 
   SingleFee({

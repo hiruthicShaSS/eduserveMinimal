@@ -1,7 +1,6 @@
 // 🐦 Flutter imports:
 import 'package:eduserveMinimal/global/service/currency_to_unicode.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
-import 'package:eduserveMinimal/service/fees_details.dart';
 import 'package:eduserveMinimal/view/fees/widgets/fee_container.dart';
 import 'package:flutter/material.dart';
 

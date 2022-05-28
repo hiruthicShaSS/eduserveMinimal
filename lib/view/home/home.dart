@@ -171,8 +171,10 @@ class _HomePageState extends State<HomePage> {
     Fees fees = await getFeesDetails();
     HallTicket hallTicket = await getHallTicket();
 
-    Provider.of<AppState>(context).setFees = fees;
-    Provider.of<AppState>(context).setHallTicket = hallTicket;
+    if (mounted) {
+      Provider.of<AppState>(context, listen: false).setFees = fees;
+      Provider.of<AppState>(context, listen: false).setHallTicket = hallTicket;
+    }
 
     List<Issue> issues = [];
 

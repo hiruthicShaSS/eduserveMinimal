@@ -76,9 +76,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         initialDate: DateTime.now()
                             .add(const Duration(days: -18 * 30 * 12)),
                         firstDate: DateTime.now()
-                            .add(const Duration(days: -18 * 30 * 12)),
+                            .add(const Duration(days: -80 * 30 * 12)),
                         lastDate: DateTime.now()
-                            .add(const Duration(days: 18 * 30 * 12)),
+                            .add(const Duration(days: 80 * 30 * 12)),
                       );
 
                       if (dateTime != null) {
