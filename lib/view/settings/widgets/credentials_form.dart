@@ -134,15 +134,15 @@ class _CredentialsFormState extends State<CredentialsForm> {
               ),
             ),
           ),
-          TextButton(
-            child: Text("Forgot password?"),
-            onPressed: () {
-              Navigator.of(context).pushNamed("/forgotPassword");
-            },
-            style: ButtonStyle(
-              overlayColor: MaterialStateProperty.all(Colors.transparent),
-            ),
-          ),
+          // TextButton(
+          //   child: Text("Forgot password?"),
+          //   onPressed: () {
+          //     Navigator.of(context).pushNamed("/forgotPassword");
+          //   },
+          //   style: ButtonStyle(
+          //     overlayColor: MaterialStateProperty.all(Colors.transparent),
+          //   ),
+          // ),
         ],
       ),
     );
