@@ -59,3 +59,22 @@ Future<Fees> getFeesDetails() async {
 
   return fees;
 }
+
+Future<void> downloadFeeStatement() async {
+  Map<String, String> formData = AuthService.formData;
+
+  formData["__EVENTTARGET"] = "";
+  formData["__EVENTARGUMENT"] = "";
+  formData[r"ctl00_radMenuModule_ClientState"] = "";
+  formData[r"ctl00_mainContent_grdData_ClientState"] =
+      '{"selectedIndexes":[],"selectedCellsIndexes":[],"unselectableItemsIndexes":[],"reorderedColumns":[],"expandedItems":[],"expandedGroupItems":[],"expandedFilterItems":[],"deletedItems":[],"hidedColumns":[],"showedColumns":[],"groupColsState":{},"hierarchyState":{},"scrolledPosition":"545.5999755859375,0","popUpLocations":{},"draggedItemsIndexes":[]}';
+  formData[r"ctl00$mainContent$btnDownload"] = "Download";
+
+  Response res = await post(
+    Uri.parse("https://eduserve.karunya.edu/Student/Fees/FeesStatement.aspx"),
+    headers: AuthService.headers,
+    body: formData,
+  );
+
+  print(res.body);
+}

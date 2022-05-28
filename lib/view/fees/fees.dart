@@ -1,6 +1,7 @@
 // 🐦 Flutter imports:
 import 'package:eduserveMinimal/global/service/currency_to_unicode.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
+import 'package:eduserveMinimal/service/fees_details.dart';
 import 'package:eduserveMinimal/view/fees/widgets/fee_container.dart';
 import 'package:flutter/material.dart';
 
@@ -83,35 +84,39 @@ class FeesView extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
-                        child: Container(
-                          height: 50,
-                          decoration: BoxDecoration(
-                            color: ThemeProvider.currentThemeData!.primaryColor
-                                .withOpacity(0.3),
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Center(
-                            child: AutoSizeText(
-                              "Total spent: ${currencyToUnicode(fees.all.first.currency)} ${fees.all.fold<double>(0, (previousValue, fee) => previousValue + fee.paid)}",
-                              minFontSize: 15,
-                              maxFontSize: 22,
-                              overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.comfortaa(
-                                  fontWeight: FontWeight.bold),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15),
+                          child: Container(
+                            height: 50,
+                            decoration: BoxDecoration(
+                              color: ThemeProvider
+                                  .currentThemeData!.primaryColor
+                                  .withOpacity(0.3),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: Center(
+                              child: AutoSizeText(
+                                "Total spent: ${currencyToUnicode(fees.all.first.currency)} ${fees.all.fold<double>(0, (previousValue, fee) => previousValue + fee.paid)}",
+                                minFontSize: 15,
+                                maxFontSize: 22,
+                                overflow: TextOverflow.ellipsis,
+                                style: GoogleFonts.comfortaa(
+                                    fontWeight: FontWeight.bold),
+                              ),
                             ),
                           ),
                         ),
                       ),
-                      const Spacer(),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
-                        child: IconButton(
-                          onPressed: () {},
-                          icon: Icon(Icons.download),
-                        ),
-                      )
+                      // Padding(
+                      //   padding: const EdgeInsets.symmetric(horizontal: 15),
+                      //   child: IconButton(
+                      //     onPressed: () async {
+                      //       await downloadFeeStatement();
+                      //     },
+                      //     icon: Icon(Icons.download),
+                      //   ),
+                      // )
                     ],
                   ),
                   Expanded(
