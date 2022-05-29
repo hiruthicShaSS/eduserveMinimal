@@ -1,5 +1,7 @@
 import 'package:eduserveMinimal/global/exceptions.dart';
-import 'package:eduserveMinimal/models/class_attendance.dart';
+import 'package:eduserveMinimal/models/attendance/attendance.dart';
+import 'package:eduserveMinimal/models/attendance/attendance_summary.dart';
+import 'package:eduserveMinimal/models/attendance/semester_attendance.dart';
 import 'package:eduserveMinimal/service/auth.dart';
 import 'package:http/http.dart';
 

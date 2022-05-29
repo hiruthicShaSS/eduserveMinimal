@@ -1,41 +1,11 @@
-// 🎯 Dart imports:
-import 'dart:convert';
-
 // 📦 Package imports:
 import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/models/timetable.dart';
 import 'package:eduserveMinimal/service/auth.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:html/dom.dart';
 
 Future<List<TimeTable>> getTimetable({bool supressError = false}) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  final FlutterSecureStorage storage = FlutterSecureStorage();
-  DateTime today = DateTime.now();
-  int lastUpdate = 100;
-
-  if (prefs.containsKey("timetable_last_update")) {
-    lastUpdate = today
-        .difference(DateTime.parse(prefs.getString("timetable_last_update")!))
-        .inDays;
-  }
-
-  if (await storage.containsKey(key: "timetable") && lastUpdate < 90) {
-    String? timetableString = await storage.read(key: "timetable");
-
-    if (timetableString != null) {
-      List timetableList = jsonDecode(timetableString);
-      timetableList = timetableList.map((e) => jsonDecode(e)).toList();
-
-      List<TimeTable> timetable =
-          timetableList.map((e) => TimeTable.fromMap(e)).toList();
-
-      if (timetable.isNotEmpty) return timetable;
-    }
-  }
-
   Map<String, String> formData = AuthService.formData;
   formData.remove(r"ctl00$mainContent$BTNCLEAR");
 
@@ -68,7 +38,7 @@ Future<List<TimeTable>> getTimetable({bool supressError = false}) async {
       .toList();
 
   formData[r"ctl00$mainContent$DDLACADEMICTERM"] =
-      (academicTerms.length - 1).toString();
+      (academicTerms.length - 2).toString();
   formData.remove(r"ctl00$mainContent$BTNCLEAR");
 
   res = await post(
@@ -118,9 +88,6 @@ Future<List<TimeTable>> getTimetable({bool supressError = false}) async {
 
     table.add(timeTable);
   }
-
-  await storage.write(key: "timetable", value: jsonEncode(table));
-  await prefs.setString("timetable_last_update", DateTime.now().toString());
 
   return table;
 }

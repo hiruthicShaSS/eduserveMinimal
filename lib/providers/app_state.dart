@@ -1,87 +1,84 @@
-// 🐦 Flutter imports:
-import 'dart:async';
-
-import 'package:eduserveMinimal/models/class_attendance.dart';
+import 'package:eduserveMinimal/controller/cache.dart';
+import 'package:eduserveMinimal/models/attendance/semester_attendance.dart';
 import 'package:eduserveMinimal/models/fees.dart';
 import 'package:eduserveMinimal/models/hallticket/hallticket.dart';
-import 'package:eduserveMinimal/models/leave.dart';
+import 'package:eduserveMinimal/models/leave/leave.dart';
+import 'package:eduserveMinimal/models/timetable.dart';
 import 'package:eduserveMinimal/models/user.dart';
+import 'package:flutter/cupertino.dart';
+
 import 'package:eduserveMinimal/service/attendance_summary.dart';
 import 'package:eduserveMinimal/service/fees_details.dart';
 import 'package:eduserveMinimal/service/get_hallticket.dart';
 import 'package:eduserveMinimal/service/leave_info.dart';
 import 'package:eduserveMinimal/service/student_info.dart';
-import 'package:flutter/cupertino.dart';
-
-// 🌎 Project imports:
-import 'package:eduserveMinimal/service/scrap.dart';
+import 'package:eduserveMinimal/service/timetable.dart';
 
 class AppState extends ChangeNotifier {
-  Scraper scraper = Scraper();
-  Map cache = {};
-
-  User? _user;
-  Leave? _leave;
-  SemesterAttendance? semesterAttendance;
-  Fees? _fees;
-  HallTicket? _hallTicket;
-
+  CacheController _cacheController = CacheController();
   bool checkedForUpdate = false;
 
-  void set setUser(User user) => _user = user;
-  void set setLeave(Leave leave) => _leave = leave;
-  void set setFees(Fees fees) => _fees = fees;
-  void set setHallTicket(HallTicket hallTicket) => _hallTicket = hallTicket;
+  void set setUser(User user) => _cacheController.setUser = user;
+  void set setLeave(Leave leave) => _cacheController.setLeave = leave;
+  void set setFees(Fees fees) => _cacheController.setFees = fees;
+  void set setHallTicket(HallTicket hallTicket) =>
+      _cacheController.setHallTicket = hallTicket;
 
   Future<User> get user async {
-    if (_user != null) {
-      return _user!;
-    }
+    if (_cacheController.user != null) return _cacheController.user!;
 
-    _user = await getStudentInfo();
-    return _user!;
+    _cacheController.setUser = await getStudentInfo();
+    return _cacheController.user!;
   }
 
   Future<SemesterAttendance> get attendance async {
-    if (semesterAttendance != null) {
-      return semesterAttendance!;
+    if (_cacheController.semesterAttendance != null) {
+      return _cacheController.semesterAttendance!;
     }
 
-    semesterAttendance = await getAttendanceSummary();
-    return semesterAttendance!;
-  }
-
-  Future<Leave> get leaveInfo async {
-    if (_leave != null) {
-      return _leave!;
-    }
-
-    _leave = await getLeaveInfo();
-    return _leave!;
+    _cacheController.setSemesterAttendance = await getAttendanceSummary();
+    return _cacheController.semesterAttendance!;
   }
 
   Future<Fees> get fees async {
-    if (_fees != null) {
-      return _fees!;
-    }
+    if (_cacheController.fees != null) return _cacheController.fees!;
 
-    _fees = await getFeesDetails();
-    return _fees!;
+    _cacheController.setFees = await getFeesDetails();
+    return _cacheController.fees!;
+  }
+
+  Future<Leave> get leaveInfo async {
+    if (_cacheController.leave != null) return _cacheController.leave!;
+
+    _cacheController.setLeave = await getLeaveInfo();
+    return _cacheController.leave!;
+  }
+
+  Future<List<TimeTable>> get timetable async {
+    if (_cacheController.timeTable != null) return _cacheController.timeTable!;
+
+    List<TimeTable>? timeTableFromStorage =
+        await _cacheController.getTimetableFromStorage();
+
+    if (timeTableFromStorage != null) return timeTableFromStorage;
+
+    _cacheController.setTimetable = await getTimetable();
+    _cacheController.saveTimetableInStorage();
+
+    return _cacheController.timeTable!;
   }
 
   Future<HallTicket> get hallTicket async {
-    if (_hallTicket != null) {
-      return _hallTicket!;
+    if (_cacheController.hallTicket != null) {
+      return _cacheController.hallTicket!;
     }
 
-    _hallTicket = await getHallTicket();
-    return _hallTicket!;
+    _cacheController.setHallTicket = await getHallTicket();
+    return _cacheController.hallTicket!;
   }
 
   void refresh() {
-    _user = null;
-    _leave = null;
-    semesterAttendance = null;
+    _cacheController.clear();
 
     notifyListeners();
   }

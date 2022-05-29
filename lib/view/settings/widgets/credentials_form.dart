@@ -1,4 +1,4 @@
-import 'package:eduserveMinimal/edu_serve.dart';
+import 'package:eduserveMinimal/edu_serve_minimal.dart';
 import 'package:eduserveMinimal/service/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';

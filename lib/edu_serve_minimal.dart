@@ -29,8 +29,8 @@ import 'package:eduserveMinimal/service/get_feedback_form.dart';
 import 'package:eduserveMinimal/service/scrap.dart';
 import 'package:eduserveMinimal/shortcuts.dart';
 
-class eduserveMinimal extends StatelessWidget {
-  eduserveMinimal({Key? key, this.flavor = "production"}) : super(key: key);
+class EduserveMinimal extends StatelessWidget {
+  EduserveMinimal({Key? key, this.flavor = "production"}) : super(key: key);
   final String flavor;
 
   @override

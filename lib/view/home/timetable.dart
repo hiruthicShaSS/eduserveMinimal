@@ -2,11 +2,13 @@
 import 'dart:developer';
 
 import 'package:eduserveMinimal/models/timetable.dart';
+import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:flutter/material.dart';
 
 // 🌎 Project imports:
 import 'package:eduserveMinimal/service/timetable.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 import 'package:table_sticky_headers/table_sticky_headers.dart';
 import 'package:eduserveMinimal/view/misc/widgets/table_cell.dart' as tableCell;
 
@@ -23,7 +25,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
         child: RotatedBox(
           quarterTurns: 1,
           child: FutureBuilder(
-            future: getTimetable(),
+            future: Provider.of<AppState>(context).timetable,
             builder: (context, AsyncSnapshot<List<TimeTable>> snapshot) {
               if (snapshot.hasError) {
                 log("", error: snapshot.error);

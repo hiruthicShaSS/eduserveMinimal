@@ -69,9 +69,6 @@ class TimeTable {
 
   factory TimeTable.fromJson(String source) =>
       TimeTable.fromMap(json.decode(source));
-
-  @override
-  String toString() => 'TimeTable(day: $day)';
 }
 
 class TimeTableSubject {

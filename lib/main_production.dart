@@ -6,7 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 // 🌎 Project imports:
-import 'package:eduserveMinimal/edu_serve.dart';
+import 'package:eduserveMinimal/edu_serve_minimal.dart';
 
 void main() async {
   const AndroidOptions(encryptedSharedPreferences: true);
@@ -16,6 +16,6 @@ void main() async {
       options.dsn =
           "https://5cf3e648046b4e67a059fc4d6b8fa0fd@o1022830.ingest.sentry.io/6010044";
     },
-    appRunner: () => runApp(eduserveMinimal(flavor: "production")),
+    appRunner: () => runApp(EduserveMinimal(flavor: "production")),
   );
 }

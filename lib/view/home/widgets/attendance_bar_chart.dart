@@ -1,5 +1,6 @@
 // 🐦 Flutter imports:
-import 'package:eduserveMinimal/models/class_attendance.dart';
+import 'package:eduserveMinimal/models/attendance/attendance.dart';
+import 'package:eduserveMinimal/models/attendance/semester_attendance.dart';
 import 'package:flutter/material.dart';
 
 // 📦 Package imports:

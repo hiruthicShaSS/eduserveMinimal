@@ -4,7 +4,9 @@ import 'dart:math';
 
 // 🐦 Flutter imports:
 import 'package:eduserveMinimal/global/exceptions.dart';
-import 'package:eduserveMinimal/models/class_attendance.dart';
+import 'package:eduserveMinimal/models/attendance/attendance.dart';
+import 'package:eduserveMinimal/models/attendance/attendance_summary.dart';
+import 'package:eduserveMinimal/models/attendance/semester_attendance.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
