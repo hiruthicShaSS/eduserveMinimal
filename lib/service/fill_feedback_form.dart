@@ -1,6 +1,6 @@
 // 📦 Package imports:
-import 'package:beautifulsoup/beautifulsoup.dart';
 import 'package:http/http.dart';
+import 'package:html/dom.dart';
 
 // 🌎 Project imports:
 import 'package:eduserveMinimal/global/gloabls.dart';
@@ -23,8 +23,14 @@ Future<bool> fillFeedbackForm(Map rating) async {
   );
 
   void setInputs(String body) {
-    Beautifulsoup soup = Beautifulsoup(body);
-    final inputs = soup.find_all("input").map((e) => e.attributes).toList();
+    Document html = Document.html(res.body);
+    final inputs = html
+        .querySelectorAll("input")
+        .map((e) => {e.attributes["name"]: e.attributes["value"]})
+        .toList();
+
+    inputs.removeWhere((element) =>
+        element.keys.first == null || element.values.first == null);
 
     inputs.forEach((element) {
       if (formData[element["name"]] == "") {
