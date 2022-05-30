@@ -5,7 +5,7 @@
 # DEPRECATED
 
 ### This branch is no longer necesary for the application's work.
-Get the standalone app in branch [mobile_app](https://github.com/hiruthic2002/eduserveMinimal/tree/mobile_app).
+Get the standalone app code from branch [development](https://github.com/hiruthic2002/eduserveMinimal/tree/development).
 
 Or get the release app in [releases](https://github.com/hiruthic2002/eduserveMinimal/releases)
 <hr>
