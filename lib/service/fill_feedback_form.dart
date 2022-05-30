@@ -1,13 +1,13 @@
 // 📦 Package imports:
-import 'package:beautifulsoup/beautifulsoup.dart';
+import 'package:eduserveMinimal/service/auth.dart';
 import 'package:http/http.dart';
 
 // 🌎 Project imports:
 import 'package:eduserveMinimal/global/gloabls.dart';
 
 Future<bool> fillFeedbackForm(Map rating) async {
-  Map formData = httpFormData;
-  Map<String, String> headers = httpHeaders;
+  Map<String, String> headers = AuthService.headers;
+  Map formData = AuthService.formData;
 
   formData["ctl00_radMenu_ClientState"] = "";
   formData["__SCROLLPOSITIONX"] = "204";
@@ -22,21 +22,7 @@ Future<bool> fillFeedbackForm(Map rating) async {
     headers: headers,
   );
 
-  void setInputs(String body) {
-    Beautifulsoup soup = Beautifulsoup(body);
-    final inputs = soup.find_all("input").map((e) => e.attributes).toList();
-
-    inputs.forEach((element) {
-      if (formData[element["name"]] == "") {
-        formData[element["name"]] =
-            (element["value"] == "Clear" || element["value"] == null)
-                ? ""
-                : element["value"];
-      }
-    });
-  }
-
-  setInputs(res.body);
+  formData.addAll(await AuthService().basicFormData(res.body));
 
   rating.forEach((key, value) => formData[key] = "");
 
@@ -53,7 +39,8 @@ Future<bool> fillFeedbackForm(Map rating) async {
     Response res = await post(
         Uri.parse("https://eduserve.karunya.edu/MIS/IQAC/HFBCollection.aspx"));
 
-    setInputs(res.body);
+    formData.addAll(await AuthService().basicFormData(res.body));
+
     print(res.statusCode);
 
     if (i + 1 == rating.keys.toList().length) {

@@ -1,4 +1,3 @@
-import 'package:beautifulsoup/beautifulsoup.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -67,19 +66,21 @@ class AuthService {
     };
     var res = await get(Uri.parse(
         "https://eduserve.karunya.edu/Login.aspx?ReturnUrl=%2fStudent%2fAttSummary.aspx"));
-    var eduserveCookie =
-        res.headers["set-cookie"]!; // Set the ASP.NET_SessionId
+    var eduserveCookie = res.headers["set-cookie"]!;
 
-    // Parse: Start
-    var soup = Beautifulsoup(res.body);
-    final inputs = soup.find_all("input").map((e) => e.attributes).toList();
+    Document html = Document.html(res.body);
 
-    inputs.forEach((element) {
-      if (login_data[element["name"]] == "") {
-        login_data[element["name"]] = element["value"];
-      }
-    });
-    // Parse: End
+    List inputs = html
+        .querySelectorAll("input")
+        .map((e) => {e.attributes["name"]: e.attributes["value"]})
+        .toList();
+
+    inputs.removeWhere((element) =>
+        element.keys.first == null || element.values.first == null);
+
+    for (var input in inputs) {
+      login_data[input.keys.first!] = input.values.first;
+    }
 
     // Get login.aspx
     headers["cookie"] = eduserveCookie.split(";")[0];
