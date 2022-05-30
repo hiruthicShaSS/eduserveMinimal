@@ -24,6 +24,8 @@ class AppState extends ChangeNotifier {
   void set setHallTicket(HallTicket hallTicket) =>
       _cacheController.setHallTicket = hallTicket;
 
+  bool get isTimetableCached => _cacheController.timeTable != null;
+
   Future<User> get user async {
     if (_cacheController.user != null) return _cacheController.user!;
 
@@ -54,10 +56,10 @@ class AppState extends ChangeNotifier {
     return _cacheController.leave!;
   }
 
-  Future<List<TimeTable>> get timetable async {
+  Future<List<TimeTableEntry>> get timetable async {
     if (_cacheController.timeTable != null) return _cacheController.timeTable!;
 
-    List<TimeTable>? timeTableFromStorage =
+    List<TimeTableEntry>? timeTableFromStorage =
         await _cacheController.getTimetableFromStorage();
 
     if (timeTableFromStorage != null) return timeTableFromStorage;

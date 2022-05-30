@@ -1,6 +1,7 @@
 // 🐦 Flutter imports:
 import 'dart:typed_data';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:eduserveMinimal/global/enum.dart';
 import 'package:eduserveMinimal/global/service/birthday_service.dart';
 import 'package:eduserveMinimal/models/fees.dart';
@@ -39,6 +40,38 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   void initState() {
+    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+      if (!isAllowed) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text("Allow Notifications"),
+            content: const Text(
+                "We can send you notifications about upcoming classes..."),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text(
+                  "Don't Allow",
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  AwesomeNotifications()
+                      .requestPermissionToSendNotifications()
+                      .then((isAllowed) {
+                    if (isAllowed) Navigator.of(context).pop();
+                  });
+                },
+                child: Text("Allow"),
+              ),
+            ],
+          ),
+        );
+      }
+    });
+
     processExcessInfo(context);
     super.initState();
   }
@@ -169,7 +202,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> checkForIssues() async {
     Fees fees = await getFeesDetails();
-    HallTicket hallTicket = await getHallTicket();
+    HallTicket hallTicket = await getHallTicket(suppressError: true);
 
     if (mounted) {
       Provider.of<AppState>(context, listen: false).setFees = fees;
@@ -185,30 +218,23 @@ class _HomePageState extends State<HomePage> {
     }
 
     if (issues.isNotEmpty) {
-      ScaffoldMessenger.of(context).showMaterialBanner(
-        MaterialBanner(
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
           backgroundColor: Colors.redAccent,
           content: Text("We found some issues!"),
-          actions: [
-            TextButton(
-              onPressed: () {
-                SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                        builder: (_) => IssuesView(issues: issues)),
-                  );
+          duration: const Duration(seconds: 30),
+          action: SnackBarAction(
+            label: "Review",
+            onPressed: () {
+              SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => IssuesView(issues: issues)),
+                );
 
-                  ScaffoldMessenger.of(context).removeCurrentMaterialBanner();
-                });
-              },
-              child: Text("Review"),
-            ),
-            IconButton(
-              onPressed: () =>
-                  ScaffoldMessenger.of(context).hideCurrentMaterialBanner(),
-              icon: Icon(Icons.close),
-            ),
-          ],
+                ScaffoldMessenger.of(context).removeCurrentMaterialBanner();
+              });
+            },
+          ),
         ),
       );
     }

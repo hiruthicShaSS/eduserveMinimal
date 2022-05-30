@@ -65,7 +65,9 @@ class _InternalMarksScreenState extends State<InternalMarksScreen> {
                     ),
                   );
                 } else {
-                  return LinearProgressIndicator();
+                  return LinearProgressIndicator(
+                    backgroundColor: Colors.transparent,
+                  );
                 }
               },
             ),

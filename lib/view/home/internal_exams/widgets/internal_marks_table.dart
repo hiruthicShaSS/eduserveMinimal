@@ -99,7 +99,8 @@ class _InternalMarksTableState extends State<InternalMarksTable> {
                     ),
                   ),
                   textStyle: TextStyle(fontWeight: FontWeight.bold),
-                  colorBg: internalMarks[i].marksScored < 20
+                  colorBg: internalMarks[i].marksScored <
+                          internalMarks[i].totalMarks ~/ 2
                       ? Colors.red.withOpacity(0.2)
                       : internalMarks[i].marksScored >=
                               internalMarks[i].totalMarks
@@ -120,7 +121,8 @@ class _InternalMarksTableState extends State<InternalMarksTable> {
                       ),
                     ),
                   ),
-                  colorBg: internalMarks[j].marksScored < 20
+                  colorBg: internalMarks[j].marksScored <
+                          internalMarks[j].totalMarks ~/ 2
                       ? Colors.red.withOpacity(0.2)
                       : internalMarks[j].marksScored >=
                               internalMarks[j].totalMarks
@@ -139,7 +141,8 @@ class _InternalMarksTableState extends State<InternalMarksTable> {
                             internalMarks[j].marksScored.toString(),
                             style: TextStyle(
                               fontSize: 80,
-                              color: internalMarks[j].marksScored < 20
+                              color: internalMarks[j].marksScored <
+                                      internalMarks[j].totalMarks ~/ 2
                                   ? Colors.red
                                   : internalMarks[j].marksScored >=
                                           internalMarks[j].totalMarks

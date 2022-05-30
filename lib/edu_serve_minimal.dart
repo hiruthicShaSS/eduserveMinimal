@@ -12,6 +12,7 @@ import 'package:eduserveMinimal/view/home/home.dart';
 import 'package:eduserveMinimal/view/home/timetable.dart';
 import 'package:eduserveMinimal/view/settings/credentials.dart';
 import 'package:eduserveMinimal/view/settings/forgot_password.dart';
+import 'package:eduserveMinimal/view/settings/notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -54,6 +55,7 @@ class EduserveMinimal extends StatelessWidget {
           "/credentials": (BuildContext context) => Credentials(),
           "/user": (BuildContext context) => UserScreen(),
           "/forgotPassword": (BuildContext context) => ForgotPasswordScreen(),
+          "/notifications": (BuildContext context) => NotificationsView(),
         },
         darkTheme: ThemeProvider.dark,
         title: "eduserveMinimal",

@@ -14,7 +14,7 @@ class CacheController {
   User? _user;
   SemesterAttendance? _semesterAttendance;
   Fees? _fees;
-  List<TimeTable>? _timeTable;
+  List<TimeTableEntry>? _timeTable;
   Leave? _leave;
   HallTicket? _hallTicket;
 
@@ -29,7 +29,8 @@ class CacheController {
   void set setSemesterAttendance(SemesterAttendance semesterAttendance) =>
       _semesterAttendance = semesterAttendance;
   void set setFees(Fees fees) => _fees = fees;
-  void set setTimetable(List<TimeTable> timeTable) => _timeTable = timeTable;
+  void set setTimetable(List<TimeTableEntry> timeTable) =>
+      _timeTable = timeTable;
   void set setLeave(Leave leave) => _leave = leave;
   void set setHallTicket(HallTicket hallTicket) => _hallTicket = hallTicket;
 
@@ -40,7 +41,7 @@ class CacheController {
   User? get user => _user;
   SemesterAttendance? get semesterAttendance => _semesterAttendance;
   Fees? get fees => _fees;
-  List<TimeTable>? get timeTable => _timeTable;
+  List<TimeTableEntry>? get timeTable => _timeTable;
   Leave? get leave => _leave;
   HallTicket? get hallTicket => _hallTicket;
 
@@ -58,7 +59,7 @@ class CacheController {
     await prefs.setString("timetable_last_update", DateTime.now().toString());
   }
 
-  Future<List<TimeTable>?> getTimetableFromStorage() async {
+  Future<List<TimeTableEntry>?> getTimetableFromStorage() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final FlutterSecureStorage storage = FlutterSecureStorage();
 
@@ -78,8 +79,8 @@ class CacheController {
         List timetableList = jsonDecode(timetableString);
         timetableList = timetableList.map((e) => jsonDecode(e)).toList();
 
-        List<TimeTable> timetable =
-            timetableList.map((e) => TimeTable.fromMap(e)).toList();
+        List<TimeTableEntry> timetable =
+            timetableList.map((e) => TimeTableEntry.fromMap(e)).toList();
 
         if (timetable.isNotEmpty) return timetable;
       }

@@ -6,7 +6,6 @@ import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:flutter/material.dart';
 
 // 🌎 Project imports:
-import 'package:eduserveMinimal/service/timetable.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:table_sticky_headers/table_sticky_headers.dart';
@@ -18,6 +17,8 @@ class TimeTableScreen extends StatefulWidget {
 }
 
 class _TimeTableScreenState extends State<TimeTableScreen> {
+  List<String> weekdays = ['mon', 'tue', 'wed', 'thu', 'fri'];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +27,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
           quarterTurns: 1,
           child: FutureBuilder(
             future: Provider.of<AppState>(context).timetable,
-            builder: (context, AsyncSnapshot<List<TimeTable>> snapshot) {
+            builder: (context, AsyncSnapshot<List<TimeTableEntry>> snapshot) {
               if (snapshot.hasError) {
                 log("", error: snapshot.error);
 
@@ -48,7 +49,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
               }
 
               if (snapshot.connectionState == ConnectionState.done) {
-                List<TimeTable> timeTable = snapshot.data!;
+                List<TimeTableEntry> timeTable = snapshot.data!;
                 List<List<TimeTableSubject>> data = [];
 
                 for (var day in timeTable) {
@@ -72,17 +73,31 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                   rowsLength: data.length,
                   columnsTitleBuilder: (i) =>
                       tableCell.TableCell.stickyRow("Hour ${i + 1}"),
-                  rowsTitleBuilder: (i) =>
-                      tableCell.TableCell.stickyColumn(timeTable[i].day),
+                  rowsTitleBuilder: (i) => tableCell.TableCell.stickyColumn(
+                    timeTable[i].day,
+                    colorBg: weekdays.indexOf(timeTable[i].day.toLowerCase()) +
+                                1 ==
+                            DateTime.now().weekday
+                        ? Theme.of(context).colorScheme.primary.withOpacity(0.3)
+                        : Colors.transparent,
+                  ),
                   contentCellBuilder: (i, j) => data[j][i].name.isEmpty
                       ? const Placeholder()
                       : tableCell.TableCell.content(
+                          colorBg:
+                              weekdays.indexOf(timeTable[j].day.toLowerCase()) +
+                                          1 ==
+                                      DateTime.now().weekday
+                                  ? Theme.of(context)
+                                      .colorScheme
+                                      .primary
+                                      .withOpacity(0.3)
+                                  : Colors.transparent,
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 10),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Text(
                                   data[j][i].name,

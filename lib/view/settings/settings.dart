@@ -43,6 +43,15 @@ class Settings extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed("/notifications");
+                },
+                child: Text("Notifications"),
+              ),
+            ),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
                 child: Text("Open EduServe"),
                 onPressed: () async {
                   await launchUrl(Uri.parse(eduserveURL));
@@ -66,19 +75,23 @@ class Settings extends StatelessWidget {
                   onPressed: () async {
                     PackageInfo info = await PackageInfo.fromPlatform();
                     if (info.packageName.contains("dev") ||
-                        info.packageName.contains("stg"))
+                        info.packageName.contains("stg")) {
                       Fluttertoast.showToast(
                           msg: "You are running a non-production build!");
 
+                      return;
+                    }
+
                     final newVersion = NewVersion(androidId: info.packageName);
                     newVersion.showAlertIfNecessary(context: context);
+
                     bool? canUpdate =
                         (await newVersion.getVersionStatus())?.canUpdate;
-                    if (canUpdate ?? false)
+
+                    if (canUpdate ?? false) {
                       Fluttertoast.showToast(
                           msg: "You are already on latest version!");
-                    // launch(
-                    //     "https://github.com/hiruthic2002/eduserveMinimal/releases");
+                    }
                   }),
             ),
             SizedBox(

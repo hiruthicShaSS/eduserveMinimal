@@ -5,7 +5,7 @@ import 'package:eduserveMinimal/service/auth.dart';
 import 'package:http/http.dart';
 import 'package:html/dom.dart';
 
-Future<List<TimeTable>> getTimetable({bool supressError = false}) async {
+Future<List<TimeTableEntry>> getTimetable({bool supressError = false}) async {
   Map<String, String> formData = AuthService.formData;
   formData.remove(r"ctl00$mainContent$BTNCLEAR");
 
@@ -64,14 +64,14 @@ Future<List<TimeTable>> getTimetable({bool supressError = false}) async {
       .where((e) => e.className == "rgRow" || e.className == "rgAltRow")
       .toList();
 
-  List<TimeTable> table = [];
+  List<TimeTableEntry> table = [];
   for (var row in rows) {
     List<String> rowData = html
         .querySelectorAll("#${row.id} > td")
         .map((e) => e.text.trim())
         .toList();
 
-    TimeTable timeTable = TimeTable(
+    TimeTableEntry timeTable = TimeTableEntry(
       day: rowData[0],
       hour1: TimeTableSubject.fromString(rowData[1]),
       hour2: TimeTableSubject.fromString(rowData[2]),
