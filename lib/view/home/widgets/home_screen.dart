@@ -1,6 +1,5 @@
 import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:eduserveMinimal/service/auth.dart';
-import 'package:eduserveMinimal/service/scrap.dart';
 import 'package:eduserveMinimal/view/home/leaves/leave_information.dart';
 import 'package:eduserveMinimal/view/home/widgets/attendance_summary_basic.dart';
 import 'package:eduserveMinimal/view/home/widgets/attendance_widget.dart';
@@ -17,7 +16,6 @@ class HomeScreen extends StatelessWidget {
     return RefreshIndicator(
       displacement: 100,
       onRefresh: () => AuthService().login().then((value) {
-        Scraper.cache.clear();
         Provider.of<AppState>(context, listen: false).refresh();
       }),
       child: CustomScrollView(

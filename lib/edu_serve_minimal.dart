@@ -2,6 +2,7 @@
 import 'dart:developer';
 
 // 🐦 Flutter imports:
+import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:eduserveMinimal/providers/cache.dart';
 import 'package:eduserveMinimal/service/auth.dart';
@@ -27,7 +28,6 @@ import 'package:eduserveMinimal/providers/theme.dart';
 import 'package:eduserveMinimal/view/user/user.dart';
 import 'package:eduserveMinimal/service/fill_feedback_form.dart';
 import 'package:eduserveMinimal/service/get_feedback_form.dart';
-import 'package:eduserveMinimal/service/scrap.dart';
 import 'package:eduserveMinimal/shortcuts.dart';
 
 class EduserveMinimal extends StatelessWidget {
@@ -121,30 +121,29 @@ class _HomeControllerState extends State<HomeController> {
                 if (snapshot.connectionState == ConnectionState.done) {
                   if (snapshot.data ?? false) {
                     return FutureBuilder(
-                        future: isLoggedIn(prefs),
-                        builder: (context, AsyncSnapshot<Map> snapshot) {
+                        future: AuthService().login(),
+                        builder: (context, AsyncSnapshot snapshot) {
                           if (snapshot.hasError) {
                             log("Error on edu_serve.dart",
                                 error: snapshot.error);
+
+                            if (snapshot.error == LoginError) {
+                              return const Credentials();
+                            }
+
+                            if (snapshot.error == FeedbackFormFound) {
+                              if (prefs.getInt("autoFillFeedbackValue") !=
+                                  null) {
+                                return const AutoFillFeedback();
+                              }
+
+                              return FeedbackForm();
+                            }
                           }
 
                           if (snapshot.connectionState ==
                               ConnectionState.done) {
-                            if (snapshot.data!["isLoggedIn"]) {
-                              if (snapshot.data!["feedBackFormFound"]) {
-                                if (prefs.getInt("autoFillFeedbackValue") !=
-                                    null) {
-                                  return const AutoFillFeedback();
-                                }
-                                return FeedbackForm();
-                              }
-                              if (snapshot.data!["loginError"])
-                                return const Credentials();
-
-                              return const HomePage();
-                            }
-
-                            return const Credentials();
+                            return const HomePage();
                           }
 
                           return Material(
@@ -166,7 +165,7 @@ class _HomeControllerState extends State<HomeController> {
                         });
                   }
 
-                  return Credentials();
+                  return const Credentials();
                 }
 
                 return const Center(child: CircularProgressIndicator());
@@ -180,38 +179,10 @@ class _HomeControllerState extends State<HomeController> {
 
   Future<bool> credentialsExist() async {
     final FlutterSecureStorage storage = FlutterSecureStorage();
-    bool userNameExist = await storage.containsKey(key: "username");
-    bool passwordExist = await storage.containsKey(key: "password");
+    bool userNameExist = await storage.read(key: "username") != null;
+    bool passwordExist = await storage.read(key: "password") != null;
 
     return userNameExist && passwordExist;
-  }
-
-  Future<Map> isLoggedIn(SharedPreferences prefs) async {
-    Duration lastLogin = DateTime.parse(
-            prefs.getString("lastLogin") ?? DateTime.now().toString())
-        .difference(DateTime.now());
-
-    if (lastLogin.inMinutes < 30 && Scraper.cache["home"] != null) {
-      return {
-        "isLoggedIn": true,
-        "loginData": Scraper.cache["home"],
-        "feedBackFormFound":
-            Scraper.cache["home"].contains("feedback form found"),
-        "loginError": false,
-      };
-    }
-
-    String loginData = await AuthService().login();
-
-    if (!loginData.contains("Login error"))
-      prefs.setString("lastLogin", DateTime.now().toString());
-
-    return {
-      "isLoggedIn": loginData.length > 0,
-      "loginData": loginData,
-      "feedBackFormFound": loginData.contains("feedback form found"),
-      "loginError": loginData.contains("Login error"),
-    };
   }
 }
 

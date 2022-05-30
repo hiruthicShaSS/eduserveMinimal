@@ -30,3 +30,25 @@ class NoHallTicketAvailable implements Exception {
     return message ?? "No error message provided!";
   }
 }
+
+class LoginError implements Exception {
+  const LoginError([this.message]);
+
+  final String? message;
+
+  @override
+  String toString() {
+    return message ?? "No error message provided!";
+  }
+}
+
+class FeedbackFormFound implements Exception {
+  const FeedbackFormFound([this.message]);
+
+  final String? message;
+
+  @override
+  String toString() {
+    return message ?? "No error message provided!";
+  }
+}

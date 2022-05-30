@@ -188,17 +188,12 @@ class _CredentialsFormState extends State<CredentialsForm> {
                 ],
               ),
             ));
-    String loginStatus = await AuthService().login(
+    await AuthService().login(
       username: _usernameController.text,
       password: _passwordController.text,
     );
 
     Navigator.of(context).pop();
-
-    if (loginStatus == "Login error") {
-      Fluttertoast.showToast(msg: "Login error");
-      return;
-    }
 
     await storage.write(key: "username", value: _usernameController.text);
     await storage.write(key: "password", value: _passwordController.text);

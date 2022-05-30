@@ -31,11 +31,7 @@ class AttendanceSummaryWidget extends StatelessWidget {
             if (snapshot.error.runtimeType == NoRecordsException) {
               return Padding(
                 padding: const EdgeInsets.only(top: 20),
-                child: Center(
-                  child: Text(
-                    snapshot.error.toString(),
-                  ),
-                ),
+                child: Center(child: Text(snapshot.error.toString())),
               );
             }
 

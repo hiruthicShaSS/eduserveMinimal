@@ -7,9 +7,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
 import 'package:html/dom.dart';
 
-// 🌎 Project imports:
-import 'package:eduserveMinimal/service/scrap.dart';
-
 Future<User> getStudentInfo() async {
   String studentHomePage = await AuthService().login();
 
@@ -60,8 +57,6 @@ Future<User> getStudentInfo() async {
     headers: AuthService.headers,
   );
   user.image = imageResponse.bodyBytes;
-
-  Scraper.cache["user"] = user.toMap();
 
   final FlutterSecureStorage storage = FlutterSecureStorage();
   await storage.write(key: "userData", value: jsonEncode(user.toMap()));
