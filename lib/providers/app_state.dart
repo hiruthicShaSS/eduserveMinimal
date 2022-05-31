@@ -17,6 +17,9 @@ import 'package:eduserveMinimal/service/timetable.dart';
 class AppState extends ChangeNotifier {
   CacheController _cacheController = CacheController();
   bool checkedForUpdate = false;
+  bool _loggedIn = false;
+
+  void set setLoggedIn(bool status) => _loggedIn = status;
 
   void set setUser(User user) => _cacheController.setUser = user;
   void set setLeave(Leave leave) => _cacheController.setLeave = leave;
@@ -25,6 +28,7 @@ class AppState extends ChangeNotifier {
       _cacheController.setHallTicket = hallTicket;
 
   bool get isTimetableCached => _cacheController.timeTable != null;
+  bool get isLoggedIn => _loggedIn;
 
   Future<User> get user async {
     if (_cacheController.user != null) return _cacheController.user!;

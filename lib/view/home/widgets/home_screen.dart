@@ -26,6 +26,7 @@ class HomeScreen extends StatelessWidget {
             pinned: true,
             snap: true,
             floating: true,
+            centerTitle: true,
             flexibleSpace: FlexibleSpaceBar(
               background: Padding(
                 padding: EdgeInsets.only(

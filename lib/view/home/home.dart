@@ -1,6 +1,7 @@
 // 🐦 Flutter imports:
 import 'dart:typed_data';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:eduserveMinimal/global/enum.dart';
 import 'package:eduserveMinimal/global/service/birthday_service.dart';
@@ -106,8 +107,9 @@ class _HomePageState extends State<HomePage> {
           showUnselectedLabels: false,
           currentIndex: _selectedIndex,
           selectedItemColor: Theme.of(context).colorScheme.primary,
+          type: BottomNavigationBarType.fixed,
           unselectedItemColor:
-              Theme.of(context).colorScheme.secondary.withOpacity(0.6),
+              Theme.of(context).colorScheme.surface.withOpacity(0.4),
           onTap: (index) {
             _pageController.animateToPage(
               index,
@@ -118,10 +120,8 @@ class _HomePageState extends State<HomePage> {
           items: [
             BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
             BottomNavigationBarItem(
-                icon: Icon(Icons.calendar_month_sharp),
-                label: "Class Timetable"),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.quiz), label: "Internal Marks"),
+                icon: Icon(Icons.calendar_month_sharp), label: "Timetable"),
+            BottomNavigationBarItem(icon: Icon(Icons.quiz), label: "Internals"),
             BottomNavigationBarItem(icon: Icon(Icons.person), label: "Student"),
           ],
         ),
@@ -135,7 +135,11 @@ class _HomePageState extends State<HomePage> {
         child: Container(
           child: Row(
             children: [
-              Text("Hola amigo!", style: TextStyle(fontSize: 25)),
+              AutoSizeText(
+                "Hola amigo!",
+                minFontSize: 20,
+                maxFontSize: 25,
+              ),
               Spacer(),
               GestureDetector(
                 child: Hero(
@@ -221,10 +225,16 @@ class _HomePageState extends State<HomePage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.redAccent,
-          content: Text("We found some issues!"),
+          content: Text(
+            "We found some issues!",
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
           duration: const Duration(seconds: 30),
           action: SnackBarAction(
             label: "Review",
+            textColor: Colors.white,
             onPressed: () {
               SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
                 Navigator.of(context).push(

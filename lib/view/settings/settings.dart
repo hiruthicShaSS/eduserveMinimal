@@ -1,4 +1,6 @@
 // 🐦 Flutter imports:
+import 'package:eduserveMinimal/global/enum.dart';
+import 'package:eduserveMinimal/providers/theme.dart';
 import 'package:eduserveMinimal/service/auth.dart';
 import 'package:flutter/material.dart';
 
@@ -7,6 +9,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:new_version/new_version.dart';
 import 'package:package_info/package_info.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // 🌎 Project imports:
@@ -152,13 +155,26 @@ class Settings extends StatelessWidget {
                 onPressed: () =>
                     Fluttertoast.showToast(msg: "Press and hold for action"),
                 onLongPress: () async {
+                  AppTheme appTheme =
+                      Provider.of<ThemeProvider>(context, listen: false)
+                          .currentAppTheme;
+
                   showDialog(
                     context: context,
                     builder: (_) => StatefulBuilder(
                       builder: (context, setState) {
                         return AlertDialog(
-                          title: Text("Logout"),
-                          content: Text("Are you sure you want to logout?"),
+                          title: appTheme == AppTheme.valorant
+                              ? null
+                              : Text("Logout"),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (appTheme == AppTheme.valorant)
+                                Image.asset("assets/images/danger.gif"),
+                              Text("Are you sure you want to logout?"),
+                            ],
+                          ),
                           actions: [
                             TextButton(
                               onPressed: () async {

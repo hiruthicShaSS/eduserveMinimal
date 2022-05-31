@@ -37,19 +37,21 @@ class _LeaveInformationWidgetState extends State<LeaveInformationWidget>
       height: MediaQuery.of(context).size.height * 0.55,
       child: Column(
         children: [
-          TabBar(
-            controller: _tabController,
-            tabs: [
-              Tab(text: "Leave"),
-              Tab(text: "On-Duty Details"),
-            ],
-            indicator: CircleTabIndicator(
-                color: Theme.of(context).primaryColor, radius: 5),
-            labelColor:
-                ThemeProvider.currentThemeData!.textTheme.bodyText1!.color,
-            overlayColor: MaterialStateProperty.resolveWith(
-                (states) => Colors.transparent),
-          ),
+          Consumer(builder: (_, ThemeProvider themeProvider, __) {
+            return TabBar(
+              controller: _tabController,
+              tabs: [
+                Tab(text: "Leave"),
+                Tab(text: "On-Duty Details"),
+              ],
+              indicator: CircleTabIndicator(
+                  color: Theme.of(context).primaryColor, radius: 5),
+              labelColor:
+                  themeProvider.currentThemeData.textTheme.bodyText1!.color,
+              overlayColor: MaterialStateProperty.resolveWith(
+                  (states) => Colors.transparent),
+            );
+          }),
           Expanded(
             child: FutureBuilder(
               future: Provider.of<AppState>(context).leaveInfo,

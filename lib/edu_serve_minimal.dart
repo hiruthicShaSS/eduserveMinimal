@@ -2,6 +2,7 @@
 import 'dart:developer';
 
 // 🐦 Flutter imports:
+import 'package:eduserveMinimal/global/enum.dart';
 import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:eduserveMinimal/providers/cache.dart';
@@ -44,6 +45,7 @@ class EduserveMinimal extends StatelessWidget {
       ],
       builder: (context, child) => MaterialApp(
         debugShowCheckedModeBanner: flavor == "development",
+        title: "eduserveMinimal",
         initialRoute: "/homeController",
         routes: {
           "/homeController": (BuildContext context) => HomeController(),
@@ -57,9 +59,9 @@ class EduserveMinimal extends StatelessWidget {
           "/forgotPassword": (BuildContext context) => ForgotPasswordScreen(),
           "/notifications": (BuildContext context) => NotificationsView(),
         },
-        darkTheme: ThemeProvider.dark,
-        title: "eduserveMinimal",
+        darkTheme: Provider.of<ThemeProvider>(context).getDarkTheme,
         themeMode: Provider.of<ThemeProvider>(context).themeMode,
+        theme: Provider.of<ThemeProvider>(context).currentThemeData,
       ),
     );
   }
@@ -121,7 +123,7 @@ class _HomeControllerState extends State<HomeController> {
                 if (snapshot.connectionState == ConnectionState.done) {
                   if (snapshot.data ?? false) {
                     return FutureBuilder(
-                        future: AuthService().login(),
+                        future: _login(),
                         builder: (context, AsyncSnapshot snapshot) {
                           if (snapshot.hasError) {
                             log("Error on edu_serve.dart",
@@ -134,24 +136,38 @@ class _HomeControllerState extends State<HomeController> {
                             if (snapshot.error == FeedbackFormFound) {
                               if (prefs.getInt("autoFillFeedbackValue") !=
                                   null) {
+                                Provider.of<AppState>(context).setLoggedIn =
+                                    true;
+
                                 return const AutoFillFeedback();
                               }
 
+                              Provider.of<AppState>(context).setLoggedIn = true;
                               return FeedbackForm();
                             }
                           }
 
                           if (snapshot.connectionState ==
                               ConnectionState.done) {
+                            Provider.of<AppState>(context).setLoggedIn = true;
+
                             return const HomePage();
                           }
 
+                          AppTheme appTheme =
+                              Provider.of<ThemeProvider>(context)
+                                  .currentAppTheme;
+
                           return Material(
+                            color: Theme.of(context).backgroundColor,
                             child: Center(
                                 child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Lottie.asset("assets/lottie/log_in.json"),
+                                if (appTheme == AppTheme.valorant)
+                                  Image.asset("assets/images/kayo-loading.gif"),
+                                if (appTheme != AppTheme.valorant)
+                                  Lottie.asset("assets/lottie/log_in.json"),
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(
@@ -183,6 +199,12 @@ class _HomeControllerState extends State<HomeController> {
     bool passwordExist = await storage.read(key: "password") != null;
 
     return userNameExist && passwordExist;
+  }
+
+  Future _login() async {
+    if (Provider.of<AppState>(context).isLoggedIn) return;
+
+    return AuthService().login();
   }
 }
 

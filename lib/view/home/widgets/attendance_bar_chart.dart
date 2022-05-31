@@ -1,4 +1,5 @@
 // 🐦 Flutter imports:
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:eduserveMinimal/models/attendance/attendance.dart';
 import 'package:eduserveMinimal/models/attendance/semester_attendance.dart';
 import 'package:flutter/material.dart';
@@ -200,7 +201,13 @@ class LineChartLegend extends StatelessWidget {
           ),
         ),
         SizedBox(width: 6),
-        Text(text),
+        AutoSizeText(
+          text,
+          minFontSize: 8,
+          maxFontSize: 10,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(fontSize: 8),
+        ),
       ],
     );
   }

@@ -102,7 +102,10 @@ class LeaveList extends StatelessWidget {
                   child: Container(
                     padding: EdgeInsets.all(5),
                     decoration: BoxDecoration(
-                      color: Colors.transparent.withOpacity(0.2),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withOpacity(0.2),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Icon(Icons.chevron_right),

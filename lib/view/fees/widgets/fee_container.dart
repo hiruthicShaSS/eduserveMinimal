@@ -65,7 +65,7 @@ class FeeContainer extends StatelessWidget {
             Container(
               width: 60,
               height: 60,
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(5),
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
                 borderRadius: BorderRadius.only(
@@ -78,6 +78,7 @@ class FeeContainer extends StatelessWidget {
               child: fee.dateOfPayment == null
                   ? Icon(Icons.label_important, color: Colors.red)
                   : Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           DateFormat("dd").format(fee.dateOfPayment!),

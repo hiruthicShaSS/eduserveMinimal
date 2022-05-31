@@ -41,7 +41,10 @@ class IssuesView extends StatelessWidget {
                 trailing: TextButton(
                   onPressed: () => Navigator.of(context)
                       .push(MaterialPageRoute(builder: (_) => FeesView())),
-                  child: Text("Review"),
+                  child: Text(
+                    "Review",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
             ),
@@ -53,7 +56,10 @@ class IssuesView extends StatelessWidget {
                 trailing: TextButton(
                   onPressed: () => Navigator.of(context).push(
                       MaterialPageRoute(builder: (_) => HallTicketView())),
-                  child: Text("Review"),
+                  child: Text(
+                    "Review",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
             ),

@@ -114,9 +114,9 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                                   ),
                                 ),
                                 const Spacer(),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                Wrap(
+                                  alignment: WrapAlignment.spaceBetween,
+                                  spacing: 30,
                                   children: [
                                     Text(
                                       "Batch: ${data[j][i].batch}",
@@ -137,7 +137,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                     stickyLegendWidth: 80,
                     stickyLegendHeight: 80,
                     contentCellWidth: 200,
-                    contentCellHeight: 130,
+                    contentCellHeight: 170,
                   ),
                   legendCell: tableCell.TableCell.legend("Day / Hour"),
                 );

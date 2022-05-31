@@ -58,25 +58,28 @@ class FeesView extends StatelessWidget {
                         ),
                         Padding(
                           padding: const EdgeInsets.all(2.0),
-                          child: Container(
-                            height: 50,
-                            width: _width / 2.2,
-                            decoration: BoxDecoration(
-                              color:
-                                  ThemeProvider.currentThemeData!.primaryColor,
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Center(
-                              child: AutoSizeText(
-                                "Advance: ${fees.advance}",
-                                minFontSize: 15,
-                                maxFontSize: 22,
-                                overflow: TextOverflow.ellipsis,
-                                style: GoogleFonts.comfortaa(
-                                    fontWeight: FontWeight.bold),
+                          child: Consumer(
+                              builder: (_, ThemeProvider themeProvider, __) {
+                            return Container(
+                              height: 50,
+                              width: _width / 2.2,
+                              decoration: BoxDecoration(
+                                color:
+                                    themeProvider.currentThemeData.primaryColor,
+                                borderRadius: BorderRadius.circular(15),
                               ),
-                            ),
-                          ),
+                              child: Center(
+                                child: AutoSizeText(
+                                  "Advance: ${fees.advance}",
+                                  minFontSize: 15,
+                                  maxFontSize: 22,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.comfortaa(
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            );
+                          }),
                         ),
                       ],
                     ),
@@ -86,25 +89,28 @@ class FeesView extends StatelessWidget {
                       Expanded(
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 15),
-                          child: Container(
-                            height: 50,
-                            decoration: BoxDecoration(
-                              color: ThemeProvider
-                                  .currentThemeData!.primaryColor
-                                  .withOpacity(0.3),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Center(
-                              child: AutoSizeText(
-                                "Total spent: ${currencyToUnicode(fees.all.first.currency)} ${fees.all.fold<double>(0, (previousValue, fee) => previousValue + fee.paid)}",
-                                minFontSize: 15,
-                                maxFontSize: 22,
-                                overflow: TextOverflow.ellipsis,
-                                style: GoogleFonts.comfortaa(
-                                    fontWeight: FontWeight.bold),
+                          child: Consumer(
+                              builder: (_, ThemeProvider themeProvider, __) {
+                            return Container(
+                              height: 50,
+                              decoration: BoxDecoration(
+                                color: themeProvider
+                                    .currentThemeData.primaryColor
+                                    .withOpacity(0.3),
+                                borderRadius: BorderRadius.circular(15),
                               ),
-                            ),
-                          ),
+                              child: Center(
+                                child: AutoSizeText(
+                                  "Total spent: ${currencyToUnicode(fees.all.first.currency)} ${fees.all.fold<double>(0, (previousValue, fee) => previousValue + fee.paid)}",
+                                  minFontSize: 15,
+                                  maxFontSize: 22,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.comfortaa(
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            );
+                          }),
                         ),
                       ),
                       // Padding(
