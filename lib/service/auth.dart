@@ -1,4 +1,3 @@
-import 'package:beautifulsoup/beautifulsoup.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -71,8 +70,14 @@ class AuthService {
         res.headers["set-cookie"]!; // Set the ASP.NET_SessionId
 
     // Parse: Start
-    var soup = Beautifulsoup(res.body);
-    final inputs = soup.find_all("input").map((e) => e.attributes).toList();
+    Document html = Document.html(res.body);
+    final inputs = html
+        .querySelectorAll("input")
+        .map((e) => {e.attributes["name"]: e.attributes["value"]})
+        .toList();
+
+    inputs.removeWhere((element) =>
+        element.keys.first == null || element.values.first == null);
 
     inputs.forEach((element) {
       if (login_data[element["name"]] == "") {
