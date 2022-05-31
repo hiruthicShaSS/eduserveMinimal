@@ -1,14 +1,11 @@
 // 📦 Package imports:
+import 'package:eduserveMinimal/service/auth.dart';
 import 'package:http/http.dart';
 import 'package:html/dom.dart';
 
-// 🌎 Project imports:
-import 'package:eduserveMinimal/global/gloabls.dart';
-import 'package:http/http.dart';
-
 Future<bool> fillFeedbackForm(Map rating) async {
-  Map formData = httpFormData;
-  Map<String, String> headers = httpHeaders;
+  Map<String, String> headers = AuthService.headers;
+  Map formData = AuthService.formData;
 
   formData["ctl00_radMenu_ClientState"] = "";
   formData["__SCROLLPOSITIONX"] = "204";
@@ -60,7 +57,8 @@ Future<bool> fillFeedbackForm(Map rating) async {
     Response res = await post(
         Uri.parse("https://eduserve.karunya.edu/MIS/IQAC/HFBCollection.aspx"));
 
-    setInputs(res.body);
+    formData.addAll(await AuthService().basicFormData(res.body));
+
     print(res.statusCode);
 
     if (i + 1 == rating.keys.toList().length) {

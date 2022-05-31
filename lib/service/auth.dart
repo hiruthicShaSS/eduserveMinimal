@@ -66,12 +66,11 @@ class AuthService {
     };
     var res = await get(Uri.parse(
         "https://eduserve.karunya.edu/Login.aspx?ReturnUrl=%2fStudent%2fAttSummary.aspx"));
-    var eduserveCookie =
-        res.headers["set-cookie"]!; // Set the ASP.NET_SessionId
+    var eduserveCookie = res.headers["set-cookie"]!;
 
-    // Parse: Start
     Document html = Document.html(res.body);
-    final inputs = html
+
+    List inputs = html
         .querySelectorAll("input")
         .map((e) => {e.attributes["name"]: e.attributes["value"]})
         .toList();
@@ -79,12 +78,9 @@ class AuthService {
     inputs.removeWhere((element) =>
         element.keys.first == null || element.values.first == null);
 
-    inputs.forEach((element) {
-      if (login_data[element["name"]] == "") {
-        login_data[element["name"]] = element["value"];
-      }
-    });
-    // Parse: End
+    for (var input in inputs) {
+      login_data[input.keys.first!] = input.values.first;
+    }
 
     // Get login.aspx
     headers["cookie"] = eduserveCookie.split(";")[0];
