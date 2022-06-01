@@ -159,7 +159,7 @@ class _HomeControllerState extends State<HomeController> {
                                   .currentAppTheme;
 
                           return Material(
-                            color: Theme.of(context).backgroundColor,
+                            // color: Theme.of(context).backgroundColor,
                             child: Center(
                                 child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,

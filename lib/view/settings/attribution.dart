@@ -41,6 +41,12 @@ class AttributionScreen extends StatelessWidget {
           "https://lottiefiles.com/41070-notepad-with-a-list-of-tick-boxes-and-5-star-feedback",
           "Lottie Files",
           "https://lottiefiles.com"),
+      Attribution(
+          AttributionType.GIF,
+          "Valorant",
+          "https://giphy.com/playvalorant/valorant-agents/kayo",
+          "GIPHY",
+          "https://giphy.com/"),
     ];
 
     return Scaffold(
@@ -73,7 +79,7 @@ class AttributionScreen extends StatelessWidget {
   }
 }
 
-enum AttributionType { Image, Animation }
+enum AttributionType { Image, Animation, GIF }
 
 class Attribution {
   final AttributionType type;

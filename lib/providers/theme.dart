@@ -41,14 +41,15 @@ class ThemeProvider extends ChangeNotifier {
     ),
   );
 
-  static ThemeData light = ThemeData(
+  static ThemeData light = ThemeData.light().copyWith(
     brightness: Brightness.light,
-    cardColor: Colors.transparent.withOpacity(0.2),
     primaryColor: Colors.lightBlueAccent,
-    colorScheme: ColorScheme.light(
-      primary: Colors.blue,
-      secondary: Colors.blueAccent,
-    ),
+    colorScheme: ThemeData.light().colorScheme.copyWith(
+          primary: Colors.blue,
+          secondary: Colors.blueAccent,
+          onBackground: Colors.tealAccent.withOpacity(0.4),
+          surface: Colors.green,
+        ),
     textTheme: TextTheme(
       bodyText1: TextStyle(
         color: Colors.black,
@@ -74,7 +75,7 @@ class ThemeProvider extends ChangeNotifier {
       onBackground: const Color.fromARGB(255, 21, 33, 44),
       onError: const Color(0xFF790202),
       onSurface: const Color(0xFF1e1412),
-      brightness: SchedulerBinding.instance!.window.platformBrightness,
+      brightness: Brightness.dark,
     ),
     brightness: Brightness.dark,
     backgroundColor: const Color.fromRGBO(13, 23, 33, 1),
