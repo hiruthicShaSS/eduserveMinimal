@@ -27,7 +27,6 @@ class ThemeProvider extends ChangeNotifier {
           onBackground: Colors.deepPurpleAccent,
         ),
     brightness: Brightness.dark,
-    backgroundColor: const Color.fromRGBO(13, 23, 33, 1),
     dividerColor: Colors.white54,
     textTheme: TextTheme(
       bodyText1: TextStyle(
@@ -48,9 +47,9 @@ class ThemeProvider extends ChangeNotifier {
           primary: Colors.blue,
           secondary: Colors.blueAccent,
           onBackground: Colors.tealAccent.withOpacity(0.4),
-          surface: Colors.green,
+          surface: Colors.grey,
         ),
-    textTheme: TextTheme(
+    primaryTextTheme: TextTheme(
       bodyText1: TextStyle(
         color: Colors.black,
       ),

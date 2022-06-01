@@ -55,15 +55,6 @@ class Settings extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                child: Text("Open EduServe"),
-                onPressed: () async {
-                  await launchUrl(Uri.parse(eduserveURL));
-                },
-              ),
-            ),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
                 child: Text("Update credentials"),
                 onPressed: () {
                   Navigator.of(context)
@@ -122,11 +113,12 @@ class Settings extends StatelessWidget {
                         }),
                   ),
                 ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 2),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 2),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.4,
                     child: ElevatedButton(
-                        child: Text("Attributions"),
+                        child: Text("Attribution"),
                         onPressed: () => Navigator.of(context).push(
                             MaterialPageRoute(
                                 builder: (_) => AttributionScreen()))),

@@ -25,7 +25,7 @@ Future<HallTicket> getHallTicket({bool suppressError = false}) async {
   Map<String, String> formData = await AuthService().basicFormData(res.body);
 
   if (academicTerms.isEmpty) {
-    throw MiscellaneousErrorInEduserve();
+    throw MiscellaneousErrorInEduserve("No academic terms found!");
   }
 
   formData[r"ctl00$mainContent$DDLEXAM"] = academicTerms.last.toString();

@@ -38,7 +38,7 @@ Future<List<TimeTableEntry>> getTimetable({bool supressError = false}) async {
       .toList();
 
   formData[r"ctl00$mainContent$DDLACADEMICTERM"] =
-      (academicTerms.length - 2).toString();
+      (academicTerms.length - 1).toString();
   formData.remove(r"ctl00$mainContent$BTNCLEAR");
 
   res = await post(

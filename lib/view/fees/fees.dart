@@ -1,4 +1,5 @@
 // 🐦 Flutter imports:
+import 'package:eduserveMinimal/global/enum.dart';
 import 'package:eduserveMinimal/global/service/currency_to_unicode.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:eduserveMinimal/view/fees/widgets/fee_container.dart';
@@ -23,7 +24,11 @@ class FeesView extends StatelessWidget {
         child: FutureBuilder(
           future: Provider.of<AppState>(context).fees,
           builder: (context, AsyncSnapshot<Fees> snapshot) {
-            if (snapshot.hasData) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              if (!snapshot.hasData) {
+                return const Text("No data found!");
+              }
+
               Fees fees = snapshot.data!;
 
               return Column(
@@ -50,7 +55,7 @@ class FeesView extends StatelessWidget {
                               minFontSize: 15,
                               maxFontSize: 22,
                               overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.comfortaa(
+                              style: TextStyle(
                                 fontWeight: FontWeight.bold,
                               ),
                             )),
@@ -74,8 +79,7 @@ class FeesView extends StatelessWidget {
                                   minFontSize: 15,
                                   maxFontSize: 22,
                                   overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.comfortaa(
-                                      fontWeight: FontWeight.bold),
+                                  style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                               ),
                             );
@@ -139,7 +143,12 @@ class FeesView extends StatelessWidget {
                 ],
               );
             } else {
-              return Center(child: CircularProgressIndicator());
+              return Center(
+                child: Provider.of<ThemeProvider>(context).currentAppTheme ==
+                        AppTheme.valorant
+                    ? Image.asset("assets/images/skye-tiger-loading.gif")
+                    : const CircularProgressIndicator(),
+              );
             }
           },
         ),

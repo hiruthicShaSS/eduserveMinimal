@@ -1,5 +1,7 @@
+import 'package:eduserveMinimal/global/enum.dart';
 import 'package:eduserveMinimal/models/user.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
+import 'package:eduserveMinimal/providers/theme.dart';
 import 'package:eduserveMinimal/view/home/widgets/semester_summary_widget.dart';
 import 'package:eduserveMinimal/view/user/widgets/user_detail.dart';
 import 'package:eduserveMinimal/view/user/widgets/user_header.dart';
@@ -43,7 +45,12 @@ class UserScreen extends StatelessWidget {
                     return _MainScreen(user: user);
                   }
 
-                  return Center(child: CircularProgressIndicator());
+                  return Center(
+                      child: Provider.of<ThemeProvider>(context)
+                                  .currentAppTheme ==
+                              AppTheme.valorant
+                          ? Image.asset("assets/images/reyna-leer-loading.gif")
+                          : const CircularProgressIndicator());
                 },
               );
             }),

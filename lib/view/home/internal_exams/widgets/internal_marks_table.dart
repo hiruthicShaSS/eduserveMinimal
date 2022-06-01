@@ -1,9 +1,11 @@
 import 'dart:developer';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:eduserveMinimal/global/enum.dart';
 import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/models/internal_mark.dart';
 import 'package:eduserveMinimal/providers/cache.dart';
+import 'package:eduserveMinimal/providers/theme.dart';
 import 'package:eduserveMinimal/service/internal_marks.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -188,7 +190,11 @@ class _InternalMarksTableState extends State<InternalMarksTable> {
             );
           }
 
-          return const Center(child: CircularProgressIndicator());
+          return Center(
+              child: Provider.of<ThemeProvider>(context).currentAppTheme ==
+                      AppTheme.valorant
+                  ? Image.asset("assets/images/skye-tiger-loading.gif")
+                  : const CircularProgressIndicator());
         },
       );
     });

@@ -1,5 +1,6 @@
 // 🐦 Flutter imports:
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 // 📦 Package imports:
@@ -42,9 +43,45 @@ class AttributionScreen extends StatelessWidget {
           "Lottie Files",
           "https://lottiefiles.com"),
       Attribution(
+          AttributionType.Image,
+          "unDraw",
+          "https://lottiefiles.com/41070-notepad-with-a-list-of-tick-boxes-and-5-star-feedback",
+          "unDraw",
+          "https://undraw.co"),
+      Attribution(
+          AttributionType.Image,
+          "unDraw",
+          "https://lottiefiles.com/41070-notepad-with-a-list-of-tick-boxes-and-5-star-feedback",
+          "unDraw",
+          "https://undraw.co"),
+      Attribution(
           AttributionType.GIF,
           "Valorant",
-          "https://giphy.com/playvalorant/valorant-agents/kayo",
+          "https://giphy.com/gifs/playvalorant-transparent-GuX4wXQnebwakfBRHE",
+          "GIPHY",
+          "https://giphy.com/"),
+      Attribution(
+          AttributionType.GIF,
+          "Valorant",
+          "https://giphy.com/gifs/kj-valorant-killjoy-JKwo7P9nu7vINc879r",
+          "GIPHY",
+          "https://giphy.com/"),
+      Attribution(
+          AttributionType.GIF,
+          "Valorant",
+          "https://giphy.com/gifs/playvalorant-valorant-skye-trailblazer-yu6tnbAPwZOlFDWSgY",
+          "GIPHY",
+          "https://giphy.com/"),
+      Attribution(
+          AttributionType.GIF,
+          "Valorant",
+          "https://giphy.com/gifs/playvalorant-eye-blind-leer-gxboUsrwPQ1Pmt01IH",
+          "GIPHY",
+          "https://giphy.com/"),
+      Attribution(
+          AttributionType.GIF,
+          "Valorant",
+          "https://giphy.com/gifs/playvalorant-transparent-tqKpvAu2ea9KJhpyp6",
           "GIPHY",
           "https://giphy.com/"),
     ];
@@ -55,25 +92,40 @@ class AttributionScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: ListView.builder(
-            itemCount: attributions.length,
-            itemBuilder: (context, index) => Row(
-                  children: [
-                    TextButton(
-                      onPressed: () =>
-                          launchUrl(Uri.parse(attributions[index].url)),
-                      child: Text(
-                        describeEnum(attributions[index].type),
-                      ),
-                    ),
-                    Text("from "),
-                    Text(attributions[index].author),
-                    Text(" by"),
-                    TextButton(
-                        onPressed: () =>
-                            launchUrl(Uri.parse(attributions[index].sourceUrl)),
-                        child: Text(attributions[index].source)),
-                  ],
-                )),
+          itemCount: attributions.length,
+          itemBuilder: (context, index) => Padding(
+            padding: const EdgeInsets.all(10),
+            child: RichText(
+              text: TextSpan(
+                style: TextStyle(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black),
+                children: [
+                  TextSpan(
+                    text: describeEnum(attributions[index].type),
+                    style: TextStyle(
+                        color: Colors.blue, fontWeight: FontWeight.bold),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap =
+                          () => launchUrl(Uri.parse(attributions[index].url)),
+                  ),
+                  TextSpan(text: " from "),
+                  TextSpan(text: attributions[index].author),
+                  TextSpan(text: " by "),
+                  TextSpan(
+                    text: attributions[index].source,
+                    style: TextStyle(
+                        color: Colors.blue, fontWeight: FontWeight.bold),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () =>
+                          launchUrl(Uri.parse(attributions[index].sourceUrl)),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

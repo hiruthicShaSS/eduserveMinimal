@@ -3,12 +3,16 @@ import 'dart:typed_data';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:eduserveMinimal/controller/cache.dart';
 import 'package:eduserveMinimal/global/enum.dart';
+import 'package:eduserveMinimal/global/gloabls.dart';
 import 'package:eduserveMinimal/global/service/birthday_service.dart';
 import 'package:eduserveMinimal/models/fees.dart';
 import 'package:eduserveMinimal/models/hallticket/hallticket.dart';
 import 'package:eduserveMinimal/models/user.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
+import 'package:eduserveMinimal/providers/cache.dart';
+import 'package:eduserveMinimal/providers/theme.dart';
 import 'package:eduserveMinimal/service/get_hallticket.dart';
 import 'package:eduserveMinimal/service/timetable.dart';
 import 'package:eduserveMinimal/view/home/widgets/home_screen.dart';
@@ -157,11 +161,16 @@ class _HomePageState extends State<HomePage> {
                                     "assets/placeholder_profile.png"),
                               )
                             : Container(
-                                height: 50,
-                                width: 50,
+                                height: 100,
+                                width: 100,
                                 decoration:
                                     BoxDecoration(shape: BoxShape.circle),
-                                child: CircularProgressIndicator(),
+                                child: Provider.of<ThemeProvider>(context)
+                                            .currentAppTheme ==
+                                        AppTheme.valorant
+                                    ? Image.asset(
+                                        "assets/images/reyna-leer-loading.gif")
+                                    : CircularProgressIndicator(),
                               );
                       }),
                 ),
@@ -200,6 +209,9 @@ class _HomePageState extends State<HomePage> {
     }
 
     getTimetable(supressError: true);
+    Provider.of<CacheProvider>(context, listen: false)
+        .getInternalAcademicTerms();
+
     checkForIssues();
     _checkUpdates(context);
   }
