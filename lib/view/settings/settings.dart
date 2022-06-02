@@ -14,8 +14,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 // 🌎 Project imports:
 import 'package:eduserveMinimal/view/settings/cache_data.dart';
-import 'package:eduserveMinimal/view/settings/credentials.dart';
-import 'package:eduserveMinimal/view/settings/attribution.dart';
 import 'package:eduserveMinimal/view/settings/developer.dart';
 import 'package:eduserveMinimal/view/settings/themes.dart';
 
@@ -57,8 +55,8 @@ class Settings extends StatelessWidget {
               child: ElevatedButton(
                 child: Text("Update credentials"),
                 onPressed: () {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (_) => Credentials()));
+                  Navigator.of(context).pushNamed("/credentials",
+                      arguments: {"isFromAuth": false});
                 },
               ),
             ),
@@ -119,9 +117,8 @@ class Settings extends StatelessWidget {
                     width: MediaQuery.of(context).size.width * 0.4,
                     child: ElevatedButton(
                         child: Text("Attribution"),
-                        onPressed: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (_) => AttributionScreen()))),
+                        onPressed: () =>
+                            Navigator.of(context).pushNamed("/attributions")),
                   ),
                 ),
                 Expanded(

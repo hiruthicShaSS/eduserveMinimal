@@ -12,6 +12,7 @@ import 'package:eduserveMinimal/view/fees/fees.dart';
 import 'package:eduserveMinimal/view/home/apply_leave.dart';
 import 'package:eduserveMinimal/view/home/home.dart';
 import 'package:eduserveMinimal/view/home/timetable.dart';
+import 'package:eduserveMinimal/view/settings/attribution.dart';
 import 'package:eduserveMinimal/view/settings/credentials.dart';
 import 'package:eduserveMinimal/view/settings/forgot_password.dart';
 import 'package:eduserveMinimal/view/settings/notifications.dart';
@@ -48,16 +49,18 @@ class EduserveMinimal extends StatelessWidget {
         title: "eduserveMinimal",
         initialRoute: "/homeController",
         routes: {
-          "/homeController": (BuildContext context) => HomeController(),
-          "/home": (BuildContext context) => HomePage(),
+          "/homeController": (BuildContext context) => const HomeController(),
+          "/home": (BuildContext context) => const HomePage(),
           "/feedbackForm": (BuildContext context) => FeedbackForm(),
           "/timetable": (BuildContext context) => TimeTableScreen(),
-          "/apply_leave": (BuildContext context) => ApplyLeaveView(),
+          "/apply_leave": (BuildContext context) => const ApplyLeaveView(),
           "/fees": (BuildContext context) => FeesView(),
-          "/credentials": (BuildContext context) => Credentials(),
+          "/credentials": (BuildContext context) => const Credentials(),
           "/user": (BuildContext context) => UserScreen(),
-          "/forgotPassword": (BuildContext context) => ForgotPasswordScreen(),
-          "/notifications": (BuildContext context) => NotificationsView(),
+          "/forgotPassword": (BuildContext context) =>
+              const ForgotPasswordScreen(),
+          "/notifications": (BuildContext context) => const NotificationsView(),
+          "/attributions": (BuildContext context) => const AttributionScreen(),
         },
         darkTheme: Provider.of<ThemeProvider>(context).getDarkTheme,
         themeMode: Provider.of<ThemeProvider>(context).themeMode,
