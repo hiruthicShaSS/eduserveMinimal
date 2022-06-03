@@ -119,12 +119,31 @@ class FeeContainer extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 15),
-            Text(
-              currencyToUnicode(fee.currency) + fee.paid.toString(),
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 17,
-              ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  currencyToUnicode(fee.currency) + fee.paid.toString(),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 17,
+                  ),
+                ),
+                if (fee.paid != fee.toPay)
+                  Row(
+                    children: [
+                      if (fee.paid != fee.toPay)
+                        Icon(Icons.request_page, color: Colors.red),
+                      Text(
+                        currencyToUnicode(fee.currency) + fee.toPay.toString(),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 17,
+                        ),
+                      ),
+                    ],
+                  ),
+              ],
             ),
           ],
         ),

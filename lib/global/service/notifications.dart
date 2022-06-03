@@ -37,5 +37,6 @@ Future<void> createUpcomingClassNotification(String body, String? venue,
 }
 
 Future<void> cancelAllUpcomingClassNotification() async {
-  await AwesomeNotifications().cancelAllSchedules();
+  await AwesomeNotifications()
+      .cancelSchedulesByChannelKey(timeTableNotificationChannelKey);
 }

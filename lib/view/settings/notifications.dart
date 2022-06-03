@@ -60,6 +60,13 @@ class _NotificationsViewState extends State<NotificationsView> {
                                       await setupSchedule(context);
                                     } else {
                                       await cancelAllUpcomingClassNotification();
+
+                                      SharedPreferences.getInstance()
+                                          .then((prefs) async {
+                                        await prefs.setBool(
+                                            "upcomingClassesScheduled",
+                                            _notifyUpcomingClass);
+                                      });
                                     }
 
                                     SharedPreferences.getInstance().then(

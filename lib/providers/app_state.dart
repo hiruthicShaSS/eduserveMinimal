@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:eduserveMinimal/controller/cache.dart';
 import 'package:eduserveMinimal/models/attendance/semester_attendance.dart';
 import 'package:eduserveMinimal/models/fees.dart';
@@ -66,7 +68,10 @@ class AppState extends ChangeNotifier {
     List<TimeTableEntry>? timeTableFromStorage =
         await _cacheController.getTimetableFromStorage();
 
-    if (timeTableFromStorage != null) return timeTableFromStorage;
+    if (timeTableFromStorage != null) {
+      _cacheController.setTimetable = timeTableFromStorage;
+      return timeTableFromStorage;
+    }
 
     _cacheController.setTimetable = await getTimetable();
     _cacheController.saveTimetableInStorage();
