@@ -1,7 +1,7 @@
 import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/global/service/notifications.dart';
 import 'package:eduserveMinimal/global/utilities/notification.dart';
-import 'package:eduserveMinimal/models/timetable.dart';
+import 'package:eduserveMinimal/models/timetable_entry.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';

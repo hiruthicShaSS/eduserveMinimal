@@ -1,7 +1,7 @@
 // 🐦 Flutter imports:
 import 'dart:developer';
 
-import 'package:eduserveMinimal/models/timetable.dart';
+import 'package:eduserveMinimal/models/timetable_entry.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:flutter/material.dart';
 

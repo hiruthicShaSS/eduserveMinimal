@@ -5,7 +5,7 @@ import 'package:eduserveMinimal/models/attendance/semester_attendance.dart';
 import 'package:eduserveMinimal/models/fees.dart';
 import 'package:eduserveMinimal/models/hallticket/hallticket.dart';
 import 'package:eduserveMinimal/models/leave/leave.dart';
-import 'package:eduserveMinimal/models/timetable.dart';
+import 'package:eduserveMinimal/models/timetable_entry.dart';
 import 'package:eduserveMinimal/models/user.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';

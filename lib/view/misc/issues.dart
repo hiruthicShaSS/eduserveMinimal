@@ -63,6 +63,14 @@ class IssuesView extends StatelessWidget {
                 ),
               ),
             ),
+            Visibility(
+              visible: issues.contains(Issue.abesnt_yesterday),
+              child: ListTile(
+                tileColor: Colors.orangeAccent.withOpacity(0.6),
+                title: Text("You were marked absent for certain classes"),
+                trailing: Text("Check in eduserve"),
+              ),
+            ),
           ],
         ),
       ),

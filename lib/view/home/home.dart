@@ -3,9 +3,7 @@ import 'dart:typed_data';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:eduserveMinimal/controller/cache.dart';
 import 'package:eduserveMinimal/global/enum.dart';
-import 'package:eduserveMinimal/global/gloabls.dart';
 import 'package:eduserveMinimal/global/service/birthday_service.dart';
 import 'package:eduserveMinimal/models/fees.dart';
 import 'package:eduserveMinimal/models/hallticket/hallticket.dart';
@@ -19,6 +17,10 @@ import 'package:eduserveMinimal/view/home/widgets/home_screen.dart';
 import 'package:eduserveMinimal/view/misc/issues.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:eduserveMinimal/global/utilities/getHourDataByHour.dart';
+import 'package:eduserveMinimal/models/attendance/attendance.dart';
+import 'package:eduserveMinimal/models/attendance/semester_attendance.dart';
+import 'package:eduserveMinimal/models/timetable_entry.dart';
 
 // 📦 Package imports:
 import 'package:new_version/new_version.dart';
@@ -219,6 +221,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> checkForIssues() async {
     Fees fees = await getFeesDetails();
     HallTicket hallTicket = await getHallTicket(suppressError: true);
+    bool absentYesterday = await checkForAbsent();
 
     if (mounted) {
       Provider.of<AppState>(context, listen: false).setFees = fees;
@@ -232,6 +235,8 @@ class _HomePageState extends State<HomePage> {
     if (!hallTicket.isEligibile && !hallTicket.isSubjectsEligibile) {
       issues.add(Issue.hallticket_ineligible);
     }
+
+    if (absentYesterday) issues.add(Issue.abesnt_yesterday);
 
     if (issues.isNotEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -260,6 +265,48 @@ class _HomePageState extends State<HomePage> {
         ),
       );
     }
+  }
+
+  Future<bool> checkForAbsent() async {
+    SemesterAttendance semesterAttendance =
+        await Provider.of<AppState>(context, listen: false).attendance;
+
+    List<TimeTableEntry> timetable =
+        await Provider.of<AppState>(context, listen: false).timetable;
+
+    List<Attendance> attendance = semesterAttendance.attendance;
+
+    DateTime yesterday = DateTime(2022, 4, 19);
+
+    int yesterdayIndex =
+        attendance.map((e) => e.date).toList().indexOf(yesterday);
+    // bool yesterdayExists = attendance
+    //     .contains(DateTime.now().add(const Duration(days: -1)));
+
+    if (yesterdayIndex != -1) {
+      bool hasAbsentHours =
+          attendance[yesterdayIndex].attendanceSummary.totalAbsent > 0;
+
+      if (hasAbsentHours) {
+        List<bool> hours = attendance[yesterdayIndex].toHourList();
+
+        List<TimeTableSubject> absentClasses = [];
+        for (int i = 0; i < hours.length; i++) {
+          if (hours[i]) continue;
+
+          TimeTableSubject subject =
+              getHourDataByHour(timetable[yesterday.weekday], i);
+
+          if (subject.name.isEmpty) continue;
+
+          absentClasses.add(subject);
+        }
+
+        return absentClasses.isNotEmpty;
+      }
+    }
+
+    return false;
   }
 
   void _checkUpdates(BuildContext context) async {

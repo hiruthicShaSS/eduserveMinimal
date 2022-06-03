@@ -1,6 +1,6 @@
 // 📦 Package imports:
 import 'package:eduserveMinimal/global/exceptions.dart';
-import 'package:eduserveMinimal/models/timetable.dart';
+import 'package:eduserveMinimal/models/timetable_entry.dart';
 import 'package:eduserveMinimal/service/auth.dart';
 import 'package:http/http.dart';
 import 'package:html/dom.dart';

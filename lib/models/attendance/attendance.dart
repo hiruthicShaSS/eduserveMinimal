@@ -35,6 +35,21 @@ class Attendance {
     required this.attendanceSummary,
   });
 
+  List<bool> toHourList() => [
+        hour0,
+        hour1,
+        hour2,
+        hour3,
+        hour4,
+        hour5,
+        hour6,
+        hour7,
+        hour8,
+        hour9,
+        hour10,
+        hour11,
+      ];
+
   @override
   String toString() {
     return 'Attendance(date: $date, assemblyAttended: $assemblyAttended, hour0: $hour0, hour1: $hour1, hour2: $hour2, hour3: $hour3, hour4: $hour4, hour5: $hour5, hour6: $hour6, hour7: $hour7, hour8: $hour8, hour9: $hour9, hour10: $hour10, hour11: $hour11)';

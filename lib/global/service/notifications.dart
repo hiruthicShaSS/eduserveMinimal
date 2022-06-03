@@ -40,3 +40,18 @@ Future<void> cancelAllUpcomingClassNotification() async {
   await AwesomeNotifications()
       .cancelSchedulesByChannelKey(timeTableNotificationChannelKey);
 }
+
+Future<void> createAbsentNotification(String title, String body) async {
+  AwesomeNotifications().createNotification(
+    content: NotificationContent(
+      id: createUniqueId(),
+      channelKey: absentNMotificationChannelKey,
+      title: title,
+      body: body,
+      color: Colors.red,
+      notificationLayout: NotificationLayout.BigText,
+      category: NotificationCategory.Reminder,
+      wakeUpScreen: true,
+    ),
+  );
+}
