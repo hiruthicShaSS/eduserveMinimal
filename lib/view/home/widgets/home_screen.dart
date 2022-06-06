@@ -1,4 +1,5 @@
 import 'package:eduserveMinimal/providers/app_state.dart';
+import 'package:eduserveMinimal/providers/issue_provider.dart';
 import 'package:eduserveMinimal/service/auth.dart';
 import 'package:eduserveMinimal/view/home/leaves/leave_information.dart';
 import 'package:eduserveMinimal/view/home/widgets/attendance_summary_basic.dart';
@@ -38,10 +39,36 @@ class HomeScreen extends StatelessWidget {
               ],
             ),
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(15),
-              bottomRight: Radius.circular(15),
-            )),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(15),
+                bottomRight: Radius.circular(15),
+              ),
+            ),
+            leading:
+                Consumer(builder: (context, IssueProvider issueProvider, _) {
+              return Stack(
+                alignment: Alignment.topRight,
+                children: [
+                  IconButton(
+                    onPressed: () => Scaffold.of(context).openDrawer(),
+                    icon: Icon(Icons.menu_rounded),
+                  ),
+                  if (issueProvider.isNotEmpty)
+                    Positioned(
+                      top: 12,
+                      right: 10,
+                      child: Container(
+                        height: 10,
+                        width: 10,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.red,
+                        ),
+                      ),
+                    ),
+                ],
+              );
+            }),
           ),
           SliverList(
             delegate: SliverChildListDelegate([

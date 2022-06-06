@@ -78,20 +78,21 @@ Future<SemesterAttendance> getAttendanceSummary([retries = 0]) async {
 
       Attendance attendance = Attendance(
         date: DateFormat("dd MMM yyyy").parse(attendanceData[0]),
-        assemblyAttended: attendanceData[1] == "P",
-        hour0: attendanceData[2] == "P",
-        hour1: attendanceData[3] == "P",
-        hour2: attendanceData[4] == "P",
-        hour3: attendanceData[5] == "P",
-        hour4: attendanceData[6] == "P",
-        hour5: attendanceData[7] == "P",
-        hour6: attendanceData[8] == "P",
-        hour7: attendanceData[9] == "P",
-        hour8: attendanceData[10] == "P",
-        hour9: attendanceData[11] == "P",
-        hour10: attendanceData[12] == "P",
-        hour11: attendanceData[13] == "P",
-        attendanceSummary: attendanceSummary,
+        assemblyAttended:
+            Attendance.getAttendanceTypeFromString(attendanceData[1]),
+        hour0: Attendance.getAttendanceTypeFromString(attendanceData[2]),
+        hour1: Attendance.getAttendanceTypeFromString(attendanceData[3]),
+        hour2: Attendance.getAttendanceTypeFromString(attendanceData[4]),
+        hour3: Attendance.getAttendanceTypeFromString(attendanceData[5]),
+        hour4: Attendance.getAttendanceTypeFromString(attendanceData[6]),
+        hour5: Attendance.getAttendanceTypeFromString(attendanceData[7]),
+        hour6: Attendance.getAttendanceTypeFromString(attendanceData[8]),
+        hour7: Attendance.getAttendanceTypeFromString(attendanceData[9]),
+        hour8: Attendance.getAttendanceTypeFromString(attendanceData[10]),
+        hour9: Attendance.getAttendanceTypeFromString(attendanceData[11]),
+        hour10: Attendance.getAttendanceTypeFromString(attendanceData[12]),
+        hour11: Attendance.getAttendanceTypeFromString(attendanceData[13]),
+        summary: attendanceSummary,
       );
 
       allAttendance.add(attendance);

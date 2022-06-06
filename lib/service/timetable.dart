@@ -5,7 +5,7 @@ import 'package:eduserveMinimal/service/auth.dart';
 import 'package:http/http.dart';
 import 'package:html/dom.dart';
 
-Future<List<TimeTableEntry>> getTimetable({bool supressError = false}) async {
+Future<List<TimeTableEntry>> getTimetable() async {
   Map<String, String> formData = AuthService.formData;
   formData.remove(r"ctl00$mainContent$BTNCLEAR");
 
@@ -47,14 +47,12 @@ Future<List<TimeTableEntry>> getTimetable({bool supressError = false}) async {
     body: formData,
   );
 
-  if (!supressError) {
-    if (res.body.contains("No records to display.")) {
-      throw NoRecordsException("No timetable records to display.");
-    }
+  if (res.body.contains("No records to display.")) {
+    throw NoRecordsException("No timetable records to display.");
+  }
 
-    if (res.body.contains("Object moved to")) {
-      throw MiscellaneousErrorInEduserve("Error fetching timetable data.");
-    }
+  if (res.body.contains("Object moved to")) {
+    throw MiscellaneousErrorInEduserve("Error fetching timetable data.");
   }
 
   html = Document.html(res.body);

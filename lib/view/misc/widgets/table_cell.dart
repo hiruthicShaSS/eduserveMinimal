@@ -44,8 +44,8 @@ class TableCell extends StatelessWidget {
         _textAlign = TextAlign.end,
         _padding = EdgeInsets.zero;
 
-  TableCell.stickyColumn(
-    this.text, {
+  TableCell.stickyColumn({
+    this.text,
     this.child,
     this.textStyle,
     this.cellDimensions = const CellDimensions.uniform(width: 200, height: 200),

@@ -88,6 +88,8 @@ class AppState extends ChangeNotifier {
     return _cacheController.hallTicket!;
   }
 
+  void rebuildDecendants() => notifyListeners();
+
   void refresh() {
     _cacheController.clear();
 

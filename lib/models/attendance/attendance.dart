@@ -1,21 +1,22 @@
+import 'package:eduserveMinimal/global/enum.dart';
 import 'package:eduserveMinimal/models/attendance/attendance_summary.dart';
 
 class Attendance {
   DateTime date;
-  bool assemblyAttended;
-  bool hour0;
-  bool hour1;
-  bool hour2;
-  bool hour3;
-  bool hour4;
-  bool hour5;
-  bool hour6;
-  bool hour7;
-  bool hour8;
-  bool hour9;
-  bool hour10;
-  bool hour11;
-  AttendanceSummary attendanceSummary;
+  AttendanceType assemblyAttended;
+  AttendanceType hour0;
+  AttendanceType hour1;
+  AttendanceType hour2;
+  AttendanceType hour3;
+  AttendanceType hour4;
+  AttendanceType hour5;
+  AttendanceType hour6;
+  AttendanceType hour7;
+  AttendanceType hour8;
+  AttendanceType hour9;
+  AttendanceType hour10;
+  AttendanceType hour11;
+  AttendanceSummary summary;
 
   Attendance({
     required this.date,
@@ -32,10 +33,10 @@ class Attendance {
     required this.hour9,
     required this.hour10,
     required this.hour11,
-    required this.attendanceSummary,
+    required this.summary,
   });
 
-  List<bool> toHourList() => [
+  List<AttendanceType> toHourList() => [
         hour0,
         hour1,
         hour2,
@@ -49,6 +50,42 @@ class Attendance {
         hour10,
         hour11,
       ];
+
+  static AttendanceType getAttendanceTypeFromString(String string) {
+    switch (string) {
+      case "p":
+        return AttendanceType.present;
+      case "A":
+        return AttendanceType.absent;
+      case "O":
+        return AttendanceType.od;
+      case "M":
+        return AttendanceType.mediacal;
+      case "-":
+        return AttendanceType.none;
+      case "U":
+        return AttendanceType.unattended;
+      default:
+        return AttendanceType.present;
+    }
+  }
+
+  static String getStringFromAttendanceType(AttendanceType attendanceType) {
+    switch (attendanceType) {
+      case AttendanceType.present:
+        return "P";
+      case AttendanceType.absent:
+        return "A";
+      case AttendanceType.mediacal:
+        return "ML";
+      case AttendanceType.od:
+        return "OD";
+      case AttendanceType.unattended:
+        return "U";
+      case AttendanceType.none:
+        return "-";
+    }
+  }
 
   @override
   String toString() {

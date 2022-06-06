@@ -6,6 +6,7 @@ import 'package:eduserveMinimal/global/enum.dart';
 import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:eduserveMinimal/providers/cache.dart';
+import 'package:eduserveMinimal/providers/issue_provider.dart';
 import 'package:eduserveMinimal/service/auth.dart';
 import 'package:eduserveMinimal/view/feedback_form/feedback_form.dart';
 import 'package:eduserveMinimal/view/fees/fees.dart';
@@ -43,6 +44,7 @@ class EduserveMinimal extends StatelessWidget {
         ChangeNotifierProvider<AppState>(create: (_) => AppState()),
         ChangeNotifierProvider<ThemeProvider>(create: (_) => ThemeProvider()),
         ChangeNotifierProvider<CacheProvider>(create: (_) => CacheProvider()),
+        ChangeNotifierProvider<IssueProvider>(create: (_) => IssueProvider()),
       ],
       builder: (context, child) => MaterialApp(
         debugShowCheckedModeBanner: flavor == "development",

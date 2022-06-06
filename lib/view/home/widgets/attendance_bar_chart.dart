@@ -2,6 +2,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:eduserveMinimal/models/attendance/attendance.dart';
 import 'package:eduserveMinimal/models/attendance/semester_attendance.dart';
+import 'package:eduserveMinimal/view/home/semester_attendance_view.dart';
 import 'package:flutter/material.dart';
 
 // 📦 Package imports:
@@ -99,7 +100,7 @@ class AttendanceBarChart extends StatelessWidget {
                       barRods: [
                         BarChartRodData(
                           toY: attendance[index]
-                              .attendanceSummary
+                              .summary
                               .totalAttended
                               .toDouble(),
                           gradient: LinearGradient(
@@ -114,10 +115,7 @@ class AttendanceBarChart extends StatelessWidget {
                           ),
                         ),
                         BarChartRodData(
-                          toY: attendance[index]
-                              .attendanceSummary
-                              .totalAbsent
-                              .toDouble(),
+                          toY: attendance[index].summary.totalAbsent.toDouble(),
                           backDrawRodData: BackgroundBarChartRodData(
                             gradient: LinearGradient(
                               begin: Alignment.bottomCenter,
@@ -141,7 +139,7 @@ class AttendanceBarChart extends StatelessWidget {
                         ),
                         BarChartRodData(
                           toY: attendance[index]
-                              .attendanceSummary
+                              .summary
                               .totalUnAttended
                               .toDouble(),
                           backDrawRodData: BackgroundBarChartRodData(
@@ -167,6 +165,20 @@ class AttendanceBarChart extends StatelessWidget {
                         ),
                       ],
                     ),
+                  ),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                child: Text(
+                  "More",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => SemesterAttendanceView(),
                   ),
                 ),
               ),

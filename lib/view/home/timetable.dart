@@ -74,7 +74,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                   columnsTitleBuilder: (i) =>
                       tableCell.TableCell.stickyRow("Hour ${i + 1}"),
                   rowsTitleBuilder: (i) => tableCell.TableCell.stickyColumn(
-                    timeTable[i].day,
+                    text: timeTable[i].day,
                     colorBg: weekdays.indexOf(timeTable[i].day.toLowerCase()) +
                                 1 ==
                             DateTime.now().weekday

@@ -6,7 +6,7 @@ import 'package:eduserveMinimal/service/auth.dart';
 import 'package:http/http.dart';
 import 'package:html/dom.dart';
 
-Future<HallTicket> getHallTicket({bool suppressError = false}) async {
+Future<HallTicket> getHallTicket() async {
   Response res = await get(
     Uri.parse(
         "https://eduserve.karunya.edu/Student/CBCS/HallTicketDownload.aspx"),
@@ -38,10 +38,8 @@ Future<HallTicket> getHallTicket({bool suppressError = false}) async {
     body: formData,
   );
 
-  if (!suppressError) {
-    if (res.body.contains("No records to display.")) {
-      throw NoHallTicketAvailable("No records to display.");
-    }
+  if (res.body.contains("No records to display.")) {
+    throw NoHallTicketAvailable("No records to display.");
   }
 
   html = Document.html(res.body);

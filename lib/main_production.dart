@@ -1,6 +1,7 @@
 // 🐦 Flutter imports:
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:eduserveMinimal/global/constants.dart';
+import 'package:eduserveMinimal/service/bg_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -11,7 +12,11 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:eduserveMinimal/edu_serve_minimal.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   const AndroidOptions(encryptedSharedPreferences: true);
+
+  await initializeService();
+
   AwesomeNotifications().initialize(
     "resource://drawable/res_notification_app_icon",
     notificationChannels,

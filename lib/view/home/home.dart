@@ -10,6 +10,7 @@ import 'package:eduserveMinimal/models/hallticket/hallticket.dart';
 import 'package:eduserveMinimal/models/user.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:eduserveMinimal/providers/cache.dart';
+import 'package:eduserveMinimal/providers/issue_provider.dart';
 import 'package:eduserveMinimal/providers/theme.dart';
 import 'package:eduserveMinimal/service/get_hallticket.dart';
 import 'package:eduserveMinimal/service/timetable.dart';
@@ -17,10 +18,6 @@ import 'package:eduserveMinimal/view/home/widgets/home_screen.dart';
 import 'package:eduserveMinimal/view/misc/issues.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:eduserveMinimal/global/utilities/getHourDataByHour.dart';
-import 'package:eduserveMinimal/models/attendance/attendance.dart';
-import 'package:eduserveMinimal/models/attendance/semester_attendance.dart';
-import 'package:eduserveMinimal/models/timetable_entry.dart';
 
 // 📦 Package imports:
 import 'package:new_version/new_version.dart';
@@ -91,10 +88,48 @@ class _HomePageState extends State<HomePage> {
     UserScreen(),
   ];
   final PageController _pageController = PageController();
+  bool _snackBarActive = false;
 
   @override
   Widget build(BuildContext context) {
-    return Consumer(builder: (context, AppState appState, _) {
+    return Consumer2(
+        builder: (context, AppState appState, IssueProvider issueProvider, _) {
+      if (issueProvider.isNotEmpty) {
+        SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
+          if (!_snackBarActive) {
+            _snackBarActive = true;
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                backgroundColor: Colors.redAccent,
+                content: Text(
+                  "We found some issues!",
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                duration: const Duration(seconds: 30),
+                action: SnackBarAction(
+                  label: "Review",
+                  textColor: Colors.white,
+                  onPressed: () {
+                    SchedulerBinding.instance!
+                        .addPostFrameCallback((timeStamp) {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => IssuesView()),
+                      );
+
+                      ScaffoldMessenger.of(context)
+                          .removeCurrentMaterialBanner();
+                    });
+                  },
+                ),
+              ),
+            );
+          }
+        });
+      }
+
       return Scaffold(
         drawer: Drawer(
           child: Column(
@@ -200,6 +235,34 @@ class _HomePageState extends State<HomePage> {
         onTap: () => Navigator.of(context)
             .push(MaterialPageRoute(builder: (context) => Settings())),
       ),
+      ListTile(
+        title: Consumer(builder: (context, IssueProvider issueProvider, _) {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("Issues"),
+              if (issueProvider.length > 0)
+                Container(
+                  height: 25,
+                  width: 25,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.redAccent.withOpacity(0.6),
+                  ),
+                  child: Text(
+                    issueProvider.length.toString(),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+            ],
+          );
+        }),
+        onTap: () => Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => IssuesView())),
+      ),
     ];
   }
 
@@ -210,7 +273,10 @@ class _HomePageState extends State<HomePage> {
           .push(MaterialPageRoute(builder: (_) => BirthDayWidget()));
     }
 
-    getTimetable(supressError: true);
+    try {
+      getTimetable();
+    } catch (_) {}
+
     Provider.of<CacheProvider>(context, listen: false)
         .getInternalAcademicTerms();
 
@@ -219,94 +285,32 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> checkForIssues() async {
+    IssueProvider issueProvider =
+        Provider.of<IssueProvider>(context, listen: false);
+
     Fees fees = await getFeesDetails();
-    HallTicket hallTicket = await getHallTicket(suppressError: true);
-    bool absentYesterday = await checkForAbsent();
+    HallTicket? hallTicket;
+
+    try {
+      await getHallTicket();
+    } catch (_) {}
 
     if (mounted) {
       Provider.of<AppState>(context, listen: false).setFees = fees;
-      Provider.of<AppState>(context, listen: false).setHallTicket = hallTicket;
     }
 
-    List<Issue> issues = [];
+    if (fees.totalDues > 0) issueProvider.add(Issue.fees_due);
 
-    if (fees.totalDues > 0) issues.add(Issue.fees_due);
+    if (hallTicket != null) {
+      if (mounted) {
+        Provider.of<AppState>(context, listen: false).setHallTicket =
+            hallTicket;
+      }
 
-    if (!hallTicket.isEligibile && !hallTicket.isSubjectsEligibile) {
-      issues.add(Issue.hallticket_ineligible);
-    }
-
-    if (absentYesterday) issues.add(Issue.abesnt_yesterday);
-
-    if (issues.isNotEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.redAccent,
-          content: Text(
-            "We found some issues!",
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
-          duration: const Duration(seconds: 30),
-          action: SnackBarAction(
-            label: "Review",
-            textColor: Colors.white,
-            onPressed: () {
-              SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => IssuesView(issues: issues)),
-                );
-
-                ScaffoldMessenger.of(context).removeCurrentMaterialBanner();
-              });
-            },
-          ),
-        ),
-      );
-    }
-  }
-
-  Future<bool> checkForAbsent() async {
-    SemesterAttendance semesterAttendance =
-        await Provider.of<AppState>(context, listen: false).attendance;
-
-    List<TimeTableEntry> timetable =
-        await Provider.of<AppState>(context, listen: false).timetable;
-
-    List<Attendance> attendance = semesterAttendance.attendance;
-
-    DateTime yesterday = DateTime(2022, 4, 19);
-
-    int yesterdayIndex =
-        attendance.map((e) => e.date).toList().indexOf(yesterday);
-    // bool yesterdayExists = attendance
-    //     .contains(DateTime.now().add(const Duration(days: -1)));
-
-    if (yesterdayIndex != -1) {
-      bool hasAbsentHours =
-          attendance[yesterdayIndex].attendanceSummary.totalAbsent > 0;
-
-      if (hasAbsentHours) {
-        List<bool> hours = attendance[yesterdayIndex].toHourList();
-
-        List<TimeTableSubject> absentClasses = [];
-        for (int i = 0; i < hours.length; i++) {
-          if (hours[i]) continue;
-
-          TimeTableSubject subject =
-              getHourDataByHour(timetable[yesterday.weekday], i);
-
-          if (subject.name.isEmpty) continue;
-
-          absentClasses.add(subject);
-        }
-
-        return absentClasses.isNotEmpty;
+      if (!hallTicket.isEligibile && !hallTicket.isSubjectsEligibile) {
+        issueProvider.add(Issue.hallticket_ineligible);
       }
     }
-
-    return false;
   }
 
   void _checkUpdates(BuildContext context) async {
