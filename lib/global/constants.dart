@@ -3,6 +3,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 String timeTableNotificationChannelKey = "timetable";
 String timeTableNotificationGroupKey = "timetable-group";
 String absentNMotificationChannelKey = "absent";
+int absentNMotificationId = 1;
 
 int timeTableNotificationId = 0;
 

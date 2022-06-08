@@ -44,7 +44,7 @@ void onStart(ServiceInstance service) async {
   // Only available for flutter 3.0.0 and later
   // DartPluginRegistrant.ensureInitialized();
 
-  log("background service started");
+  log("Background service started");
 
   // service.on('setAsForeground').listen((event) {
   //   service.setAsForegroundService();
@@ -66,10 +66,8 @@ void onStart(ServiceInstance service) async {
         content: DateTime.now().toIso8601String(),
       );
     }
-
-    log('FLUTTER BACKGROUND SERVICE: ${DateTime.now()}');
   });
 
-  // Check if the user is abset yesterday every 8 hours
-  Timer.periodic(const Duration(minutes: 10), (timer) => checkForAbsent());
+  Timer.periodic(const Duration(hours: 4),
+      (timer) => checkForAbsent(showNotification: true));
 }

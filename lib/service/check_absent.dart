@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:eduserveMinimal/global/enum.dart';
 import 'package:eduserveMinimal/global/service/notifications.dart';
 import 'package:eduserveMinimal/global/utilities/getHourDataByHour.dart';
@@ -9,6 +11,7 @@ import 'package:eduserveMinimal/service/attendance_summary.dart';
 import 'package:eduserveMinimal/service/timetable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 SemesterAttendance? _semesterAttendance;
 
@@ -65,17 +68,19 @@ Future<bool> checkForAbsent({
         String data = "";
 
         for (var absentClass in absentClasses) {
-          data += absentClass.name +
+          data += "👉&nbsp;" +
+              absentClass.name +
               "(${absentClass.code})" +
               " @ " +
               absentClass.venue +
-              " , ";
+              "<br />";
         }
 
         if (showNotification) {
-          // Show notifications only if the app is not foreground
+          // SharedPreferences prefs = await SharedPreferences.getInstance();
+
           createAbsentNotification(
-            "You have missed these class${absentClasses.length > 1 ? "es" : ""}",
+            "You have missed ${absentClasses.length} class${absentClasses.length > 1 ? "es" : ""}",
             data,
           );
         }

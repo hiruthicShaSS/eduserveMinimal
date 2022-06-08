@@ -44,13 +44,14 @@ Future<void> cancelAllUpcomingClassNotification() async {
 Future<void> createAbsentNotification(String title, String body) async {
   AwesomeNotifications().createNotification(
     content: NotificationContent(
-      id: createUniqueId(),
+      id: absentNMotificationId,
       channelKey: absentNMotificationChannelKey,
       title: title,
       body: body,
       color: Colors.red,
       notificationLayout: NotificationLayout.BigText,
-      category: NotificationCategory.Reminder,
+      category: NotificationCategory.Message,
+      fullScreenIntent: true,
       wakeUpScreen: true,
     ),
   );
