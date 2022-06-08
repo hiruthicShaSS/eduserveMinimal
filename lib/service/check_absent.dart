@@ -68,13 +68,17 @@ Future<bool> checkForAbsent({
         String data = "";
 
         for (var absentClass in absentClasses) {
-          data += "👉&nbsp;" +
-              absentClass.name +
-              "(${absentClass.code})" +
-              " @ " +
-              absentClass.venue +
-              "<br />";
+          data +=
+              "👉&nbsp; ${absentClass.name} (${absentClass.code}) @ ${absentClass.venue} <br />";
         }
+
+        log(data.length.toString());
+        if (data.length >= 350) {
+          data = data.substring(0, 350) + " ...";
+          data += "<br /><br /><b>Tap for more info...<b>";
+        }
+
+        print(data.length);
 
         if (showNotification) {
           // SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -82,6 +86,7 @@ Future<bool> checkForAbsent({
           createAbsentNotification(
             "You have missed ${absentClasses.length} class${absentClasses.length > 1 ? "es" : ""}",
             data,
+            {"date": yesterday.millisecondsSinceEpoch.toString()},
           );
         }
 

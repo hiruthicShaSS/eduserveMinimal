@@ -9,7 +9,9 @@ import 'package:table_sticky_headers/table_sticky_headers.dart';
 import 'package:eduserveMinimal/view/misc/widgets/table_cell.dart' as tableCell;
 
 class SemesterAttendanceView extends StatelessWidget {
-  const SemesterAttendanceView({Key? key}) : super(key: key);
+  const SemesterAttendanceView({Key? key, this.yesterday}) : super(key: key);
+
+  final DateTime? yesterday;
 
   @override
   Widget build(BuildContext context) {
@@ -55,23 +57,32 @@ class SemesterAttendanceView extends StatelessWidget {
                       i == 0 ? "Assembly" : "Hour ${i - 1}",
                     ),
                     rowsTitleBuilder: (i) => tableCell.TableCell.stickyColumn(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(DateFormat("dd MMM yyyy")
-                              .format(allAttendance[i].date)),
-                          if (data[i].contains(AttendanceType.absent))
-                            Expanded(
-                              child: Container(
-                                height: 5,
-                                width: 5,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.red,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                          color: allAttendance[i].date == yesterday
+                              ? Colors.red
+                              : Colors.transparent,
+                          width: 2,
+                        )),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(DateFormat("dd MMM yyyy")
+                                .format(allAttendance[i].date)),
+                            if (data[i].contains(AttendanceType.absent))
+                              Expanded(
+                                child: Container(
+                                  height: 5,
+                                  width: 5,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.red,
+                                  ),
                                 ),
                               ),
-                            ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                     contentCellBuilder: (i, j) {

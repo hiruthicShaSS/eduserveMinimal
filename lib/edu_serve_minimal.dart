@@ -2,6 +2,8 @@
 import 'dart:developer';
 
 // 🐦 Flutter imports:
+import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:eduserveMinimal/global/constants.dart';
 import 'package:eduserveMinimal/global/enum.dart';
 import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
@@ -12,6 +14,7 @@ import 'package:eduserveMinimal/view/feedback_form/feedback_form.dart';
 import 'package:eduserveMinimal/view/fees/fees.dart';
 import 'package:eduserveMinimal/view/home/apply_leave.dart';
 import 'package:eduserveMinimal/view/home/home.dart';
+import 'package:eduserveMinimal/view/home/semester_attendance_view.dart';
 import 'package:eduserveMinimal/view/home/timetable.dart';
 import 'package:eduserveMinimal/view/settings/attribution.dart';
 import 'package:eduserveMinimal/view/settings/credentials.dart';
@@ -80,38 +83,11 @@ class HomeController extends StatefulWidget {
 }
 
 class _HomeControllerState extends State<HomeController> {
-  void initQuickActionsEvents(BuildContext context) {
-    final quickActions = QuickActions();
-    quickActions.initialize((type) {
-      print(type);
-
-      switch (type) {
-        case "timetable":
-          Navigator.of(context).pushNamed("/timetable");
-          break;
-        case "fees":
-          Navigator.of(context).pushNamed("/fees");
-          break;
-        case "apply_leave":
-          Navigator.of(context).pushNamed("/apply_leave");
-          break;
-        case "user":
-          Navigator.of(context).pushNamed("/user");
-          break;
-      }
-    });
-  }
-
-  void initQuickActions(BuildContext context) {
-    final quickActions = QuickActions();
-    quickActions.setShortcutItems(ShortcutItems.items);
-    initQuickActionsEvents(context);
-  }
-
   @override
-  void didChangeDependencies() {
+  void initState() {
     initQuickActions(context);
-    super.didChangeDependencies();
+    initNotificationListeners();
+    super.initState();
   }
 
   @override
@@ -213,6 +189,51 @@ class _HomeControllerState extends State<HomeController> {
     if (Provider.of<AppState>(context).isLoggedIn) return;
 
     return AuthService().login();
+  }
+
+  void initQuickActionsEvents(BuildContext context) {
+    final quickActions = QuickActions();
+    quickActions.initialize((type) {
+      print(type);
+
+      switch (type) {
+        case "timetable":
+          Navigator.of(context).pushNamed("/timetable");
+          break;
+        case "fees":
+          Navigator.of(context).pushNamed("/fees");
+          break;
+        case "apply_leave":
+          Navigator.of(context).pushNamed("/apply_leave");
+          break;
+        case "user":
+          Navigator.of(context).pushNamed("/user");
+          break;
+      }
+    });
+  }
+
+  void initQuickActions(BuildContext context) {
+    final quickActions = QuickActions();
+    quickActions.setShortcutItems(ShortcutItems.items);
+    initQuickActionsEvents(context);
+  }
+
+  void initNotificationListeners() {
+    AwesomeNotifications().actionStream.listen((notification) {
+      if (notification.channelKey == absentNMotificationChannelKey) {
+        DateTime yesterday = DateTime.fromMillisecondsSinceEpoch(
+            int.parse(notification.payload!["date"]!));
+
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => SemesterAttendanceView(
+              yesterday: yesterday,
+            ),
+          ),
+        );
+      }
+    });
   }
 }
 
