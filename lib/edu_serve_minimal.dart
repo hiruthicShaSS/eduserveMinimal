@@ -10,6 +10,7 @@ import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:eduserveMinimal/providers/cache.dart';
 import 'package:eduserveMinimal/providers/issue_provider.dart';
 import 'package:eduserveMinimal/service/auth.dart';
+import 'package:eduserveMinimal/service/bg_service.dart';
 import 'package:eduserveMinimal/view/feedback_form/feedback_form.dart';
 import 'package:eduserveMinimal/view/fees/fees.dart';
 import 'package:eduserveMinimal/view/home/apply_leave.dart';
@@ -110,11 +111,12 @@ class _HomeControllerState extends State<HomeController> {
                             log("Error on edu_serve.dart",
                                 error: snapshot.error);
 
-                            if (snapshot.error == LoginError) {
+                            if (snapshot.error.runtimeType == LoginError) {
                               return const Credentials();
                             }
 
-                            if (snapshot.error == FeedbackFormFound) {
+                            if (snapshot.error.runtimeType ==
+                                FeedbackFormFound) {
                               if (prefs.getInt("autoFillFeedbackValue") !=
                                   null) {
                                 Provider.of<AppState>(context).setLoggedIn =
@@ -127,6 +129,8 @@ class _HomeControllerState extends State<HomeController> {
                               return FeedbackForm();
                             }
                           }
+
+                          initializeBackgroundService();
 
                           if (snapshot.connectionState ==
                               ConnectionState.done) {

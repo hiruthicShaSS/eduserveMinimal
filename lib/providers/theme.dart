@@ -10,7 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ThemeProvider extends ChangeNotifier {
   ThemeMode themeMode = ThemeMode.system;
   ThemeData _currentThemeData =
-      SchedulerBinding.instance!.window.platformBrightness == Brightness.dark
+      SchedulerBinding.instance.window.platformBrightness == Brightness.dark
           ? dark
           : light;
   AppTheme currentAppTheme = AppTheme.system;
@@ -113,7 +113,7 @@ class ThemeProvider extends ChangeNotifier {
         case "AppTheme.system":
           themeMode = ThemeMode.system;
           _currentThemeData =
-              SchedulerBinding.instance!.window.platformBrightness ==
+              SchedulerBinding.instance.window.platformBrightness ==
                       Brightness.dark
                   ? dark
                   : light;
@@ -151,7 +151,7 @@ class ThemeProvider extends ChangeNotifier {
       case AppTheme.system:
         themeMode = ThemeMode.system;
         _currentThemeData =
-            SchedulerBinding.instance!.window.platformBrightness ==
+            SchedulerBinding.instance.window.platformBrightness ==
                     Brightness.dark
                 ? dark
                 : light;

@@ -1,6 +1,7 @@
 // 🐦 Flutter imports:
 import 'dart:developer';
 
+import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/models/user.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:flutter/material.dart';

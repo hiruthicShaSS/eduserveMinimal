@@ -98,10 +98,6 @@ class AuthService {
     if (res.body.indexOf(
             "Your login attempt was not successful. Please try again.") !=
         -1) {
-      Fluttertoast.showToast(
-          msg: "Your login attempt was not successful. Please try again.",
-          gravity: ToastGravity.CENTER);
-
       throw LoginError(
           "Your login attempt was not successful. Please try again.");
     }

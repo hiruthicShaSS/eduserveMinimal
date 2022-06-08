@@ -95,7 +95,7 @@ class _HomePageState extends State<HomePage> {
     return Consumer2(
         builder: (context, AppState appState, IssueProvider issueProvider, _) {
       if (issueProvider.isNotEmpty) {
-        SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
+        SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
           if (!_snackBarActive) {
             _snackBarActive = true;
 
@@ -113,8 +113,7 @@ class _HomePageState extends State<HomePage> {
                   label: "Review",
                   textColor: Colors.white,
                   onPressed: () {
-                    SchedulerBinding.instance!
-                        .addPostFrameCallback((timeStamp) {
+                    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
                       Navigator.of(context).push(
                         MaterialPageRoute(builder: (_) => IssuesView()),
                       );

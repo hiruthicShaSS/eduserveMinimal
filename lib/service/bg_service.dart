@@ -1,12 +1,13 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:ui';
 
 import 'package:eduserveMinimal/service/check_absent.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 
-Future<void> initializeService() async {
+Future<void> initializeBackgroundService() async {
   final service = FlutterBackgroundService();
   await service.configure(
     androidConfiguration: AndroidConfiguration(
@@ -41,8 +42,7 @@ bool onIosBackground(ServiceInstance service) {
 }
 
 void onStart(ServiceInstance service) async {
-  // Only available for flutter 3.0.0 and later
-  // DartPluginRegistrant.ensureInitialized();
+  DartPluginRegistrant.ensureInitialized();
 
   log("Background service started");
 
@@ -63,7 +63,7 @@ void onStart(ServiceInstance service) async {
     if (service is AndroidServiceInstance) {
       service.setForegroundNotificationInfo(
         title: "Background Service",
-        content: DateTime.now().toIso8601String(),
+        content: "Please hide this notification channel!",
       );
     }
   });

@@ -1,5 +1,7 @@
 import 'package:eduserveMinimal/edu_serve_minimal.dart';
+import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/service/auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -19,6 +21,8 @@ class _CredentialsFormState extends State<CredentialsForm> {
 
   int _autoFillFeedbackValue = 1;
   bool _autoFillFedbackForm = false;
+  String _information = "";
+  int _errorInLoginCount = 0;
 
   @override
   void initState() {
@@ -122,6 +126,60 @@ class _CredentialsFormState extends State<CredentialsForm> {
             ),
           ),
           const SizedBox(height: 10),
+          if (_information.isNotEmpty)
+            RichText(
+                text: TextSpan(
+              style: TextStyle(color: Colors.red),
+              children: [
+                TextSpan(text: _information),
+                if (_errorInLoginCount > 3)
+                  TextSpan(
+                    text: " Help",
+                    style: TextStyle(color: Colors.blue),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                            title: Text("Un-sucessful login attempt"),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                    "There are sometimes eduserve will just stop logging you in for no reason. But there is a way around."),
+                                Text("There are two ways,"),
+                                ExpansionTile(
+                                  title: Text("Fast but dirty"),
+                                  expandedCrossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Text("👉Click forgot password in eduserve"),
+                                    Text(
+                                        "👉Login to eduserve with new credentials"),
+                                    Text("👉Reset your password"),
+                                  ],
+                                ),
+                                ExpansionTile(
+                                  title: Text("Long but painful"),
+                                  expandedCrossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Text("👉Wait for a day"),
+                                    Text("👉Dont try to login even once"),
+                                    Text("👉After a day it will work."),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                  ),
+              ],
+            )),
+
+          const SizedBox(height: 10),
           ElevatedButton(
             onPressed: _onSave,
             child: Text("SAVE"),
@@ -188,10 +246,24 @@ class _CredentialsFormState extends State<CredentialsForm> {
                 ],
               ),
             ));
-    await AuthService().login(
-      username: _usernameController.text,
-      password: _passwordController.text,
-    );
+
+    try {
+      setState(() => _information = "");
+      await AuthService().login(
+        username: _usernameController.text,
+        password: _passwordController.text,
+      );
+    } on LoginError {
+      Navigator.of(context).pop();
+
+      setState(() {
+        _information =
+            "For some parmigiano, pecorino your login attempt was not successful. Please try again.";
+        _errorInLoginCount++;
+      });
+
+      return;
+    }
 
     Navigator.of(context).pop();
 

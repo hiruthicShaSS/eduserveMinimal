@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:eduserveMinimal/controller/cache.dart';
 import 'package:eduserveMinimal/global/enum.dart';
 import 'package:eduserveMinimal/global/service/notifications.dart';
 import 'package:eduserveMinimal/global/utilities/getHourDataByHour.dart';
@@ -14,21 +15,40 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 SemesterAttendance? _semesterAttendance;
+CacheController _cacheController = CacheController();
 
 Future<bool> checkForAbsent({
   SemesterAttendance? semesterAttendance,
   BuildContext? context,
   bool showNotification = true,
 }) async {
-  List<TimeTableEntry>? timetable;
+  SharedPreferences _prefs = await SharedPreferences.getInstance();
+
+  if (_prefs.containsKey("absentClassShownAt")) {
+    String lastAbsentDateString = _prefs.getString("absentClassShownAt")!;
+
+    DateTime lastAbsentDate = DateTime.parse(lastAbsentDateString);
+
+    if (DateTime.now().difference(lastAbsentDate).inHours < 23) return false;
+  }
 
   try {
     _semesterAttendance = semesterAttendance ?? await getAttendanceSummary();
 
     if (context != null) {
-      timetable = await Provider.of<AppState>(context, listen: false).timetable;
+      _cacheController.setTimetable =
+          await Provider.of<AppState>(context, listen: false).timetable;
     } else {
-      timetable = await getTimetable();
+      if (_cacheController.timeTable == null) {
+        List<TimeTableEntry>? timetable =
+            await _cacheController.getTimetableFromStorage();
+
+        if (timetable == null) {
+          _cacheController.setTimetable = await getTimetable();
+        } else {
+          _cacheController.setTimetable = timetable;
+        }
+      }
     }
   } catch (_) {
     return false;
@@ -56,8 +76,8 @@ Future<bool> checkForAbsent({
           continue;
         }
 
-        TimeTableSubject subject =
-            getHourDataByHour(timetable[yesterday.weekday], i);
+        TimeTableSubject subject = getHourDataByHour(
+            _cacheController.timeTable![yesterday.weekday], i);
 
         if (subject.name.isEmpty) continue;
 
@@ -72,22 +92,20 @@ Future<bool> checkForAbsent({
               "👉&nbsp; ${absentClass.name} (${absentClass.code}) @ ${absentClass.venue} <br />";
         }
 
-        log(data.length.toString());
-        if (data.length >= 350) {
-          data = data.substring(0, 350) + " ...";
+        if (data.length >= 300) {
+          data = data.substring(0, 300) + " ...";
           data += "<br /><br /><b>Tap for more info...<b>";
         }
 
-        print(data.length);
-
         if (showNotification) {
-          // SharedPreferences prefs = await SharedPreferences.getInstance();
-
           createAbsentNotification(
             "You have missed ${absentClasses.length} class${absentClasses.length > 1 ? "es" : ""}",
             data,
             {"date": yesterday.millisecondsSinceEpoch.toString()},
           );
+
+          await _prefs.setString(
+              "absentClassShownAt", DateTime.now().toString());
         }
 
         return true;

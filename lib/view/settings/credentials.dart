@@ -1,6 +1,7 @@
 // 🐦 Flutter imports:
 import 'package:eduserveMinimal/view/settings/widgets/credentials_form.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class Credentials extends StatefulWidget {
@@ -13,6 +14,12 @@ class Credentials extends StatefulWidget {
 
 class _CredentialsState extends State<Credentials> {
   late bool isFromAuth;
+
+  @override
+  void initState() {
+    FlutterBackgroundService().invoke("stopService");
+    super.initState();
+  }
 
   @override
   void didChangeDependencies() {
