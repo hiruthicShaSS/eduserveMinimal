@@ -51,6 +51,7 @@ dependencies:
   awesome_notifications: ^0.6.21
   package_info: ^2.0.2
   flutter_svg: ^1.0.3
+  webview_flutter: ^3.0.4
 
   beautifulsoup:
     path: beautifulsoup.dart

@@ -1,6 +1,7 @@
 import 'package:eduserveMinimal/edu_serve_minimal.dart';
 import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/service/auth.dart';
+import 'package:eduserveMinimal/view/settings/forgot_password.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -178,7 +179,6 @@ class _CredentialsFormState extends State<CredentialsForm> {
                   ),
               ],
             )),
-
           const SizedBox(height: 10),
           ElevatedButton(
             onPressed: _onSave,
@@ -195,7 +195,13 @@ class _CredentialsFormState extends State<CredentialsForm> {
           // TextButton(
           //   child: Text("Forgot password?"),
           //   onPressed: () {
-          //     Navigator.of(context).pushNamed("/forgotPassword");
+          //     Navigator.of(context).push(
+          //       MaterialPageRoute(
+          //         builder: (_) => ForgotPasswordScreen(
+          //           username: _usernameController.text,
+          //         ),
+          //       ),
+          //     );
           //   },
           //   style: ButtonStyle(
           //     overlayColor: MaterialStateProperty.all(Colors.transparent),

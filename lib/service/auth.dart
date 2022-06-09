@@ -35,6 +35,19 @@ class AuthService {
       data[input.keys.first!] = input.values.first;
     }
 
+    List<String> radScriptmanagerHtml = html
+        .querySelectorAll("script")
+        .where((element) =>
+            element.attributes["src"]?.contains("RadScriptManager1") ?? false)
+        .map((e) => e.attributes["src"] ?? "")
+        .toList();
+
+    if (radScriptmanagerHtml.isNotEmpty) {
+      String radScriptManager = radScriptmanagerHtml.first.split("=").last;
+
+      data["RadScriptManager1_TSM"] = Uri.decodeFull(radScriptManager);
+    }
+
     return data;
   }
 
@@ -127,6 +140,12 @@ class AuthService {
   }
 
   Future forgotPassrword(String username, String dob, String kmail) async {
+    List<String> possibleErrors = [
+      "Enter the Student Register No.",
+      "Enter the Date of Birth",
+      "Enter the official email ID",
+    ];
+
     Response res = await get(
       Uri.parse("https://eduserve.karunya.edu/Online/PasswordReset.aspx"),
       headers: headers,
@@ -142,7 +161,7 @@ class AuthService {
 
     formDataForPasswordReset.remove(r"ctl00$mainContent$Login1$LoginButton");
 
-    await post(
+    res = await post(
       Uri.parse("https://eduserve.karunya.edu/Online/PasswordReset.aspx"),
       headers: headers,
       body: formDataForPasswordReset,
@@ -164,6 +183,24 @@ class AuthService {
       body: formDataForPasswordReset,
     );
 
+    // Document html = Document.html(res.body);
+    // List<String> webResources = html
+    //     .querySelectorAll("script")
+    //     .map((e) => e.attributes["src"] ?? "")
+    //     .where((e) => e.contains("ScriptResource") || e.contains("WebResource"))
+    //     .toList();
+
+    // for (var resource in webResources) {
+    //   await get(
+    //     Uri.parse("https://eduserve.karunya.edu$resource"),
+    //     headers: headers,
+    //   );
+    // }
+
     print(res.body);
+
+    print(res.body.contains("Password Reset Successfully"));
+
+    return res.body;
   }
 }

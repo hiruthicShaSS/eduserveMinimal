@@ -224,20 +224,22 @@ class _HomeControllerState extends State<HomeController> {
   }
 
   void initNotificationListeners() {
-    AwesomeNotifications().actionStream.listen((notification) {
-      if (notification.channelKey == absentNMotificationChannelKey) {
-        DateTime yesterday = DateTime.fromMillisecondsSinceEpoch(
-            int.parse(notification.payload!["date"]!));
+    try {
+      AwesomeNotifications().actionStream.listen((notification) {
+        if (notification.channelKey == absentNMotificationChannelKey) {
+          DateTime yesterday = DateTime.fromMillisecondsSinceEpoch(
+              int.parse(notification.payload!["date"]!));
 
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) => SemesterAttendanceView(
-              yesterday: yesterday,
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => SemesterAttendanceView(
+                yesterday: yesterday,
+              ),
             ),
-          ),
-        );
-      }
-    });
+          );
+        }
+      });
+    } catch (_) {}
   }
 }
 

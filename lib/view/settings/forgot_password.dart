@@ -1,10 +1,14 @@
 import 'package:eduserveMinimal/service/auth.dart';
+import 'package:eduserveMinimal/view/settings/test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
-  const ForgotPasswordScreen({Key? key}) : super(key: key);
+  const ForgotPasswordScreen({Key? key, this.username}) : super(key: key);
+
+  final String? username;
 
   @override
   State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
@@ -16,6 +20,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final TextEditingController _dobController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _resetting = false;
+  late WebViewController _controller;
+
+  @override
+  void initState() {
+    _usernameController.text = widget.username ?? "";
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -170,11 +181,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           _resetting = true;
                         });
 
-                        await AuthService().forgotPassrword(
+                        String body = await AuthService().forgotPassrword(
                           _usernameController.text,
                           _dobController.text,
                           _kmailController.text,
                         );
+
+                        // Navigator.of(context).push(MaterialPageRoute(
+                        //     builder: (_) => Test(body: body)));
                       }
                     },
                     child: Text(_resetting
@@ -195,6 +209,16 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             ),
           ),
         ),
+        // floatingActionButton: Offstage(
+        //   offstage: true,
+        //   child: WebView(
+        //     initialUrl: "https://eduserve.karunya.edu",
+        //     javascriptMode: JavascriptMode.unrestricted,
+        //     onWebViewCreated: (webViewController) async {
+        //       _controller = webViewController;
+        //     },
+        //   ),
+        // ),
       ),
     );
   }
