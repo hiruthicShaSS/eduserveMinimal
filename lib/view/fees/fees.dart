@@ -21,137 +21,140 @@ class FeesView extends StatelessWidget {
 
     return Scaffold(
       body: SafeArea(
-        child: FutureBuilder(
-          future: Provider.of<AppState>(context).fees,
-          builder: (context, AsyncSnapshot<Fees> snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              if (!snapshot.hasData) {
-                return const Text("No data found!");
-              }
+        child: Consumer(builder: (context, AppState appState, _) {
+          return FutureBuilder(
+            future: appState.fees,
+            builder: (context, AsyncSnapshot<Fees> snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                if (!snapshot.hasData) {
+                  return const Text("No data found!");
+                }
 
-              Fees fees = snapshot.data!;
+                Fees fees = snapshot.data!;
 
-              return Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10, bottom: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(2.0),
-                          child: Container(
-                            height: 50,
-                            width: _width / 2.2,
-                            decoration: BoxDecoration(
-                              color: fees.totalDues <= 0
-                                  ? Colors.green
-                                  : Colors.red,
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Center(
-                                child: AutoSizeText(
-                              "Total Due: ${fees.totalDues}",
-                              minFontSize: 15,
-                              maxFontSize: 22,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            )),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(2.0),
-                          child: Consumer(
-                              builder: (_, ThemeProvider themeProvider, __) {
-                            return Container(
+                return Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10, bottom: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: Container(
                               height: 50,
                               width: _width / 2.2,
                               decoration: BoxDecoration(
-                                color:
-                                    themeProvider.currentThemeData.primaryColor,
+                                color: fees.totalDues <= 0
+                                    ? Colors.green
+                                    : Colors.red,
                                 borderRadius: BorderRadius.circular(15),
                               ),
                               child: Center(
-                                child: AutoSizeText(
-                                  "Advance: ${fees.advance}",
-                                  minFontSize: 15,
-                                  maxFontSize: 22,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  child: AutoSizeText(
+                                "Total Due: ${fees.totalDues}",
+                                minFontSize: 15,
+                                maxFontSize: 22,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
                                 ),
-                              ),
-                            );
-                          }),
+                              )),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: Consumer(
+                                builder: (_, ThemeProvider themeProvider, __) {
+                              return Container(
+                                height: 50,
+                                width: _width / 2.2,
+                                decoration: BoxDecoration(
+                                  color: themeProvider
+                                      .currentThemeData.primaryColor,
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: Center(
+                                  child: AutoSizeText(
+                                    "Advance: ${fees.advance}",
+                                    minFontSize: 15,
+                                    maxFontSize: 22,
+                                    overflow: TextOverflow.ellipsis,
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              );
+                            }),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: Consumer(
+                                builder: (_, ThemeProvider themeProvider, __) {
+                              return Container(
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: themeProvider
+                                      .currentThemeData.primaryColor
+                                      .withOpacity(0.3),
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: Center(
+                                  child: AutoSizeText(
+                                    "Total spent: ${currencyToUnicode(fees.all.first.currency)} ${fees.all.fold<double>(0, (previousValue, fee) => previousValue + fee.paid)}",
+                                    minFontSize: 15,
+                                    maxFontSize: 22,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.comfortaa(
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              );
+                            }),
+                          ),
                         ),
+                        // Padding(
+                        //   padding: const EdgeInsets.symmetric(horizontal: 15),
+                        //   child: IconButton(
+                        //     onPressed: () async {
+                        //       await downloadFeeStatement();
+                        //     },
+                        //     icon: Icon(Icons.download),
+                        //   ),
+                        // )
                       ],
                     ),
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15),
-                          child: Consumer(
-                              builder: (_, ThemeProvider themeProvider, __) {
-                            return Container(
-                              height: 50,
-                              decoration: BoxDecoration(
-                                color: themeProvider
-                                    .currentThemeData.primaryColor
-                                    .withOpacity(0.3),
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              child: Center(
-                                child: AutoSizeText(
-                                  "Total spent: ${currencyToUnicode(fees.all.first.currency)} ${fees.all.fold<double>(0, (previousValue, fee) => previousValue + fee.paid)}",
-                                  minFontSize: 15,
-                                  maxFontSize: 22,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.comfortaa(
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            );
-                          }),
-                        ),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: fees.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 5, horizontal: 15),
+                            child: FeeContainer(fee: fees.all[index]),
+                          );
+                        },
                       ),
-                      // Padding(
-                      //   padding: const EdgeInsets.symmetric(horizontal: 15),
-                      //   child: IconButton(
-                      //     onPressed: () async {
-                      //       await downloadFeeStatement();
-                      //     },
-                      //     icon: Icon(Icons.download),
-                      //   ),
-                      // )
-                    ],
-                  ),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: fees.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 5, horizontal: 15),
-                          child: FeeContainer(fee: fees.all[index]),
-                        );
-                      },
                     ),
-                  ),
-                ],
-              );
-            } else {
-              return Center(
-                child: Provider.of<ThemeProvider>(context).currentAppTheme ==
-                        AppTheme.valorant
-                    ? Image.asset("assets/images/skye-tiger-loading.gif")
-                    : const CircularProgressIndicator(),
-              );
-            }
-          },
-        ),
+                  ],
+                );
+              } else {
+                return Center(
+                  child: Provider.of<ThemeProvider>(context).currentAppTheme ==
+                          AppTheme.valorant
+                      ? Image.asset("assets/images/skye-tiger-loading.gif")
+                      : const CircularProgressIndicator(),
+                );
+              }
+            },
+          );
+        }),
       ),
     );
   }
