@@ -1,4 +1,8 @@
+import 'dart:developer';
+
+import 'package:eduserveMinimal/global/constants.dart';
 import 'package:eduserveMinimal/global/enum.dart';
+import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/models/user.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:eduserveMinimal/providers/theme.dart';
@@ -21,39 +25,51 @@ class UserScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: FutureBuilder(
-            future: Provider.of<AppState>(context).user,
-            builder: (context, AsyncSnapshot<User> snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                User user = snapshot.data!;
+        child: Consumer(builder: (context, AppState appState, _) {
+          return FutureBuilder(
+              future: appState.user,
+              builder: (context, AsyncSnapshot<User> snapshot) {
+                if (snapshot.hasError) {
+                  log("Error fetching user data: ", error: snapshot.error);
 
-                Provider.of<AppState>(context).setUser = user;
-
-                return _MainScreen(user: user, cached: false);
-              }
-
-              return FutureBuilder(
-                future: SharedPreferences.getInstance(),
-                builder: (context, AsyncSnapshot<SharedPreferences> snapshot) {
-                  if (snapshot.hasError) print(snapshot.error);
-
-                  if (snapshot.connectionState == ConnectionState.done &&
-                      snapshot.data!.containsKey("userData")) {
-                    User user =
-                        User.fromJson(snapshot.data!.getString("userData")!);
-
-                    return _MainScreen(user: user);
+                  if (snapshot.error.runtimeType == NetworkException) {
+                    return Center(child: Text(noInternetText));
                   }
+                }
 
-                  return Center(
-                      child: Provider.of<ThemeProvider>(context)
-                                  .currentAppTheme ==
-                              AppTheme.valorant
-                          ? Image.asset("assets/images/reyna-leer-loading.gif")
-                          : const CircularProgressIndicator());
-                },
-              );
-            }),
+                if (snapshot.connectionState == ConnectionState.done) {
+                  User user = snapshot.data!;
+
+                  Provider.of<AppState>(context).setUser = user;
+
+                  return _MainScreen(user: user, cached: false);
+                }
+
+                return FutureBuilder(
+                  future: SharedPreferences.getInstance(),
+                  builder:
+                      (context, AsyncSnapshot<SharedPreferences> snapshot) {
+                    if (snapshot.hasError) print(snapshot.error);
+
+                    if (snapshot.connectionState == ConnectionState.done &&
+                        snapshot.data!.containsKey("userData")) {
+                      User user =
+                          User.fromJson(snapshot.data!.getString("userData")!);
+
+                      return _MainScreen(user: user);
+                    }
+
+                    return Center(
+                        child: Provider.of<ThemeProvider>(context)
+                                    .currentAppTheme ==
+                                AppTheme.valorant
+                            ? Image.asset(
+                                "assets/images/reyna-leer-loading.gif")
+                            : const CircularProgressIndicator());
+                  },
+                );
+              });
+        }),
       ),
     );
   }

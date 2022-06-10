@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:eduserveMinimal/global/constants.dart';
 import 'package:eduserveMinimal/global/enum.dart';
 import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/models/internal_mark.dart';
@@ -54,10 +55,11 @@ class _InternalMarksTableState extends State<InternalMarksTable> {
           if (snapshot.hasError) {
             log("", error: snapshot.error);
 
-            if (snapshot.error.runtimeType == NoRecordsException) {
-              return Center(
-                child: Text(snapshot.error.toString()),
-              );
+            switch (snapshot.error.runtimeType) {
+              case NoRecordsException:
+                return Center(child: Text(snapshot.error.toString()));
+              case NetworkException:
+                return Center(child: Text(noInternetText));
             }
           }
 

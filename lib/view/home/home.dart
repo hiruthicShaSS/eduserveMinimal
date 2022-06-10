@@ -1,9 +1,12 @@
 // 🐦 Flutter imports:
+import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:eduserveMinimal/global/constants.dart';
 import 'package:eduserveMinimal/global/enum.dart';
+import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/global/service/birthday_service.dart';
 import 'package:eduserveMinimal/models/fees.dart';
 import 'package:eduserveMinimal/models/hallticket/hallticket.dart';
@@ -13,11 +16,12 @@ import 'package:eduserveMinimal/providers/cache.dart';
 import 'package:eduserveMinimal/providers/issue_provider.dart';
 import 'package:eduserveMinimal/providers/theme.dart';
 import 'package:eduserveMinimal/service/get_hallticket.dart';
-import 'package:eduserveMinimal/service/timetable.dart';
+import 'package:eduserveMinimal/service/student_info.dart';
 import 'package:eduserveMinimal/view/home/widgets/home_screen.dart';
 import 'package:eduserveMinimal/view/misc/issues.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 // 📦 Package imports:
 import 'package:new_version/new_version.dart';
@@ -42,8 +46,21 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  int _selectedIndex = 0;
+  List<Widget> _screens = [
+    HomeScreen(),
+    TimeTableScreen(),
+    InternalMarksScreen(),
+    UserScreen(),
+  ];
+  final PageController _pageController = PageController();
+  bool _snackBarActive = false;
+  late Future<User> userImageFuture;
+
   @override
   void initState() {
+    userImageFuture = getStudentInfo();
+
     AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
       if (!isAllowed) {
         showDialog(
@@ -80,18 +97,24 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
-  int _selectedIndex = 0;
-  List<Widget> _screens = [
-    HomeScreen(),
-    TimeTableScreen(),
-    InternalMarksScreen(),
-    UserScreen(),
-  ];
-  final PageController _pageController = PageController();
-  bool _snackBarActive = false;
-
   @override
   Widget build(BuildContext context) {
+    Widget defaultUserimage = Container(
+      decoration: BoxDecoration(shape: BoxShape.circle),
+      child: Provider.of<ThemeProvider>(context).currentAppTheme ==
+              AppTheme.valorant
+          ? Image.asset(
+              "assets/images/reyna-leer-loading.gif",
+              width: 35,
+              height: 30,
+            )
+          : Image.asset(
+              "assets/placeholder_profile.png",
+              width: 30,
+              height: 30,
+            ),
+    );
+
     return Consumer2(
         builder: (context, AppState appState, IssueProvider issueProvider, _) {
       if (issueProvider.isNotEmpty) {
@@ -162,7 +185,40 @@ class _HomePageState extends State<HomePage> {
             BottomNavigationBarItem(
                 icon: Icon(Icons.calendar_month_sharp), label: "Timetable"),
             BottomNavigationBarItem(icon: Icon(Icons.quiz), label: "Internals"),
-            BottomNavigationBarItem(icon: Icon(Icons.person), label: "Student"),
+            BottomNavigationBarItem(
+              icon: Consumer(builder: (context, AppState appState, _) {
+                return FutureBuilder(
+                    future: userImageFuture,
+                    builder: (context, AsyncSnapshot<User> snapshot) {
+                      if (snapshot.hasError) {
+                        log("Error fetching user image:",
+                            error: snapshot.error);
+
+                        if (snapshot.error.runtimeType == NetworkException) {
+                          return defaultUserimage;
+                        } else {
+                          return defaultUserimage;
+                        }
+                      }
+
+                      if (snapshot.connectionState == ConnectionState.done &&
+                          snapshot.hasData) {
+                        appState.setUser = snapshot.data!;
+
+                        return CircleAvatar(
+                          maxRadius: 15,
+                          backgroundImage:
+                              MemoryImage(snapshot.data?.image ?? Uint8List(0)),
+                          backgroundColor: Colors.transparent,
+                          onBackgroundImageError: (_, __) => defaultUserimage,
+                        );
+                      }
+
+                      return defaultUserimage;
+                    });
+              }),
+              label: "Student",
+            ),
           ],
         ),
       );
@@ -172,51 +228,8 @@ class _HomePageState extends State<HomePage> {
   List<StatelessWidget> buildDrawer(BuildContext context) {
     return [
       DrawerHeader(
-        child: Container(
-          child: Row(
-            children: [
-              AutoSizeText(
-                "Hola amigo!",
-                minFontSize: 20,
-                maxFontSize: 25,
-              ),
-              Spacer(),
-              GestureDetector(
-                child: Hero(
-                  tag: "hero-userImage",
-                  child: FutureBuilder(
-                      future: Provider.of<AppState>(context).user,
-                      builder: (context, AsyncSnapshot<User> snapshot) {
-                        return snapshot.hasData
-                            ? CircleAvatar(
-                                maxRadius: 50,
-                                backgroundImage: MemoryImage(
-                                    snapshot.data?.image ?? Uint8List(0)),
-                                backgroundColor: Colors.transparent,
-                                onBackgroundImageError: (_, __) => Image.asset(
-                                    "assets/placeholder_profile.png"),
-                              )
-                            : Container(
-                                height: 100,
-                                width: 100,
-                                decoration:
-                                    BoxDecoration(shape: BoxShape.circle),
-                                child: Provider.of<ThemeProvider>(context)
-                                            .currentAppTheme ==
-                                        AppTheme.valorant
-                                    ? Image.asset(
-                                        "assets/images/reyna-leer-loading.gif")
-                                    : CircularProgressIndicator(),
-                              );
-                      }),
-                ),
-                onTap: () {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (_) => UserScreen()));
-                },
-              ),
-            ],
-          ),
+        child: Center(
+          child: Text("Hola amigo!", style: TextStyle(fontSize: 30)),
         ),
       ),
       ListTile(
@@ -272,14 +285,26 @@ class _HomePageState extends State<HomePage> {
           .push(MaterialPageRoute(builder: (_) => BirthDayWidget()));
     }
 
-    try {
-      getTimetable();
-    } catch (_) {}
-
-    Provider.of<CacheProvider>(context, listen: false)
-        .getInternalAcademicTerms();
-
     checkForIssues();
+
+    try {
+      if (!Provider.of<AppState>(context, listen: false).isTimetableCached) {
+        await Provider.of<AppState>(context, listen: false).timetable;
+      }
+    } on NetworkException {
+    } on NoRecordsException {
+    } on MiscellaneousErrorInEduserve catch (e) {
+      log("Error pre-fetching timetable: ", error: e);
+    }
+
+    try {
+      await Provider.of<CacheProvider>(context, listen: false)
+          .getInternalAcademicTerms();
+    } on NetworkException {
+    } on NoRecordsException catch (e) {
+      log("Error pre-fetching internal academic terms: ", error: e);
+    }
+
     _checkUpdates(context);
   }
 
@@ -287,28 +312,41 @@ class _HomePageState extends State<HomePage> {
     IssueProvider issueProvider =
         Provider.of<IssueProvider>(context, listen: false);
 
-    Fees fees = await getFeesDetails();
+    late Fees fees;
     HallTicket? hallTicket;
 
     try {
-      await getHallTicket();
-    } catch (_) {}
+      fees = await getFeesDetails();
+      if (fees.totalDues > 0) issueProvider.add(Issue.fees_due);
+      if (mounted) {
+        Provider.of<AppState>(context, listen: false).setFees = fees;
+      }
+    } on NetworkException {
+      Fluttertoast.showToast(
+          msg:
+              "Few features will be disabled as there is no active internet connection. Restart the app to resume!");
 
-    if (mounted) {
-      Provider.of<AppState>(context, listen: false).setFees = fees;
+      return;
     }
 
-    if (fees.totalDues > 0) issueProvider.add(Issue.fees_due);
+    try {
+      await getHallTicket();
+      if (hallTicket != null) {
+        if (mounted) {
+          Provider.of<AppState>(context, listen: false).setHallTicket =
+              hallTicket;
+        }
 
-    if (hallTicket != null) {
-      if (mounted) {
-        Provider.of<AppState>(context, listen: false).setHallTicket =
-            hallTicket;
+        if (!hallTicket.isEligibile && !hallTicket.isSubjectsEligibile) {
+          issueProvider.add(Issue.hallticket_ineligible);
+        }
       }
+    } on NetworkException {
+      Fluttertoast.showToast(
+          msg:
+              "Few features will be disabled as there is no active internet connection. Restart the app to resume!");
 
-      if (!hallTicket.isEligibile && !hallTicket.isSubjectsEligibile) {
-        issueProvider.add(Issue.hallticket_ineligible);
-      }
+      return;
     }
   }
 

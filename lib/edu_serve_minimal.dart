@@ -1,11 +1,13 @@
 // 🎯 Dart imports:
 import 'dart:developer';
+import 'dart:io';
 
 // 🐦 Flutter imports:
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:eduserveMinimal/global/constants.dart';
 import 'package:eduserveMinimal/global/enum.dart';
 import 'package:eduserveMinimal/global/exceptions.dart';
+import 'package:eduserveMinimal/global/widgets/network_aware_widget.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:eduserveMinimal/providers/cache.dart';
 import 'package:eduserveMinimal/providers/issue_provider.dart';
@@ -17,6 +19,7 @@ import 'package:eduserveMinimal/view/home/apply_leave.dart';
 import 'package:eduserveMinimal/view/home/home.dart';
 import 'package:eduserveMinimal/view/home/semester_attendance_view.dart';
 import 'package:eduserveMinimal/view/home/timetable.dart';
+import 'package:eduserveMinimal/view/no_internet_screen.dart';
 import 'package:eduserveMinimal/view/settings/attribution.dart';
 import 'package:eduserveMinimal/view/settings/credentials.dart';
 import 'package:eduserveMinimal/view/settings/forgot_password.dart';
@@ -99,17 +102,25 @@ class _HomeControllerState extends State<HomeController> {
         if (snapshot.connectionState == ConnectionState.done) {
           SharedPreferences prefs = snapshot.data!;
 
-          return FutureBuilder(
-              future: credentialsExist(),
-              builder: (context, AsyncSnapshot<bool> snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  if (snapshot.data ?? false) {
-                    return FutureBuilder(
+          return NetworkAwareWidget(
+            noInternetWidget: const NoInternetScreen(),
+            removeAwarenessAfterConnection: true,
+            showDialogWhenOffline: true,
+            child: FutureBuilder(
+                future: credentialsExist(),
+                builder: (context, AsyncSnapshot<bool> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.data ?? false) {
+                      return FutureBuilder(
                         future: _login(),
                         builder: (context, AsyncSnapshot snapshot) {
                           if (snapshot.hasError) {
                             log("Error on edu_serve.dart",
                                 error: snapshot.error);
+
+                            if (snapshot.error.runtimeType == SocketException) {
+                              return const NoInternetScreen();
+                            }
 
                             if (snapshot.error.runtimeType == LoginError) {
                               return const Credentials();
@@ -149,31 +160,35 @@ class _HomeControllerState extends State<HomeController> {
                                     ? Theme.of(context).backgroundColor
                                     : null,
                             child: Center(
-                                child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                if (appTheme == AppTheme.valorant)
-                                  Image.asset("assets/images/kayo-loading.gif"),
-                                if (appTheme != AppTheme.valorant)
-                                  Lottie.asset("assets/lottie/log_in.json"),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    "Logging In...",
-                                    style: TextStyle(fontSize: 25),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  if (appTheme == AppTheme.valorant)
+                                    Image.asset(
+                                        "assets/images/kayo-loading.gif"),
+                                  if (appTheme != AppTheme.valorant)
+                                    Lottie.asset("assets/lottie/log_in.json"),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      "Logging In...",
+                                      style: TextStyle(fontSize: 25),
+                                    ),
                                   ),
-                                ),
-                              ],
-                            )),
+                                ],
+                              ),
+                            ),
                           );
-                        });
+                        },
+                      );
+                    }
+
+                    return const Credentials();
                   }
 
-                  return const Credentials();
-                }
-
-                return const Center(child: CircularProgressIndicator());
-              });
+                  return const Center(child: CircularProgressIndicator());
+                }),
+          );
         }
 
         return Container();

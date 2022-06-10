@@ -1,6 +1,8 @@
 import 'dart:developer' as dev;
 import 'dart:math';
 
+import 'package:eduserveMinimal/global/constants.dart';
+import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/models/semester_summary_result.dart';
 import 'package:eduserveMinimal/service/semester_summary.dart';
 import 'package:eduserveMinimal/view/user/widgets/semester_summary_graph.dart';
@@ -20,6 +22,12 @@ class SemesterSummaryWidget extends StatelessWidget {
             (context, AsyncSnapshot<List<SemesterSummaryResult>> snapshot) {
           if (snapshot.hasError) {
             dev.log("", error: snapshot.error);
+
+            if (snapshot.error.runtimeType == NetworkException) {
+              return Center(
+                  child:
+                      Text("$noInternetText. Unable to load semester graph."));
+            }
           }
 
           if (snapshot.connectionState == ConnectionState.done) {

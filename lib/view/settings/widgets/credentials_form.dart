@@ -1,11 +1,14 @@
+import 'package:connectivity/connectivity.dart';
 import 'package:eduserveMinimal/edu_serve_minimal.dart';
 import 'package:eduserveMinimal/global/exceptions.dart';
+import 'package:eduserveMinimal/global/widgets/network_aware_widget.dart';
 import 'package:eduserveMinimal/service/auth.dart';
 import 'package:eduserveMinimal/view/settings/forgot_password.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CredentialsForm extends StatefulWidget {
@@ -180,15 +183,20 @@ class _CredentialsFormState extends State<CredentialsForm> {
               ],
             )),
           const SizedBox(height: 10),
-          ElevatedButton(
-            onPressed: _onSave,
-            child: Text("SAVE"),
-            style: ButtonStyle(
-              shape: MaterialStateProperty.all(
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-              ),
-              fixedSize: MaterialStateProperty.all(
-                Size(MediaQuery.of(context).size.width, 45),
+          NetworkAwareWidget(
+            noInternetWidget:
+                const Text("No internet. Please turn on to continue!"),
+            child: ElevatedButton(
+              onPressed: _onSave,
+              child: Text("SAVE"),
+              style: ButtonStyle(
+                shape: MaterialStateProperty.all(
+                  RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30)),
+                ),
+                fixedSize: MaterialStateProperty.all(
+                  Size(MediaQuery.of(context).size.width, 45),
+                ),
               ),
             ),
           ),

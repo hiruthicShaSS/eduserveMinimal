@@ -1,7 +1,9 @@
 import 'dart:developer';
 
 import 'package:eduserveMinimal/controller/cache.dart';
+import 'package:eduserveMinimal/global/constants.dart';
 import 'package:eduserveMinimal/global/enum.dart';
+import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/global/service/notifications.dart';
 import 'package:eduserveMinimal/global/utilities/getHourDataByHour.dart';
 import 'package:eduserveMinimal/models/attendance/attendance.dart';
@@ -50,6 +52,8 @@ Future<bool> checkForAbsent({
         }
       }
     }
+  } on NetworkException catch (e) {
+    log("$noInternetText. Unable to check for absent hours.", error: e);
   } catch (_) {
     return false;
   }

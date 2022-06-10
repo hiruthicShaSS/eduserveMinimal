@@ -1,3 +1,4 @@
+import 'package:connectivity/connectivity.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:eduserveMinimal/providers/issue_provider.dart';
 import 'package:eduserveMinimal/service/auth.dart';
@@ -16,9 +17,33 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       displacement: 100,
-      onRefresh: () => AuthService().login().then((value) {
+      onRefresh: () async {
+        ConnectivityResult result = await Connectivity().checkConnectivity();
+
+        if (result == ConnectivityResult.none) {
+          ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+          ScaffoldMessenger.of(context).showMaterialBanner(
+            MaterialBanner(
+              content: const Text("No internet"),
+              backgroundColor: Colors.red,
+              actions: [
+                IconButton(
+                  onPressed: () =>
+                      ScaffoldMessenger.of(context).hideCurrentMaterialBanner(),
+                  icon: Icon(
+                    Icons.close,
+                  ),
+                ),
+              ],
+            ),
+          );
+
+          return;
+        }
+
+        await AuthService().login();
         Provider.of<AppState>(context, listen: false).refresh();
-      }),
+      },
       child: CustomScrollView(
         slivers: [
           SliverAppBar(

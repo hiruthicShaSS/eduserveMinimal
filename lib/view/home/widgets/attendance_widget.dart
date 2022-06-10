@@ -1,6 +1,8 @@
 // 🐦 Flutter imports:
 import 'dart:developer';
 
+import 'package:eduserveMinimal/global/constants.dart';
+import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/models/user.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +21,11 @@ class AttendanceContainer extends StatelessWidget {
       future: Provider.of<AppState>(context).user,
       builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
         if (snapshot.hasError) {
-          log("", error: snapshot.error);
+          log("Error fetching attendance data: ", error: snapshot.error);
+
+          if (snapshot.error.runtimeType == NetworkException) {
+            return Center(child: Text(noInternetText));
+          }
         }
 
         if (snapshot.connectionState == ConnectionState.done) {

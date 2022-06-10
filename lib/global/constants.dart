@@ -1,5 +1,6 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 
+String noInternetText = "There was a problem connecting to the internet!";
 String timeTableNotificationChannelKey = "timetable";
 String timeTableNotificationGroupKey = "timetable-group";
 String absentNMotificationChannelKey = "absent";

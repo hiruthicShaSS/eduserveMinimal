@@ -1,7 +1,6 @@
-import 'package:connectivity/connectivity.dart';
 import 'package:eduserveMinimal/global/exceptions.dart';
+import 'package:eduserveMinimal/service/network_service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,12 +9,14 @@ import 'package:html/dom.dart';
 class AuthService {
   static Map<String, String> headers = {};
   static Map<String, String> formData = {};
+  NetworkService _networkService = NetworkService();
 
   Future<Map<String, String>> basicFormData([String? htmlPage]) async {
     Document html;
 
     if (htmlPage == null) {
-      Response res = await get(Uri.parse("https://eduserve.karunya.edu"));
+      Response res =
+          await _networkService.get(Uri.parse("https://eduserve.karunya.edu"));
       html = Document.html(res.body);
     } else {
       html = Document.html(htmlPage);
@@ -58,14 +59,6 @@ class AuthService {
     username = await storage.read(key: "username") ?? username;
     password = await storage.read(key: "password") ?? password;
 
-    var connection = await (Connectivity().checkConnectivity());
-    if (connection == ConnectivityResult.none) {
-      Fluttertoast.showToast(
-        msg: "Internet, caveman. Turn it on...",
-        timeInSecForIosWeb: 10,
-      );
-    }
-
     Map<String?, String?>? login_data = {
       "RadScriptManager1_TSM": "",
       "__EVENTTARGET": "",
@@ -77,7 +70,7 @@ class AuthService {
       "ctl00\$mainContent\$Login1\$Password": password,
       "ctl00\$mainContent\$Login1\$LoginButton": "Log In"
     };
-    var res = await get(Uri.parse(
+    var res = await _networkService.get(Uri.parse(
         "https://eduserve.karunya.edu/Login.aspx?ReturnUrl=%2fStudent%2fAttSummary.aspx"));
     var eduserveCookie = res.headers["set-cookie"]!;
 
@@ -101,7 +94,7 @@ class AuthService {
         "https://eduserve.karunya.edu/Login.aspx?ReturnUrl=%2fStudent%2fAttSummary.aspx";
 
     // Post to login.aspx
-    res = await post(
+    res = await _networkService.post(
       Uri.parse(
           "https://eduserve.karunya.edu/Login.aspx?ReturnUrl=%2fStudent%2fAttSummary.aspx"),
       headers: headers,
@@ -118,7 +111,7 @@ class AuthService {
     if (res.statusCode == 302) {
       headers["cookie"] =
           headers["cookie"]! + "; ${res.headers['set-cookie']!.split(';')[0]}";
-      res = await get(
+      res = await _networkService.get(
           Uri.parse("https://eduserve.karunya.edu${res.headers["location"]}"),
           headers: headers);
     }
@@ -146,7 +139,7 @@ class AuthService {
       "Enter the official email ID",
     ];
 
-    Response res = await get(
+    Response res = await _networkService.get(
       Uri.parse("https://eduserve.karunya.edu/Online/PasswordReset.aspx"),
       headers: headers,
     );
@@ -191,7 +184,7 @@ class AuthService {
     //     .toList();
 
     // for (var resource in webResources) {
-    //   await get(
+    //   await _networkService.get(
     //     Uri.parse("https://eduserve.karunya.edu$resource"),
     //     headers: headers,
     //   );

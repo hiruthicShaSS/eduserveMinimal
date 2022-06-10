@@ -1,6 +1,8 @@
 // 🐦 Flutter imports:
 import 'dart:developer';
 
+import 'package:eduserveMinimal/global/constants.dart';
+import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/models/hallticket/hallticket.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +34,10 @@ class _HallTicketViewState extends State<HallTicketView> {
                   builder: (context, AsyncSnapshot<HallTicket> snapshot) {
                     if (snapshot.hasError) {
                       log("", error: snapshot.error);
+
+                      if (snapshot.error.runtimeType == NetworkException) {
+                        return Center(child: Text(noInternetText));
+                      }
                     }
 
                     if (snapshot.connectionState == ConnectionState.done) {

@@ -1,4 +1,5 @@
 // 🐦 Flutter imports:
+import 'package:connectivity/connectivity.dart';
 import 'package:eduserveMinimal/global/enum.dart';
 import 'package:eduserveMinimal/providers/theme.dart';
 import 'package:eduserveMinimal/service/auth.dart';
@@ -65,25 +66,33 @@ class Settings extends StatelessWidget {
               child: ElevatedButton(
                   child: Text("Check updates"),
                   onPressed: () async {
-                    PackageInfo info = await PackageInfo.fromPlatform();
-                    if (info.packageName.contains("dev") ||
-                        info.packageName.contains("stg")) {
-                      Fluttertoast.showToast(
-                          msg: "You are running a non-production build!");
+                    if ((await Connectivity().checkConnectivity()) !=
+                        ConnectivityResult.none) {
+                      PackageInfo info = await PackageInfo.fromPlatform();
+                      if (info.packageName.contains("dev") ||
+                          info.packageName.contains("stg")) {
+                        Fluttertoast.showToast(
+                            msg: "You are running a non-production build!");
+
+                        return;
+                      }
+
+                      final newVersion =
+                          NewVersion(androidId: info.packageName);
+                      newVersion.showAlertIfNecessary(context: context);
+
+                      bool? canUpdate =
+                          (await newVersion.getVersionStatus())?.canUpdate;
+
+                      if (canUpdate ?? false) {
+                        Fluttertoast.showToast(
+                            msg: "You are already on latest version!");
+                      }
 
                       return;
                     }
 
-                    final newVersion = NewVersion(androidId: info.packageName);
-                    newVersion.showAlertIfNecessary(context: context);
-
-                    bool? canUpdate =
-                        (await newVersion.getVersionStatus())?.canUpdate;
-
-                    if (canUpdate ?? false) {
-                      Fluttertoast.showToast(
-                          msg: "You are already on latest version!");
-                    }
+                    Fluttertoast.showToast(msg: "No internet!");
                   }),
             ),
             SizedBox(

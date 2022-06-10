@@ -1,3 +1,4 @@
+import 'package:eduserveMinimal/global/constants.dart';
 import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/global/service/notifications.dart';
 import 'package:eduserveMinimal/global/utilities/notification.dart';
@@ -60,25 +61,12 @@ class _NotificationsViewState extends State<NotificationsView> {
                                       await setupSchedule(context);
                                     } else {
                                       await cancelAllUpcomingClassNotification();
-
-                                      SharedPreferences.getInstance()
-                                          .then((prefs) async {
-                                        await prefs.setBool(
-                                            "upcomingClassesScheduled",
-                                            _notifyUpcomingClass);
+                                      setState(() {
+                                        _notifyUpcomingClass = false;
                                       });
                                     }
-
-                                    SharedPreferences.getInstance().then(
-                                        (prefs) => prefs.setBool(
-                                            "upcomingClassesScheduled",
-                                            _notifyUpcomingClass));
-
-                                    if (mounted) {
-                                      setState(
-                                          () => _notifyUpcomingClass = value);
-                                    }
-                                  }),
+                                  },
+                                ),
                         ],
                       ),
                     ),
@@ -194,8 +182,13 @@ class _NotificationsViewState extends State<NotificationsView> {
         }
       }
     } on NoRecordsException catch (e) {
-      setState(() => _timetableDownloading = false);
+      _onfailure();
       Fluttertoast.showToast(msg: e.message!);
+
+      return;
+    } on NetworkException catch (_) {
+      _onfailure();
+      Fluttertoast.showToast(msg: noInternetText);
 
       return;
     }
@@ -203,6 +196,7 @@ class _NotificationsViewState extends State<NotificationsView> {
     setState(() {
       _timetableDownloading = false;
       _alertBefore = alertBefore;
+      _notifyUpcomingClass = true;
     });
 
     Fluttertoast.showToast(msg: "$scheduleCount schedules created!");
@@ -210,5 +204,15 @@ class _NotificationsViewState extends State<NotificationsView> {
       await prefs.setBool("upcomingClassesScheduled", _notifyUpcomingClass);
       await prefs.setInt("alertBefore", alertBefore);
     });
+  }
+
+  void _onfailure() async {
+    setState(() {
+      _notifyUpcomingClass = false;
+      _timetableDownloading = false;
+    });
+
+    SharedPreferences.getInstance().then((prefs) =>
+        prefs.setBool("upcomingClassesScheduled", _notifyUpcomingClass));
   }
 }

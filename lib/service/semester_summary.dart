@@ -2,11 +2,14 @@
 import 'package:eduserveMinimal/global/service/month_to_int.dart';
 import 'package:eduserveMinimal/models/semester_summary_result.dart';
 import 'package:eduserveMinimal/service/auth.dart';
+import 'package:eduserveMinimal/service/network_service.dart';
 import 'package:http/http.dart';
 import 'package:html/dom.dart';
 
 Future<List<SemesterSummaryResult>> getSemesterSummary() async {
-  Response res = await get(
+  NetworkService _networkService = NetworkService();
+
+  Response res = await _networkService.get(
     Uri.parse("https://eduserve.karunya.edu/Student/SemSummary.aspx"),
     headers: AuthService.headers,
   );
@@ -14,7 +17,7 @@ Future<List<SemesterSummaryResult>> getSemesterSummary() async {
   if (res.body.contains("User Login")) {
     await AuthService().login();
 
-    res = await get(
+    res = await _networkService.get(
       Uri.parse("https://eduserve.karunya.edu/Student/SemSummary.aspx"),
       headers: AuthService.headers,
     );

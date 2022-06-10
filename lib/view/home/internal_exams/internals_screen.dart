@@ -1,3 +1,7 @@
+import 'dart:developer';
+
+import 'package:eduserveMinimal/global/constants.dart';
+import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/providers/cache.dart';
 import 'package:eduserveMinimal/view/home/internal_exams/widgets/internal_marks_table.dart';
 import 'package:flutter/material.dart';
@@ -22,11 +26,20 @@ class _InternalMarksScreenState extends State<InternalMarksScreen> {
     return Scaffold(
       body: SafeArea(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             FutureBuilder(
               future: Provider.of<CacheProvider>(context)
                   .getInternalAcademicTerms(),
               builder: (context, AsyncSnapshot<dynamic> snapshot) {
+                if (snapshot.hasError) {
+                  log(snapshot.error.toString());
+
+                  if (snapshot.error.runtimeType == NetworkException) {
+                    return Center(child: Text(noInternetText));
+                  }
+                }
+
                 if (snapshot.hasData) {
                   academicTerms = snapshot.data;
                   academicTerms.remove("Select the Academic Term");

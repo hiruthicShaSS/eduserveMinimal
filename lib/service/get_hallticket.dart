@@ -3,11 +3,14 @@ import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/models/hallticket/hallticket.dart';
 import 'package:eduserveMinimal/models/hallticket/subject.dart';
 import 'package:eduserveMinimal/service/auth.dart';
+import 'package:eduserveMinimal/service/network_service.dart';
 import 'package:http/http.dart';
 import 'package:html/dom.dart';
 
 Future<HallTicket> getHallTicket() async {
-  Response res = await get(
+  NetworkService _networkService = NetworkService();
+
+  Response res = await _networkService.get(
     Uri.parse(
         "https://eduserve.karunya.edu/Student/CBCS/HallTicketDownload.aspx"),
     headers: AuthService.headers,
@@ -31,7 +34,7 @@ Future<HallTicket> getHallTicket() async {
   formData[r"ctl00$mainContent$DDLEXAM"] = academicTerms.last.toString();
   formData.remove(r"ctl00$mainContent$Login1$LoginButton");
 
-  res = await post(
+  res = await _networkService.post(
     Uri.parse(
         "https://eduserve.karunya.edu/Student/CBCS/HallTicketDownload.aspx"),
     headers: AuthService.headers,

@@ -2,14 +2,17 @@
 import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/models/timetable_entry.dart';
 import 'package:eduserveMinimal/service/auth.dart';
+import 'package:eduserveMinimal/service/network_service.dart';
 import 'package:http/http.dart';
 import 'package:html/dom.dart';
 
 Future<List<TimeTableEntry>> getTimetable() async {
+  NetworkService _networkService = NetworkService();
+
   Map<String, String> formData = AuthService.formData;
   formData.remove(r"ctl00$mainContent$BTNCLEAR");
 
-  Response res = await get(
+  Response res = await _networkService.get(
     Uri.parse("https://eduserve.karunya.edu/Student/TimeTable.aspx"),
     headers: AuthService.headers,
   );
@@ -41,14 +44,14 @@ Future<List<TimeTableEntry>> getTimetable() async {
       (academicTerms.length - 1).toString();
   formData.remove(r"ctl00$mainContent$BTNCLEAR");
 
-  res = await post(
+  res = await _networkService.post(
     Uri.parse("https://eduserve.karunya.edu/Student/TimeTable.aspx"),
     headers: AuthService.headers,
     body: formData,
   );
 
   if (res.body.contains("No records to display.")) {
-    throw NoRecordsException("No timetable records to display.");
+    throw NoRecordsException("No timetable records found!.");
   }
 
   if (res.body.contains("Object moved to")) {

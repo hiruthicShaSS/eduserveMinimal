@@ -1,5 +1,7 @@
 // 🐦 Flutter imports:
+import 'package:eduserveMinimal/global/constants.dart';
 import 'package:eduserveMinimal/global/enum.dart';
+import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/global/service/currency_to_unicode.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:eduserveMinimal/view/fees/widgets/fee_container.dart';
@@ -26,6 +28,12 @@ class FeesView extends StatelessWidget {
             future: appState.fees,
             builder: (context, AsyncSnapshot<Fees> snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.hasError) {
+                  if (snapshot.error.runtimeType == NetworkException) {
+                    return Center(child: Text(noInternetText));
+                  }
+                }
+
                 if (!snapshot.hasData) {
                   return const Text("No data found!");
                 }
@@ -111,8 +119,8 @@ class FeesView extends StatelessWidget {
                                     minFontSize: 15,
                                     maxFontSize: 22,
                                     overflow: TextOverflow.ellipsis,
-                                    style: GoogleFonts.comfortaa(
-                                        fontWeight: FontWeight.bold),
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                 ),
                               );

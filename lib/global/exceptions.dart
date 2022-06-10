@@ -52,3 +52,15 @@ class FeedbackFormFound implements Exception {
     return message ?? "No error message provided!";
   }
 }
+
+class NetworkException implements Exception {
+  const NetworkException([this.message, this.actualException]);
+
+  final String? message;
+  final Exception? actualException;
+
+  @override
+  String toString() {
+    return message ?? "No error message provided!";
+  }
+}

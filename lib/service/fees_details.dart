@@ -1,4 +1,5 @@
 import 'package:eduserveMinimal/service/auth.dart';
+import 'package:eduserveMinimal/service/network_service.dart';
 import 'package:http/http.dart';
 import 'package:html/dom.dart';
 
@@ -7,10 +8,12 @@ import 'package:eduserveMinimal/models/fees.dart';
 import 'package:intl/intl.dart';
 
 Future<Fees> getFeesDetails() async {
+  NetworkService _networkService = NetworkService();
+
   String feesDownload = "/Student/Fees/DownloadReceipt.aspx";
   String feesOverallStatement = "/Student/Fees/FeesStatement.aspx";
 
-  Response page = await get(
+  Response page = await _networkService.get(
     Uri.parse("https://eduserve.karunya.edu${feesDownload}"),
     headers: AuthService.headers,
   );
@@ -19,10 +22,15 @@ Future<Fees> getFeesDetails() async {
     await AuthService().login();
   }
 
-  Response res = await get(
-    Uri.parse("https://eduserve.karunya.edu${feesOverallStatement}"),
-    headers: AuthService.headers,
-  );
+  Response res;
+  try {
+    res = await _networkService.get(
+      Uri.parse("https://eduserve.karunya.edu${feesOverallStatement}"),
+      headers: AuthService.headers,
+    );
+  } on ClientException {
+    rethrow;
+  }
 
   Document html = Document.html(res.body);
 
@@ -63,6 +71,8 @@ Future<Fees> getFeesDetails() async {
 }
 
 Future<void> downloadFeeStatement() async {
+  NetworkService _networkService = NetworkService();
+
   Map<String, String> formData = AuthService.formData;
 
   formData["__EVENTTARGET"] = "";
@@ -72,7 +82,7 @@ Future<void> downloadFeeStatement() async {
       '{"selectedIndexes":[],"selectedCellsIndexes":[],"unselectableItemsIndexes":[],"reorderedColumns":[],"expandedItems":[],"expandedGroupItems":[],"expandedFilterItems":[],"deletedItems":[],"hidedColumns":[],"showedColumns":[],"groupColsState":{},"hierarchyState":{},"scrolledPosition":"545.5999755859375,0","popUpLocations":{},"draggedItemsIndexes":[]}';
   formData[r"ctl00$mainContent$btnDownload"] = "Download";
 
-  Response res = await post(
+  Response res = await _networkService.post(
     Uri.parse("https://eduserve.karunya.edu/Student/Fees/FeesStatement.aspx"),
     headers: AuthService.headers,
     body: formData,

@@ -3,7 +3,9 @@ import 'dart:developer' as dev;
 import 'dart:math';
 
 // 🐦 Flutter imports:
+import 'package:eduserveMinimal/global/constants.dart';
 import 'package:eduserveMinimal/global/enum.dart';
+import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/models/attendance/attendance.dart';
 import 'package:eduserveMinimal/models/attendance/attendance_summary.dart';
 import 'package:eduserveMinimal/models/attendance/semester_attendance.dart';
@@ -34,7 +36,17 @@ class AttendanceSummaryWidget extends StatelessWidget {
         builder: (context, AsyncSnapshot<SemesterAttendance> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasError) {
-              dev.log("Error: ", error: snapshot.error);
+              dev.log("Error loading attendance summary: ",
+                  error: snapshot.error);
+
+              if (snapshot.error.runtimeType == NetworkException) {
+                return Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: Center(
+                    child: Text(noInternetText),
+                  ),
+                );
+              }
 
               return Padding(
                 padding: const EdgeInsets.only(top: 20),
@@ -46,7 +58,8 @@ class AttendanceSummaryWidget extends StatelessWidget {
               if (snapshot.data!.attendance.isEmpty) {
                 return Padding(
                   padding: const EdgeInsets.only(top: 20),
-                  child: Center(child: Text("No data available")),
+                  child: Center(
+                      child: Text("No data available for attendance summary")),
                 );
               }
 

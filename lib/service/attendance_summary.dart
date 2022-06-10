@@ -3,6 +3,7 @@ import 'package:eduserveMinimal/models/attendance/attendance.dart';
 import 'package:eduserveMinimal/models/attendance/attendance_summary.dart';
 import 'package:eduserveMinimal/models/attendance/semester_attendance.dart';
 import 'package:eduserveMinimal/service/auth.dart';
+import 'package:eduserveMinimal/service/network_service.dart';
 import 'package:http/http.dart';
 
 // 🌎 Project imports:
@@ -10,12 +11,14 @@ import 'package:html/dom.dart';
 import 'package:intl/intl.dart';
 
 Future<SemesterAttendance> getAttendanceSummary([retries = 0]) async {
+  NetworkService _networkService = NetworkService();
+
   Map<String, String> headers = AuthService.headers;
   Map formData = AuthService.formData;
   formData.remove("ctl00\$mainContent\$DDLEXAM");
 
   headers["referer"] = "https://eduserve.karunya.edu/Student/AttSummary.aspx";
-  Response res = await get(
+  Response res = await _networkService.get(
     Uri.parse("https://eduserve.karunya.edu/Student/AttSummary.aspx"),
     headers: headers,
   );
@@ -43,7 +46,7 @@ Future<SemesterAttendance> getAttendanceSummary([retries = 0]) async {
   }
 
   formData["ctl00\$mainContent\$DDLACADEMICTERM"] = maxAcademicTerm.toString();
-  res = await post(
+  res = await _networkService.post(
     Uri.parse("https://eduserve.karunya.edu/Student/AttSummary.aspx"),
     headers: headers,
     body: formData,
