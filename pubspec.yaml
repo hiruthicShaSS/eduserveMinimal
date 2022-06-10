@@ -52,11 +52,10 @@ dependencies:
   package_info: ^2.0.2
   flutter_svg: ^1.0.3
   webview_flutter: ^3.0.4
+  flutter_background_service: any
 
   beautifulsoup:
     path: beautifulsoup.dart
-  flutter_background_service:
-    path: D:/projects/flutter_forked_packages/flutter_background_service/packages/flutter_background_service
 
 dev_dependencies:
   flutter_test:
