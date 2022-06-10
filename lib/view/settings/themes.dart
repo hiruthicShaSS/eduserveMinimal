@@ -1,4 +1,5 @@
 // 🐦 Flutter imports:
+import 'package:eduserveMinimal/global/enum.dart';
 import 'package:flutter/material.dart';
 
 // 📦 Package imports:
@@ -19,21 +20,21 @@ class Themes extends StatelessWidget {
       ),
       body: ListView(
         children: List.generate(
-          ThemeMode.values.length,
+          AppTheme.values.length,
           (index) => ListTile(
-            title: Text(ThemeMode.values[index]
+            title: Text(AppTheme.values[index]
                 .toString()
                 .split(".")
                 .last
                 .toUpperCase()),
             trailing: Visibility(
                 visible: Provider.of<ThemeProvider>(context, listen: false)
-                        .themeMode ==
-                    ThemeMode.values[index],
+                        .currentAppTheme ==
+                    AppTheme.values[index],
                 child: Icon(Icons.check_circle_outline, color: Colors.green)),
             onTap: () {
               Provider.of<ThemeProvider>(context, listen: false)
-                  .setThemeMode(ThemeMode.values[index]);
+                  .applyTheme(AppTheme.values[index]);
             },
           ),
         ),

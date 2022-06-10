@@ -1,8 +1,12 @@
 import 'dart:developer';
 
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:eduserveMinimal/global/constants.dart';
+import 'package:eduserveMinimal/global/enum.dart';
 import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/models/internal_mark.dart';
 import 'package:eduserveMinimal/providers/cache.dart';
+import 'package:eduserveMinimal/providers/theme.dart';
 import 'package:eduserveMinimal/service/internal_marks.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -51,10 +55,11 @@ class _InternalMarksTableState extends State<InternalMarksTable> {
           if (snapshot.hasError) {
             log("", error: snapshot.error);
 
-            if (snapshot.error.runtimeType == NoRecordsException) {
-              return Center(
-                child: Text(snapshot.error.toString()),
-              );
+            switch (snapshot.error.runtimeType) {
+              case NoRecordsException:
+                return Center(child: Text(snapshot.error.toString()));
+              case NetworkException:
+                return Center(child: Text(noInternetText));
             }
           }
 
@@ -94,12 +99,17 @@ class _InternalMarksTableState extends State<InternalMarksTable> {
                           internalMarks[i].subjectCode,
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        Text(internalMarks[i].subjectName),
+                        AutoSizeText(
+                          internalMarks[i].subjectName,
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ],
                     ),
                   ),
                   textStyle: TextStyle(fontWeight: FontWeight.bold),
-                  colorBg: internalMarks[i].marksScored < 20
+                  colorBg: internalMarks[i].marksScored <
+                          internalMarks[i].totalMarks ~/ 2
                       ? Colors.red.withOpacity(0.2)
                       : internalMarks[i].marksScored >=
                               internalMarks[i].totalMarks
@@ -120,7 +130,8 @@ class _InternalMarksTableState extends State<InternalMarksTable> {
                       ),
                     ),
                   ),
-                  colorBg: internalMarks[j].marksScored < 20
+                  colorBg: internalMarks[j].marksScored <
+                          internalMarks[j].totalMarks ~/ 2
                       ? Colors.red.withOpacity(0.2)
                       : internalMarks[j].marksScored >=
                               internalMarks[j].totalMarks
@@ -139,7 +150,8 @@ class _InternalMarksTableState extends State<InternalMarksTable> {
                             internalMarks[j].marksScored.toString(),
                             style: TextStyle(
                               fontSize: 80,
-                              color: internalMarks[j].marksScored < 20
+                              color: internalMarks[j].marksScored <
+                                      internalMarks[j].totalMarks ~/ 2
                                   ? Colors.red
                                   : internalMarks[j].marksScored >=
                                           internalMarks[j].totalMarks
@@ -172,7 +184,7 @@ class _InternalMarksTableState extends State<InternalMarksTable> {
                   stickyLegendWidth: 110,
                   stickyLegendHeight: 80,
                   contentCellWidth: 150,
-                  contentCellHeight: 100,
+                  contentCellHeight: 120,
                 ),
                 legendCell:
                     tableCell.TableCell.legend("Subject Code / Subject Name"),
@@ -180,7 +192,11 @@ class _InternalMarksTableState extends State<InternalMarksTable> {
             );
           }
 
-          return const Center(child: CircularProgressIndicator());
+          return Center(
+              child: Provider.of<ThemeProvider>(context).currentAppTheme ==
+                      AppTheme.valorant
+                  ? Image.asset("assets/images/skye-tiger-loading.gif")
+                  : const CircularProgressIndicator());
         },
       );
     });

@@ -1,12 +1,10 @@
 // 🐦 Flutter imports:
+import 'package:eduserveMinimal/models/leave/other_leave.dart';
 import 'package:flutter/material.dart';
 
 // 📦 Package imports:
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:shimmer/shimmer.dart';
-
-// 🌎 Project imports:
-import 'package:eduserveMinimal/models/leave.dart';
 
 class LeaveList extends StatelessWidget {
   const LeaveList({Key? key, required this.leave, this.isLoading = false})
@@ -104,7 +102,10 @@ class LeaveList extends StatelessWidget {
                   child: Container(
                     padding: EdgeInsets.all(5),
                     decoration: BoxDecoration(
-                      color: Colors.transparent.withOpacity(0.2),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withOpacity(0.2),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Icon(Icons.chevron_right),

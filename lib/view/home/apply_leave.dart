@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 // 🌎 Project imports:
 import 'package:eduserveMinimal/global/enum.dart';
 import 'package:eduserveMinimal/providers/theme.dart';
+import 'package:provider/provider.dart';
 
 class ApplyLeaveView extends StatefulWidget {
   const ApplyLeaveView({Key? key, this.leaveType = LeaveType.Medical})
@@ -36,15 +37,17 @@ class _ApplyLeaveViewState extends State<ApplyLeaveView>
       body: SafeArea(
         child: Column(
           children: [
-            TabBar(
-              controller: _tabController,
-              tabs: [
-                Tab(text: "Medical"),
-                Tab(text: "OnDuty"),
-              ],
-              labelColor:
-                  ThemeProvider.currentThemeData!.textTheme.bodyText1!.color,
-            ),
+            Consumer(builder: (_, ThemeProvider themeProvider, __) {
+              return TabBar(
+                controller: _tabController,
+                tabs: [
+                  Tab(text: "Medical"),
+                  Tab(text: "OnDuty"),
+                ],
+                labelColor:
+                    themeProvider.currentThemeData.textTheme.bodyText1!.color,
+              );
+            }),
             Expanded(
               child: TabBarView(controller: _tabController, children: [
                 MedicalLeaveWidget(),

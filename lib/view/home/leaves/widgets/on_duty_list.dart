@@ -1,12 +1,10 @@
 // 🐦 Flutter imports:
+import 'package:eduserveMinimal/models/leave/on_duty_leave.dart';
 import 'package:flutter/material.dart';
 
 // 📦 Package imports:
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:shimmer/shimmer.dart';
-
-// 🌎 Project imports:
-import 'package:eduserveMinimal/models/leave.dart';
 
 class OnDutyList extends StatelessWidget {
   const OnDutyList({Key? key, required this.leave, this.isLoading = false})

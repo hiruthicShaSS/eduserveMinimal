@@ -12,19 +12,19 @@ class Fees {
 
   int get length => all.length;
 
-  List<String> get ids => all.map((fee) => fee.recieptNo).toList();
+  List<String> get ids => all.map((fee) => fee.receiptNo ?? "").toList();
   List<SingleFee> get values => all;
 }
 
 class SingleFee {
   String description;
-  String semester;
+  int semester;
   double toPay;
   DateTime lastDate;
   String currency;
   double paid;
-  String recieptNo;
-  DateTime dateOfPayment;
+  String? receiptNo;
+  DateTime? dateOfPayment;
   double netDues;
 
   SingleFee({
@@ -34,13 +34,13 @@ class SingleFee {
     required this.lastDate,
     required this.currency,
     required this.paid,
-    required this.recieptNo,
+    required this.receiptNo,
     required this.dateOfPayment,
     required this.netDues,
   });
 
   @override
   String toString() {
-    return 'SingleFee(description: $description, semester: $semester, toPay: $toPay, lastDate: $lastDate, currency: $currency, paid: $paid, recieptNo: $recieptNo, dateOfPayment: $dateOfPayment, netDues: $netDues)';
+    return 'SingleFee(description: $description, semester: $semester, toPay: $toPay, lastDate: $lastDate, currency: $currency, paid: $paid, recieptNo: $receiptNo, dateOfPayment: $dateOfPayment, netDues: $netDues)';
   }
 }

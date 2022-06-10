@@ -1,19 +1,19 @@
 import 'package:eduserveMinimal/service/auth.dart';
+import 'package:eduserveMinimal/service/network_service.dart';
 import 'package:http/http.dart';
 import 'package:html/dom.dart';
 
 // 🌎 Project imports:
 import 'package:eduserveMinimal/models/fees.dart';
-import 'package:eduserveMinimal/service/scrap.dart';
 import 'package:intl/intl.dart';
 
 Future<Fees> getFeesDetails() async {
-  // if (Scraper.cache.containsKey("fees")) return Scraper.cache["fees"];
+  NetworkService _networkService = NetworkService();
 
   String feesDownload = "/Student/Fees/DownloadReceipt.aspx";
   String feesOverallStatement = "/Student/Fees/FeesStatement.aspx";
 
-  Response page = await get(
+  Response page = await _networkService.get(
     Uri.parse("https://eduserve.karunya.edu${feesDownload}"),
     headers: AuthService.headers,
   );
@@ -22,10 +22,15 @@ Future<Fees> getFeesDetails() async {
     await AuthService().login();
   }
 
-  Response res = await get(
-    Uri.parse("https://eduserve.karunya.edu${feesOverallStatement}"),
-    headers: AuthService.headers,
-  );
+  Response res;
+  try {
+    res = await _networkService.get(
+      Uri.parse("https://eduserve.karunya.edu${feesOverallStatement}"),
+      headers: AuthService.headers,
+    );
+  } on ClientException {
+    rethrow;
+  }
 
   Document html = Document.html(res.body);
 
@@ -49,17 +54,39 @@ Future<Fees> getFeesDetails() async {
 
     fees.add = SingleFee(
       description: rowData[3],
-      semester: rowData[4],
+      semester: int.tryParse(rowData[4].split(" ").last) ?? 0,
       toPay: double.tryParse(rowData[5]) ?? 0,
       lastDate: DateFormat("dd-MM-yyyy").parse(rowData[6]),
       currency: rowData[8],
       paid: double.tryParse(rowData[9]) ?? 0,
-      recieptNo: rowData[10],
-      dateOfPayment: DateFormat("dd-MM-yyyy").parse(rowData[11]),
+      receiptNo: rowData[10],
+      dateOfPayment: rowData[11].isEmpty
+          ? null
+          : DateFormat("yyyy-MM-dd").parse(rowData[11]),
       netDues: double.tryParse(rowData[13]) ?? 0,
     );
   }
 
-  Scraper.cache["fees"] = fees;
   return fees;
+}
+
+Future<void> downloadFeeStatement() async {
+  NetworkService _networkService = NetworkService();
+
+  Map<String, String> formData = AuthService.formData;
+
+  formData["__EVENTTARGET"] = "";
+  formData["__EVENTARGUMENT"] = "";
+  formData[r"ctl00_radMenuModule_ClientState"] = "";
+  formData[r"ctl00_mainContent_grdData_ClientState"] =
+      '{"selectedIndexes":[],"selectedCellsIndexes":[],"unselectableItemsIndexes":[],"reorderedColumns":[],"expandedItems":[],"expandedGroupItems":[],"expandedFilterItems":[],"deletedItems":[],"hidedColumns":[],"showedColumns":[],"groupColsState":{},"hierarchyState":{},"scrolledPosition":"545.5999755859375,0","popUpLocations":{},"draggedItemsIndexes":[]}';
+  formData[r"ctl00$mainContent$btnDownload"] = "Download";
+
+  Response res = await _networkService.post(
+    Uri.parse("https://eduserve.karunya.edu/Student/Fees/FeesStatement.aspx"),
+    headers: AuthService.headers,
+    body: formData,
+  );
+
+  print(res.body);
 }

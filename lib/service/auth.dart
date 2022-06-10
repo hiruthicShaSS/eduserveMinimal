@@ -1,22 +1,22 @@
-import 'package:beautifulsoup/beautifulsoup.dart';
-import 'package:connectivity/connectivity.dart';
+import 'package:eduserveMinimal/global/exceptions.dart';
+import 'package:eduserveMinimal/service/network_service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 
-import 'package:eduserveMinimal/service/scrap.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:html/dom.dart';
 
 class AuthService {
   static Map<String, String> headers = {};
   static Map<String, String> formData = {};
+  NetworkService _networkService = NetworkService();
 
-  Future<Map> basicFormData([String? htmlPage]) async {
+  Future<Map<String, String>> basicFormData([String? htmlPage]) async {
     Document html;
 
     if (htmlPage == null) {
-      Response res = await get(Uri.parse("https://eduserve.karunya.edu"));
+      Response res =
+          await _networkService.get(Uri.parse("https://eduserve.karunya.edu"));
       html = Document.html(res.body);
     } else {
       html = Document.html(htmlPage);
@@ -36,6 +36,19 @@ class AuthService {
       data[input.keys.first!] = input.values.first;
     }
 
+    List<String> radScriptmanagerHtml = html
+        .querySelectorAll("script")
+        .where((element) =>
+            element.attributes["src"]?.contains("RadScriptManager1") ?? false)
+        .map((e) => e.attributes["src"] ?? "")
+        .toList();
+
+    if (radScriptmanagerHtml.isNotEmpty) {
+      String radScriptManager = radScriptmanagerHtml.first.split("=").last;
+
+      data["RadScriptManager1_TSM"] = Uri.decodeFull(radScriptManager);
+    }
+
     return data;
   }
 
@@ -45,14 +58,6 @@ class AuthService {
 
     username = await storage.read(key: "username") ?? username;
     password = await storage.read(key: "password") ?? password;
-
-    var connection = await (Connectivity().checkConnectivity());
-    if (connection == ConnectivityResult.none) {
-      Fluttertoast.showToast(
-        msg: "Internet, caveman. Turn it on...",
-        timeInSecForIosWeb: 10,
-      );
-    }
 
     Map<String?, String?>? login_data = {
       "RadScriptManager1_TSM": "",
@@ -65,21 +70,23 @@ class AuthService {
       "ctl00\$mainContent\$Login1\$Password": password,
       "ctl00\$mainContent\$Login1\$LoginButton": "Log In"
     };
-    var res = await get(Uri.parse(
+    var res = await _networkService.get(Uri.parse(
         "https://eduserve.karunya.edu/Login.aspx?ReturnUrl=%2fStudent%2fAttSummary.aspx"));
-    var eduserveCookie =
-        res.headers["set-cookie"]!; // Set the ASP.NET_SessionId
+    var eduserveCookie = res.headers["set-cookie"]!;
 
-    // Parse: Start
-    var soup = Beautifulsoup(res.body);
-    final inputs = soup.find_all("input").map((e) => e.attributes).toList();
+    Document html = Document.html(res.body);
 
-    inputs.forEach((element) {
-      if (login_data[element["name"]] == "") {
-        login_data[element["name"]] = element["value"];
-      }
-    });
-    // Parse: End
+    List inputs = html
+        .querySelectorAll("input")
+        .map((e) => {e.attributes["name"]: e.attributes["value"]})
+        .toList();
+
+    inputs.removeWhere((element) =>
+        element.keys.first == null || element.values.first == null);
+
+    for (var input in inputs) {
+      login_data[input.keys.first!] = input.values.first;
+    }
 
     // Get login.aspx
     headers["cookie"] = eduserveCookie.split(";")[0];
@@ -87,7 +94,7 @@ class AuthService {
         "https://eduserve.karunya.edu/Login.aspx?ReturnUrl=%2fStudent%2fAttSummary.aspx";
 
     // Post to login.aspx
-    res = await post(
+    res = await _networkService.post(
       Uri.parse(
           "https://eduserve.karunya.edu/Login.aspx?ReturnUrl=%2fStudent%2fAttSummary.aspx"),
       headers: headers,
@@ -97,26 +104,21 @@ class AuthService {
     if (res.body.indexOf(
             "Your login attempt was not successful. Please try again.") !=
         -1) {
-      Fluttertoast.showToast(
-          msg: "Your login attempt was not successful. Please try again.",
-          gravity: ToastGravity.CENTER);
-
-      return "Login error";
+      throw LoginError(
+          "Your login attempt was not successful. Please try again.");
     }
 
     if (res.statusCode == 302) {
       headers["cookie"] =
           headers["cookie"]! + "; ${res.headers['set-cookie']!.split(';')[0]}";
-      res = await get(
+      res = await _networkService.get(
           Uri.parse("https://eduserve.karunya.edu${res.headers["location"]}"),
           headers: headers);
     }
 
     if (res.body.contains("Hourly Feedback")) {
-      return "feedback form found";
+      throw FeedbackFormFound("Feedback form found!");
     }
-
-    Scraper.cache["home"] = res.body;
 
     return res.body;
   }
@@ -131,7 +133,13 @@ class AuthService {
   }
 
   Future forgotPassrword(String username, String dob, String kmail) async {
-    Response res = await get(
+    List<String> possibleErrors = [
+      "Enter the Student Register No.",
+      "Enter the Date of Birth",
+      "Enter the official email ID",
+    ];
+
+    Response res = await _networkService.get(
       Uri.parse("https://eduserve.karunya.edu/Online/PasswordReset.aspx"),
       headers: headers,
     );
@@ -146,7 +154,7 @@ class AuthService {
 
     formDataForPasswordReset.remove(r"ctl00$mainContent$Login1$LoginButton");
 
-    await post(
+    res = await post(
       Uri.parse("https://eduserve.karunya.edu/Online/PasswordReset.aspx"),
       headers: headers,
       body: formDataForPasswordReset,
@@ -168,6 +176,24 @@ class AuthService {
       body: formDataForPasswordReset,
     );
 
+    // Document html = Document.html(res.body);
+    // List<String> webResources = html
+    //     .querySelectorAll("script")
+    //     .map((e) => e.attributes["src"] ?? "")
+    //     .where((e) => e.contains("ScriptResource") || e.contains("WebResource"))
+    //     .toList();
+
+    // for (var resource in webResources) {
+    //   await _networkService.get(
+    //     Uri.parse("https://eduserve.karunya.edu$resource"),
+    //     headers: headers,
+    //   );
+    // }
+
     print(res.body);
+
+    print(res.body.contains("Password Reset Successfully"));
+
+    return res.body;
   }
 }

@@ -1,17 +1,20 @@
 import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/models/internal_mark.dart';
 import 'package:eduserveMinimal/service/auth.dart';
+import 'package:eduserveMinimal/service/network_service.dart';
 import 'package:http/http.dart';
 import 'package:html/dom.dart';
 import 'package:intl/intl.dart';
 
 class InternalMarksService {
+  NetworkService _networkService = NetworkService();
+
   List inputs = [];
   static Map<String, String> formData = {};
   AuthService _authService = AuthService();
 
   Future<List<String>> getInternalAcademicTerms() async {
-    Response res = await get(
+    Response res = await _networkService.get(
       Uri.parse("https://eduserve.karunya.edu/Student/InternalMarks.aspx"),
       headers: AuthService.headers,
     );
@@ -19,7 +22,7 @@ class InternalMarksService {
     if (res.body.contains("User Login")) {
       await _authService.login();
 
-      res = await get(
+      res = await _networkService.get(
         Uri.parse("https://eduserve.karunya.edu/Student/InternalMarks.aspx"),
         headers: AuthService.headers,
       );
@@ -50,7 +53,7 @@ class InternalMarksService {
   Future<List<InternalMark>> getInternalMarks(int academicTerm) async {
     formData["ctl00\$mainContent\$DDLACADEMICTERM"] = academicTerm.toString();
 
-    Response res = await post(
+    Response res = await _networkService.post(
       Uri.parse("https://eduserve.karunya.edu/Student/InternalMarks.aspx"),
       headers: AuthService.headers,
       body: formData,

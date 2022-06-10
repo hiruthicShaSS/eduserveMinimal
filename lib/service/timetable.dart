@@ -1,45 +1,18 @@
-// 🎯 Dart imports:
-import 'dart:convert';
-
 // 📦 Package imports:
 import 'package:eduserveMinimal/global/exceptions.dart';
-import 'package:eduserveMinimal/models/timetable.dart';
+import 'package:eduserveMinimal/models/timetable_entry.dart';
 import 'package:eduserveMinimal/service/auth.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:eduserveMinimal/service/network_service.dart';
 import 'package:http/http.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:html/dom.dart';
 
-Future<List<TimeTable>> getTimetable([bool supressError = false]) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  final FlutterSecureStorage storage = FlutterSecureStorage();
-  DateTime today = DateTime.now();
-  int lastUpdate = 100;
-
-  if (prefs.containsKey("timetable_last_update")) {
-    lastUpdate = today
-        .difference(DateTime.parse(prefs.getString("timetable_last_update")!))
-        .inDays;
-  }
-
-  if (await storage.containsKey(key: "timetable") && lastUpdate < 90) {
-    String? timetableString = await storage.read(key: "timetable");
-
-    if (timetableString != null) {
-      List timetableList = jsonDecode(timetableString);
-      timetableList = timetableList.map((e) => jsonDecode(e)).toList();
-
-      List<TimeTable> timetable =
-          timetableList.map((e) => TimeTable.fromMap(e)).toList();
-
-      return timetable;
-    }
-  }
+Future<List<TimeTableEntry>> getTimetable() async {
+  NetworkService _networkService = NetworkService();
 
   Map<String, String> formData = AuthService.formData;
   formData.remove(r"ctl00$mainContent$BTNCLEAR");
 
-  Response res = await get(
+  Response res = await _networkService.get(
     Uri.parse("https://eduserve.karunya.edu/Student/TimeTable.aspx"),
     headers: AuthService.headers,
   );
@@ -71,20 +44,18 @@ Future<List<TimeTable>> getTimetable([bool supressError = false]) async {
       (academicTerms.length - 1).toString();
   formData.remove(r"ctl00$mainContent$BTNCLEAR");
 
-  res = await post(
+  res = await _networkService.post(
     Uri.parse("https://eduserve.karunya.edu/Student/TimeTable.aspx"),
     headers: AuthService.headers,
     body: formData,
   );
 
-  if (!supressError) {
-    if (res.body.contains("No records to display.")) {
-      throw NoRecordsException("No timetable records to display.");
-    }
+  if (res.body.contains("No records to display.")) {
+    throw NoRecordsException("No timetable records found!.");
+  }
 
-    if (res.body.contains("Object moved to")) {
-      throw MiscellaneousErrorInEduserve("Error fetching timetable data.");
-    }
+  if (res.body.contains("Object moved to")) {
+    throw MiscellaneousErrorInEduserve("Error fetching timetable data.");
   }
 
   html = Document.html(res.body);
@@ -94,14 +65,14 @@ Future<List<TimeTable>> getTimetable([bool supressError = false]) async {
       .where((e) => e.className == "rgRow" || e.className == "rgAltRow")
       .toList();
 
-  List<TimeTable> table = [];
+  List<TimeTableEntry> table = [];
   for (var row in rows) {
     List<String> rowData = html
         .querySelectorAll("#${row.id} > td")
         .map((e) => e.text.trim())
         .toList();
 
-    TimeTable timeTable = TimeTable(
+    TimeTableEntry timeTable = TimeTableEntry(
       day: rowData[0],
       hour1: TimeTableSubject.fromString(rowData[1]),
       hour2: TimeTableSubject.fromString(rowData[2]),
@@ -118,9 +89,6 @@ Future<List<TimeTable>> getTimetable([bool supressError = false]) async {
 
     table.add(timeTable);
   }
-
-  await storage.write(key: "timetable", value: jsonEncode(table));
-  await prefs.setString("timetable_last_update", DateTime.now().toString());
 
   return table;
 }

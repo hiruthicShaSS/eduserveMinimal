@@ -1,6 +1,7 @@
 // 🐦 Flutter imports:
 import 'package:eduserveMinimal/view/settings/widgets/credentials_form.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class Credentials extends StatefulWidget {
@@ -12,6 +13,20 @@ class Credentials extends StatefulWidget {
 }
 
 class _CredentialsState extends State<Credentials> {
+  late bool isFromAuth;
+
+  @override
+  void initState() {
+    FlutterBackgroundService().invoke("stopService");
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    isFromAuth = ModalRoute.of(context)?.settings.arguments == null;
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,18 +61,20 @@ class _CredentialsState extends State<Credentials> {
             ),
             Column(
               children: [
-                const SizedBox(height: 150),
+                SizedBox(height: isFromAuth ? 150 : 200),
                 Text(
-                  "Welcome yo,",
+                  isFromAuth ? "Welcome yo," : "Update Credentials",
                   style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30),
-                  child: SvgPicture.asset(
-                    "assets/images/login.svg",
-                    height: MediaQuery.of(context).size.height * 0.3,
+                SizedBox(height: isFromAuth ? 0 : 20),
+                if (isFromAuth == true)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    child: SvgPicture.asset(
+                      "assets/images/login.svg",
+                      height: MediaQuery.of(context).size.height * 0.3,
+                    ),
                   ),
-                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 30),
                   child: CredentialsForm(),

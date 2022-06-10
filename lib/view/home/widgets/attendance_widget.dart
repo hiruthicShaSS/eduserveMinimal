@@ -1,6 +1,8 @@
 // 🐦 Flutter imports:
 import 'dart:developer';
 
+import 'package:eduserveMinimal/global/constants.dart';
+import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/models/user.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:flutter/material.dart';
@@ -9,9 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
-
-// 🌎 Project imports:
-import 'package:eduserveMinimal/providers/theme.dart';
 
 class AttendanceContainer extends StatelessWidget {
   const AttendanceContainer({Key? key}) : super(key: key);
@@ -22,7 +21,11 @@ class AttendanceContainer extends StatelessWidget {
       future: Provider.of<AppState>(context).user,
       builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
         if (snapshot.hasError) {
-          log("", error: snapshot.error);
+          log("Error fetching attendance data: ", error: snapshot.error);
+
+          if (snapshot.error.runtimeType == NetworkException) {
+            return Center(child: Text(noInternetText));
+          }
         }
 
         if (snapshot.connectionState == ConnectionState.done) {
@@ -34,24 +37,18 @@ class AttendanceContainer extends StatelessWidget {
     );
   }
 
-  Container containerWithData(BuildContext context, User user,
+  Widget containerWithData(BuildContext context, User user,
       [bool isLoading = false]) {
-    return Container(
-      decoration: BoxDecoration(
-        color: ThemeProvider.currentThemeData!.primaryColor.withOpacity(0.1),
-        // borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        children: [
-          isLoading
-              ? Shimmer.fromColors(
-                  baseColor: Colors.grey,
-                  highlightColor: Colors.grey[900]!,
-                  child: buildAttendenceContainer(user, context),
-                )
-              : buildAttendenceContainer(user, context),
-        ],
-      ),
+    return Column(
+      children: [
+        isLoading
+            ? Shimmer.fromColors(
+                baseColor: Colors.grey,
+                highlightColor: Colors.grey[900]!,
+                child: buildAttendenceContainer(user, context),
+              )
+            : buildAttendenceContainer(user, context),
+      ],
     );
   }
 
@@ -72,7 +69,7 @@ class AttendanceContainer extends StatelessWidget {
                 height: _height * 0.15,
                 width: _width * 0.45,
                 decoration: BoxDecoration(
-                  color: ThemeProvider.currentThemeData!.primaryColor,
+                  color: Theme.of(context).colorScheme.onBackground,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Column(
@@ -108,7 +105,7 @@ class AttendanceContainer extends StatelessWidget {
                 height: _height * 0.15,
                 width: _width * 0.45,
                 decoration: BoxDecoration(
-                  color: ThemeProvider.currentThemeData!.primaryColor,
+                  color: Theme.of(context).colorScheme.onBackground,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Column(

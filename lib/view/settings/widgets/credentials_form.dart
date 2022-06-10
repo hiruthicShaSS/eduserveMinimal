@@ -1,8 +1,14 @@
-import 'package:eduserveMinimal/edu_serve.dart';
+import 'package:connectivity/connectivity.dart';
+import 'package:eduserveMinimal/edu_serve_minimal.dart';
+import 'package:eduserveMinimal/global/exceptions.dart';
+import 'package:eduserveMinimal/global/widgets/network_aware_widget.dart';
 import 'package:eduserveMinimal/service/auth.dart';
+import 'package:eduserveMinimal/view/settings/forgot_password.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CredentialsForm extends StatefulWidget {
@@ -19,6 +25,8 @@ class _CredentialsFormState extends State<CredentialsForm> {
 
   int _autoFillFeedbackValue = 1;
   bool _autoFillFedbackForm = false;
+  String _information = "";
+  int _errorInLoginCount = 0;
 
   @override
   void initState() {
@@ -122,27 +130,91 @@ class _CredentialsFormState extends State<CredentialsForm> {
             ),
           ),
           const SizedBox(height: 10),
-          ElevatedButton(
-            onPressed: _onSave,
-            child: Text("SAVE"),
-            style: ButtonStyle(
-              shape: MaterialStateProperty.all(
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-              ),
-              fixedSize: MaterialStateProperty.all(
-                Size(MediaQuery.of(context).size.width, 45),
+          if (_information.isNotEmpty)
+            RichText(
+                text: TextSpan(
+              style: TextStyle(color: Colors.red),
+              children: [
+                TextSpan(text: _information),
+                if (_errorInLoginCount > 3)
+                  TextSpan(
+                    text: " Help",
+                    style: TextStyle(color: Colors.blue),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                            title: Text("Un-sucessful login attempt"),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                    "There are sometimes eduserve will just stop logging you in for no reason. But there is a way around."),
+                                Text("There are two ways,"),
+                                ExpansionTile(
+                                  title: Text("Fast but dirty"),
+                                  expandedCrossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Text("👉Click forgot password in eduserve"),
+                                    Text(
+                                        "👉Login to eduserve with new credentials"),
+                                    Text("👉Reset your password"),
+                                  ],
+                                ),
+                                ExpansionTile(
+                                  title: Text("Long but painful"),
+                                  expandedCrossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Text("👉Wait for a day"),
+                                    Text("👉Dont try to login even once"),
+                                    Text("👉After a day it will work."),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                  ),
+              ],
+            )),
+          const SizedBox(height: 10),
+          NetworkAwareWidget(
+            noInternetWidget:
+                const Text("No internet. Please turn on to continue!"),
+            child: ElevatedButton(
+              onPressed: _onSave,
+              child: Text("SAVE"),
+              style: ButtonStyle(
+                shape: MaterialStateProperty.all(
+                  RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30)),
+                ),
+                fixedSize: MaterialStateProperty.all(
+                  Size(MediaQuery.of(context).size.width, 45),
+                ),
               ),
             ),
           ),
-          TextButton(
-            child: Text("Forgot password?"),
-            onPressed: () {
-              Navigator.of(context).pushNamed("/forgotPassword");
-            },
-            style: ButtonStyle(
-              overlayColor: MaterialStateProperty.all(Colors.transparent),
-            ),
-          ),
+          // TextButton(
+          //   child: Text("Forgot password?"),
+          //   onPressed: () {
+          //     Navigator.of(context).push(
+          //       MaterialPageRoute(
+          //         builder: (_) => ForgotPasswordScreen(
+          //           username: _usernameController.text,
+          //         ),
+          //       ),
+          //     );
+          //   },
+          //   style: ButtonStyle(
+          //     overlayColor: MaterialStateProperty.all(Colors.transparent),
+          //   ),
+          // ),
         ],
       ),
     );
@@ -188,17 +260,26 @@ class _CredentialsFormState extends State<CredentialsForm> {
                 ],
               ),
             ));
-    String loginStatus = await AuthService().login(
-      username: _usernameController.text,
-      password: _passwordController.text,
-    );
 
-    Navigator.of(context).pop();
+    try {
+      setState(() => _information = "");
+      await AuthService().login(
+        username: _usernameController.text,
+        password: _passwordController.text,
+      );
+    } on LoginError {
+      Navigator.of(context).pop();
 
-    if (loginStatus == "Login error") {
-      Fluttertoast.showToast(msg: "Login error");
+      setState(() {
+        _information =
+            "For some parmigiano, pecorino your login attempt was not successful. Please try again.";
+        _errorInLoginCount++;
+      });
+
       return;
     }
+
+    Navigator.of(context).pop();
 
     await storage.write(key: "username", value: _usernameController.text);
     await storage.write(key: "password", value: _passwordController.text);

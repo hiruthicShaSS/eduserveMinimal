@@ -1,4 +1,7 @@
 // 🐦 Flutter imports:
+import 'package:connectivity/connectivity.dart';
+import 'package:eduserveMinimal/global/enum.dart';
+import 'package:eduserveMinimal/providers/theme.dart';
 import 'package:eduserveMinimal/service/auth.dart';
 import 'package:flutter/material.dart';
 
@@ -7,12 +10,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:new_version/new_version.dart';
 import 'package:package_info/package_info.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // 🌎 Project imports:
 import 'package:eduserveMinimal/view/settings/cache_data.dart';
-import 'package:eduserveMinimal/view/settings/credentials.dart';
-import 'package:eduserveMinimal/view/settings/attribution.dart';
 import 'package:eduserveMinimal/view/settings/developer.dart';
 import 'package:eduserveMinimal/view/settings/themes.dart';
 
@@ -43,10 +45,10 @@ class Settings extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                child: Text("Open EduServe"),
-                onPressed: () async {
-                  await launchUrl(Uri.parse(eduserveURL));
+                onPressed: () {
+                  Navigator.of(context).pushNamed("/notifications");
                 },
+                child: Text("Notifications"),
               ),
             ),
             SizedBox(
@@ -54,8 +56,8 @@ class Settings extends StatelessWidget {
               child: ElevatedButton(
                 child: Text("Update credentials"),
                 onPressed: () {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (_) => Credentials()));
+                  Navigator.of(context).pushNamed("/credentials",
+                      arguments: {"isFromAuth": false});
                 },
               ),
             ),
@@ -64,21 +66,33 @@ class Settings extends StatelessWidget {
               child: ElevatedButton(
                   child: Text("Check updates"),
                   onPressed: () async {
-                    PackageInfo info = await PackageInfo.fromPlatform();
-                    if (info.packageName.contains("dev") ||
-                        info.packageName.contains("stg"))
-                      Fluttertoast.showToast(
-                          msg: "You are running a non-production build!");
+                    if ((await Connectivity().checkConnectivity()) !=
+                        ConnectivityResult.none) {
+                      PackageInfo info = await PackageInfo.fromPlatform();
+                      if (info.packageName.contains("dev") ||
+                          info.packageName.contains("stg")) {
+                        Fluttertoast.showToast(
+                            msg: "You are running a non-production build!");
 
-                    final newVersion = NewVersion(androidId: info.packageName);
-                    newVersion.showAlertIfNecessary(context: context);
-                    bool? canUpdate =
-                        (await newVersion.getVersionStatus())?.canUpdate;
-                    if (canUpdate ?? false)
-                      Fluttertoast.showToast(
-                          msg: "You are already on latest version!");
-                    // launch(
-                    //     "https://github.com/hiruthic2002/eduserveMinimal/releases");
+                        return;
+                      }
+
+                      final newVersion =
+                          NewVersion(androidId: info.packageName);
+                      newVersion.showAlertIfNecessary(context: context);
+
+                      bool? canUpdate =
+                          (await newVersion.getVersionStatus())?.canUpdate;
+
+                      if (canUpdate ?? false) {
+                        Fluttertoast.showToast(
+                            msg: "You are already on latest version!");
+                      }
+
+                      return;
+                    }
+
+                    Fluttertoast.showToast(msg: "No internet!");
                   }),
             ),
             SizedBox(
@@ -106,14 +120,14 @@ class Settings extends StatelessWidget {
                         }),
                   ),
                 ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 2),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 2),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.4,
                     child: ElevatedButton(
-                        child: Text("Attributions"),
-                        onPressed: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (_) => AttributionScreen()))),
+                        child: Text("Attribution"),
+                        onPressed: () =>
+                            Navigator.of(context).pushNamed("/attributions")),
                   ),
                 ),
                 Expanded(
@@ -139,13 +153,26 @@ class Settings extends StatelessWidget {
                 onPressed: () =>
                     Fluttertoast.showToast(msg: "Press and hold for action"),
                 onLongPress: () async {
+                  AppTheme appTheme =
+                      Provider.of<ThemeProvider>(context, listen: false)
+                          .currentAppTheme;
+
                   showDialog(
                     context: context,
                     builder: (_) => StatefulBuilder(
                       builder: (context, setState) {
                         return AlertDialog(
-                          title: Text("Logout"),
-                          content: Text("Are you sure you want to logout?"),
+                          title: appTheme == AppTheme.valorant
+                              ? null
+                              : Text("Logout"),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (appTheme == AppTheme.valorant)
+                                Image.asset("assets/images/danger.gif"),
+                              Text("Are you sure you want to logout?"),
+                            ],
+                          ),
                           actions: [
                             TextButton(
                               onPressed: () async {

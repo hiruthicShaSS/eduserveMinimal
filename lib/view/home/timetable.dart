@@ -1,12 +1,13 @@
 // 🐦 Flutter imports:
 import 'dart:developer';
 
-import 'package:eduserveMinimal/models/timetable.dart';
+import 'package:eduserveMinimal/models/timetable_entry.dart';
+import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:flutter/material.dart';
 
 // 🌎 Project imports:
-import 'package:eduserveMinimal/service/timetable.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 import 'package:table_sticky_headers/table_sticky_headers.dart';
 import 'package:eduserveMinimal/view/misc/widgets/table_cell.dart' as tableCell;
 
@@ -16,6 +17,8 @@ class TimeTableScreen extends StatefulWidget {
 }
 
 class _TimeTableScreenState extends State<TimeTableScreen> {
+  List<String> weekdays = ['mon', 'tue', 'wed', 'thu', 'fri'];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,8 +26,8 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
         child: RotatedBox(
           quarterTurns: 1,
           child: FutureBuilder(
-            future: getTimetable(),
-            builder: (context, AsyncSnapshot<List<TimeTable>> snapshot) {
+            future: Provider.of<AppState>(context).timetable,
+            builder: (context, AsyncSnapshot<List<TimeTableEntry>> snapshot) {
               if (snapshot.hasError) {
                 log("", error: snapshot.error);
 
@@ -46,7 +49,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
               }
 
               if (snapshot.connectionState == ConnectionState.done) {
-                List<TimeTable> timeTable = snapshot.data!;
+                List<TimeTableEntry> timeTable = snapshot.data!;
                 List<List<TimeTableSubject>> data = [];
 
                 for (var day in timeTable) {
@@ -70,17 +73,31 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                   rowsLength: data.length,
                   columnsTitleBuilder: (i) =>
                       tableCell.TableCell.stickyRow("Hour ${i + 1}"),
-                  rowsTitleBuilder: (i) =>
-                      tableCell.TableCell.stickyColumn(timeTable[i].day),
+                  rowsTitleBuilder: (i) => tableCell.TableCell.stickyColumn(
+                    text: timeTable[i].day,
+                    colorBg: weekdays.indexOf(timeTable[i].day.toLowerCase()) +
+                                1 ==
+                            DateTime.now().weekday
+                        ? Theme.of(context).colorScheme.primary.withOpacity(0.3)
+                        : Colors.transparent,
+                  ),
                   contentCellBuilder: (i, j) => data[j][i].name.isEmpty
                       ? const Placeholder()
                       : tableCell.TableCell.content(
+                          colorBg:
+                              weekdays.indexOf(timeTable[j].day.toLowerCase()) +
+                                          1 ==
+                                      DateTime.now().weekday
+                                  ? Theme.of(context)
+                                      .colorScheme
+                                      .primary
+                                      .withOpacity(0.3)
+                                  : Colors.transparent,
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 10),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Text(
                                   data[j][i].name,
@@ -89,7 +106,6 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                const SizedBox(height: 10),
                                 Text(
                                   data[j][i].code,
                                   style: TextStyle(
@@ -98,9 +114,9 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                                   ),
                                 ),
                                 const Spacer(),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                Wrap(
+                                  alignment: WrapAlignment.spaceBetween,
+                                  spacing: 30,
                                   children: [
                                     Text(
                                       "Batch: ${data[j][i].batch}",
@@ -121,7 +137,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                     stickyLegendWidth: 80,
                     stickyLegendHeight: 80,
                     contentCellWidth: 200,
-                    contentCellHeight: 130,
+                    contentCellHeight: 170,
                   ),
                   legendCell: tableCell.TableCell.legend("Day / Hour"),
                 );

@@ -3,14 +3,14 @@ import 'dart:convert';
 
 import 'package:eduserveMinimal/models/user.dart';
 import 'package:eduserveMinimal/service/auth.dart';
+import 'package:eduserveMinimal/service/network_service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
 import 'package:html/dom.dart';
 
-// 🌎 Project imports:
-import 'package:eduserveMinimal/service/scrap.dart';
-
 Future<User> getStudentInfo() async {
+  NetworkService _networkService = NetworkService();
+
   String studentHomePage = await AuthService().login();
 
   if (studentHomePage == "") return User();
@@ -54,14 +54,12 @@ Future<User> getStudentInfo() async {
         "0"),
   );
 
-  Response imageResponse = await get(
+  Response imageResponse = await _networkService.get(
     Uri.parse(
         "https://eduserve.karunya.edu/${studentImage?.replaceAll("../", "")}"),
     headers: AuthService.headers,
   );
   user.image = imageResponse.bodyBytes;
-
-  Scraper.cache["user"] = user.toMap();
 
   final FlutterSecureStorage storage = FlutterSecureStorage();
   await storage.write(key: "userData", value: jsonEncode(user.toMap()));

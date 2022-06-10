@@ -1,19 +1,16 @@
 // 🐦 Flutter imports:
+import 'package:eduserveMinimal/global/enum.dart';
+import 'package:eduserveMinimal/providers/issue_provider.dart';
+import 'package:eduserveMinimal/view/home/semester_attendance_view.dart';
 import 'package:flutter/material.dart';
 
 // 🌎 Project imports:
 import 'package:eduserveMinimal/view/fees/fees.dart';
 import 'package:eduserveMinimal/view/home/hallticket.dart';
+import 'package:provider/provider.dart';
 
 class IssuesView extends StatelessWidget {
-  const IssuesView(
-      {Key? key,
-      required this.outstandingDue,
-      required this.hallTicketUnEligible})
-      : super(key: key);
-
-  final bool outstandingDue;
-  final bool hallTicketUnEligible;
+  const IssuesView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,34 +32,79 @@ class IssuesView extends StatelessWidget {
         ],
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            Visibility(
-              visible: outstandingDue,
-              child: ListTile(
-                tileColor: Colors.redAccent.withOpacity(0.6),
-                title: Text("You have outstanding fees due"),
-                trailing: TextButton(
-                  onPressed: () => Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (_) => FeesView())),
-                  child: Text("Review"),
+        child: Consumer(builder: (context, IssueProvider issueProvider, _) {
+          return Column(
+            children: [
+              Visibility(
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton.icon(
+                    onPressed:
+                        issueProvider.isEmpty ? null : issueProvider.clear,
+                    icon: Icon(Icons.clear_all),
+                    label: Text("Mark All As Read"),
+                  ),
                 ),
               ),
-            ),
-            Visibility(
-              visible: hallTicketUnEligible,
-              child: ListTile(
-                tileColor: Colors.orangeAccent.withOpacity(0.6),
-                title: Text("You might have issues on hallticket download"),
-                trailing: TextButton(
-                  onPressed: () => Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => HallTicketView())),
-                  child: Text("Review"),
+              Visibility(
+                visible: issueProvider.issues.contains(Issue.fees_due),
+                child: Dismissible(
+                  key: Key(Issue.fees_due.toString()),
+                  onDismissed: (direction) {
+                    issueProvider.remove(Issue.fees_due);
+                  },
+                  background: Container(color: Colors.red),
+                  child: ListTile(
+                    title: Text("You have outstanding fees due"),
+                    trailing: TextButton(
+                      onPressed: () => Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (_) => FeesView())),
+                      child: Text("Review"),
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ],
-        ),
+              Visibility(
+                visible:
+                    issueProvider.issues.contains(Issue.hallticket_ineligible),
+                child: Dismissible(
+                  key: Key(Issue.hallticket_ineligible.toString()),
+                  onDismissed: (direction) {
+                    issueProvider.remove(Issue.hallticket_ineligible);
+                  },
+                  background: Container(color: Colors.red),
+                  child: ListTile(
+                    title: Text("You might have issues on hallticket download"),
+                    trailing: TextButton(
+                      onPressed: () => Navigator.of(context).push(
+                          MaterialPageRoute(builder: (_) => HallTicketView())),
+                      child: Text("Review"),
+                    ),
+                  ),
+                ),
+              ),
+              Visibility(
+                visible: issueProvider.issues.contains(Issue.abesnt_yesterday),
+                child: Dismissible(
+                  key: Key(Issue.abesnt_yesterday.toString()),
+                  onDismissed: (direction) {
+                    issueProvider.remove(Issue.abesnt_yesterday);
+                  },
+                  background: Container(color: Colors.red),
+                  child: ListTile(
+                    title: Text("You were marked absent for certain classes"),
+                    trailing: TextButton(
+                      onPressed: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (_) => SemesterAttendanceView())),
+                      child: Text("Review"),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        }),
       ),
     );
   }
