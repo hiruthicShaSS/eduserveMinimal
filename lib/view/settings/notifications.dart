@@ -1,13 +1,18 @@
+// 🐦 Flutter imports:
+import 'package:flutter/material.dart';
+
+// 📦 Package imports:
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+// 🌎 Project imports:
 import 'package:eduserveMinimal/global/constants.dart';
 import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/global/service/notifications.dart';
 import 'package:eduserveMinimal/global/utilities/notification.dart';
 import 'package:eduserveMinimal/models/timetable_entry.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
-import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationsView extends StatefulWidget {
   const NotificationsView({Key? key}) : super(key: key);
@@ -129,7 +134,8 @@ class _NotificationsViewState extends State<NotificationsView> {
     int scheduleCount = 0;
     try {
       List<TimeTableEntry> timeTable =
-          await Provider.of<AppState>(context, listen: false).timetable;
+          await Provider.of<AppState>(context, listen: false)
+              .getTimetableData();
 
       List<String> weekdays = [
         'mon',

@@ -1,11 +1,17 @@
+// 🎯 Dart imports:
 import 'dart:async';
 import 'dart:developer';
 import 'dart:ui';
 
-import 'package:eduserveMinimal/service/check_absent.dart';
+// 🐦 Flutter imports:
 import 'package:flutter/material.dart';
+
+// 📦 Package imports:
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
+
+// 🌎 Project imports:
+import 'package:eduserveMinimal/service/check_absent.dart';
 
 Future<void> initializeBackgroundService() async {
   final service = FlutterBackgroundService();

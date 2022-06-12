@@ -3,6 +3,13 @@ import 'dart:developer' as dev;
 import 'dart:math';
 
 // 🐦 Flutter imports:
+import 'package:flutter/material.dart';
+
+// 📦 Package imports:
+import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
+
+// 🌎 Project imports:
 import 'package:eduserveMinimal/global/constants.dart';
 import 'package:eduserveMinimal/global/enum.dart';
 import 'package:eduserveMinimal/global/exceptions.dart';
@@ -12,13 +19,6 @@ import 'package:eduserveMinimal/models/attendance/semester_attendance.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:eduserveMinimal/providers/issue_provider.dart';
 import 'package:eduserveMinimal/service/check_absent.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-// 📦 Package imports:
-import 'package:shimmer/shimmer.dart';
-
-// 🌎 Project imports:
 import 'package:eduserveMinimal/view/home/widgets/attendance_bar_chart.dart';
 import 'package:eduserveMinimal/view/home/widgets/attendance_pie_chart.dart';
 
@@ -32,7 +32,7 @@ class AttendanceSummaryWidget extends StatelessWidget {
     return Consumer2(
         builder: (context, AppState appState, IssueProvider issueProvider, _) {
       return FutureBuilder(
-        future: appState.attendance,
+        future: appState.getAttendance(),
         builder: (context, AsyncSnapshot<SemesterAttendance> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasError) {

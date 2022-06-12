@@ -1,6 +1,15 @@
+// 🎯 Dart imports:
 import 'dart:developer';
 
-import 'package:eduserveMinimal/controller/cache.dart';
+// 🐦 Flutter imports:
+import 'package:flutter/cupertino.dart';
+
+// 📦 Package imports:
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+// 🌎 Project imports:
+import 'package:eduserveMinimal/controller/cache_controller.dart';
 import 'package:eduserveMinimal/global/constants.dart';
 import 'package:eduserveMinimal/global/enum.dart';
 import 'package:eduserveMinimal/global/exceptions.dart';
@@ -12,9 +21,6 @@ import 'package:eduserveMinimal/models/timetable_entry.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:eduserveMinimal/service/attendance_summary.dart';
 import 'package:eduserveMinimal/service/timetable.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 SemesterAttendance? _semesterAttendance;
 CacheController _cacheController = CacheController();
@@ -39,7 +45,8 @@ Future<bool> checkForAbsent({
 
     if (context != null) {
       _cacheController.setTimetable =
-          await Provider.of<AppState>(context, listen: false).timetable;
+          await Provider.of<AppState>(context, listen: false)
+              .getTimetableData();
     } else {
       if (_cacheController.timeTable == null) {
         List<TimeTableEntry>? timetable =

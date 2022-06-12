@@ -1,4 +1,7 @@
+// 🐦 Flutter imports:
 import 'package:flutter/material.dart';
+
+// 📦 Package imports:
 import 'package:table_sticky_headers/cell_dimensions.dart';
 
 class TableCell extends StatelessWidget {

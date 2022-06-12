@@ -1,9 +1,11 @@
-import 'package:connectivity/connectivity.dart';
-
+// 🐦 Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
-class NetworkAwareWidget extends StatelessWidget {
+// 📦 Package imports:
+import 'package:connectivity/connectivity.dart';
+
+class NetworkAwareWidget extends StatefulWidget {
   NetworkAwareWidget({
     Key? key,
     required this.child,
@@ -28,37 +30,52 @@ class NetworkAwareWidget extends StatelessWidget {
 
   /// Show a disruptive dialog when the device goes offline
   final bool showDialogWhenOffline;
+
+  @override
+  State<NetworkAwareWidget> createState() => _NetworkAwareWidgetState();
+}
+
+class _NetworkAwareWidgetState extends State<NetworkAwareWidget> {
   bool _isDialogOpen = false;
   bool _isConnected = false;
+  late Future<ConnectivityResult> _connectivityFuture;
+  late Stream<ConnectivityResult> _connectivityStream;
+
+  @override
+  void initState() {
+    _connectivityFuture = Connectivity().checkConnectivity();
+    _connectivityStream = Connectivity().onConnectivityChanged;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<ConnectivityResult>(
-      future: Connectivity().checkConnectivity(),
+      future: _connectivityFuture,
       builder: (context, future) {
         if (future.connectionState == ConnectionState.done) {
           return StreamBuilder<ConnectivityResult>(
-              stream: Connectivity().onConnectivityChanged,
+              stream: _connectivityStream,
               initialData: future.data,
               builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (_isConnected && removeAwarenessAfterConnection) {
-                  if (showDialogWhenOffline) {
+                if (_isConnected && widget.removeAwarenessAfterConnection) {
+                  if (widget.showDialogWhenOffline) {
                     manageDialog(context, snapshot.data);
                   }
 
-                  return child;
+                  return widget.child;
                 }
 
                 _isConnected = snapshot.data != ConnectivityResult.none;
 
                 if (snapshot.data == ConnectivityResult.none)
-                  return noInternetWidget;
+                  return widget.noInternetWidget;
 
-                return child;
+                return widget.child;
               });
         }
 
-        return loadingWidget ?? const SizedBox();
+        return widget.loadingWidget ?? const SizedBox();
       },
     );
   }

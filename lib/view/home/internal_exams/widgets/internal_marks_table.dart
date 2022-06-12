@@ -1,6 +1,17 @@
+// 🎯 Dart imports:
 import 'dart:developer';
 
+// 🐦 Flutter imports:
+import 'package:flutter/material.dart';
+
+// 📦 Package imports:
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:table_sticky_headers/table_sticky_headers.dart';
+
+// 🌎 Project imports:
 import 'package:eduserveMinimal/global/constants.dart';
 import 'package:eduserveMinimal/global/enum.dart';
 import 'package:eduserveMinimal/global/exceptions.dart';
@@ -8,11 +19,6 @@ import 'package:eduserveMinimal/models/internal_mark.dart';
 import 'package:eduserveMinimal/providers/cache.dart';
 import 'package:eduserveMinimal/providers/theme.dart';
 import 'package:eduserveMinimal/service/internal_marks.dart';
-import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
-import 'package:table_sticky_headers/table_sticky_headers.dart';
 import 'package:eduserveMinimal/view/misc/widgets/table_cell.dart' as tableCell;
 
 class InternalMarksTable extends StatefulWidget {

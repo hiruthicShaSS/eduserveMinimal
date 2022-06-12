@@ -1,13 +1,19 @@
+// 🎯 Dart imports:
 import 'dart:developer' as dev;
 import 'dart:math';
 
+// 🐦 Flutter imports:
+import 'package:flutter/material.dart';
+
+// 📦 Package imports:
+import 'package:shimmer/shimmer.dart';
+
+// 🌎 Project imports:
 import 'package:eduserveMinimal/global/constants.dart';
 import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/models/semester_summary_result.dart';
 import 'package:eduserveMinimal/service/semester_summary.dart';
 import 'package:eduserveMinimal/view/user/widgets/semester_summary_graph.dart';
-import 'package:flutter/material.dart';
-import 'package:shimmer/shimmer.dart';
 
 class SemesterSummaryWidget extends StatelessWidget {
   const SemesterSummaryWidget({

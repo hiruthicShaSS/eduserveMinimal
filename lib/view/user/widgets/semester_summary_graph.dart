@@ -1,13 +1,13 @@
 // 🐦 Flutter imports:
-import 'package:eduserveMinimal/models/semester_summary_result.dart';
 import 'package:flutter/material.dart';
 
 // 📦 Package imports:
 import 'package:fl_chart/fl_chart.dart';
+import 'package:intl/intl.dart';
 
 // 🌎 Project imports:
 import 'package:eduserveMinimal/global/widgets/dot_container.dart';
-import 'package:intl/intl.dart';
+import 'package:eduserveMinimal/models/semester_summary_result.dart';
 
 class SemesterSummaryGraph extends StatelessWidget {
   SemesterSummaryGraph({

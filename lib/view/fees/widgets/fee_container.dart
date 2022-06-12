@@ -1,10 +1,15 @@
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:eduserveMinimal/global/service/currency_to_unicode.dart';
-import 'package:eduserveMinimal/models/fees.dart';
+// 🐦 Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+// 📦 Package imports:
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+
+// 🌎 Project imports:
+import 'package:eduserveMinimal/global/service/currency_to_unicode.dart';
+import 'package:eduserveMinimal/models/fees.dart';
 
 class FeeContainer extends StatelessWidget {
   const FeeContainer({Key? key, required this.fee}) : super(key: key);

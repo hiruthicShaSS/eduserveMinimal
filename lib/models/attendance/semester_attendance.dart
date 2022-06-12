@@ -1,3 +1,4 @@
+// 🌎 Project imports:
 import 'package:eduserveMinimal/models/attendance/attendance.dart';
 
 class SemesterAttendance {

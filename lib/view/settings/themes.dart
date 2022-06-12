@@ -1,11 +1,11 @@
 // 🐦 Flutter imports:
-import 'package:eduserveMinimal/global/enum.dart';
 import 'package:flutter/material.dart';
 
 // 📦 Package imports:
 import 'package:provider/provider.dart';
 
 // 🌎 Project imports:
+import 'package:eduserveMinimal/global/enum.dart';
 import 'package:eduserveMinimal/providers/theme.dart';
 
 class Themes extends StatelessWidget {

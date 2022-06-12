@@ -1,11 +1,8 @@
 // 🐦 Flutter imports:
-import 'package:connectivity/connectivity.dart';
-import 'package:eduserveMinimal/global/enum.dart';
-import 'package:eduserveMinimal/providers/theme.dart';
-import 'package:eduserveMinimal/service/auth.dart';
 import 'package:flutter/material.dart';
 
 // 📦 Package imports:
+import 'package:connectivity/connectivity.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:new_version/new_version.dart';
@@ -14,6 +11,9 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // 🌎 Project imports:
+import 'package:eduserveMinimal/global/enum.dart';
+import 'package:eduserveMinimal/providers/theme.dart';
+import 'package:eduserveMinimal/service/auth.dart';
 import 'package:eduserveMinimal/view/settings/cache_data.dart';
 import 'package:eduserveMinimal/view/settings/developer.dart';
 import 'package:eduserveMinimal/view/settings/themes.dart';

@@ -1,6 +1,10 @@
+// 🎯 Dart imports:
 import 'dart:typed_data';
 
+// 🐦 Flutter imports:
 import 'package:flutter/material.dart';
+
+// 📦 Package imports:
 import 'package:syncfusion_flutter_barcodes/barcodes.dart';
 
 class UserHeader extends StatefulWidget {

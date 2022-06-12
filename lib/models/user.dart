@@ -1,11 +1,12 @@
+// 🎯 Dart imports:
 import 'dart:convert';
 import 'dart:typed_data';
 
 class User {
   int semester;
   int arrears;
-  double? attendance;
-  double? assemblyAttendance;
+  double attendance;
+  double assemblyAttendance;
   double cgpa;
   double sgpa;
   double credits;
@@ -19,27 +20,25 @@ class User {
   String? resultOf;
   Uint8List? image;
   Uint8List? qrCode;
-  Map? leaveApplications;
 
   User({
-    this.registerNumber,
-    this.kmail,
-    this.name,
-    this.mobile,
-    this.programme,
-    this.mentor,
-    this.semester = 0,
-    this.attendance,
-    this.assemblyAttendance,
-    this.cgpa = 0,
-    this.sgpa = 0,
-    this.arrears = 0,
-    this.resultOf,
-    this.credits = 0,
-    this.nonAcademicCredits = 0,
+    required this.registerNumber,
+    required this.kmail,
+    required this.name,
+    required this.mobile,
+    required this.programme,
+    required this.mentor,
+    required this.semester,
+    required this.attendance,
+    required this.assemblyAttendance,
+    required this.cgpa,
+    required this.sgpa,
+    required this.arrears,
+    required this.resultOf,
+    required this.credits,
+    required this.nonAcademicCredits,
     this.image,
     this.qrCode,
-    this.leaveApplications,
   });
 
   Map<String, dynamic> toMap() {
@@ -61,7 +60,6 @@ class User {
       'nonAcademicCredits': nonAcademicCredits,
       'image': jsonEncode(image),
       'qrCode': jsonEncode(qrCode),
-      'leaveApplications': jsonEncode(leaveApplications),
     };
   }
 
@@ -85,9 +83,6 @@ class User {
       image: map['image'] != null
           ? Uint8List.fromList(List<int>.from(jsonDecode(map['image'])))
           : null,
-      leaveApplications: map['leaveApplications'] != null
-          ? jsonDecode(map['leaveApplications'])
-          : null,
     );
   }
 
@@ -97,6 +92,6 @@ class User {
 
   @override
   String toString() {
-    return 'User(registerNumber: $registerNumber, kmail: $kmail, name: $name, mobile: $mobile, programme: $programme, mentor: $mentor, semester: $semester, attendance: $attendance, assemblyAttendance: $assemblyAttendance, cgpa: $cgpa, sgpa: $sgpa, arrears: $arrears, resultOf: $resultOf, credits: $credits, nonAcademicCredits: $nonAcademicCredits, image: $image, qrCode: $qrCode, leaveApplications: $leaveApplications)';
+    return 'User(registerNumber: $registerNumber, kmail: $kmail, name: $name, mobile: $mobile, programme: $programme, mentor: $mentor, semester: $semester, attendance: $attendance, assemblyAttendance: $assemblyAttendance, cgpa: $cgpa, sgpa: $sgpa, arrears: $arrears, resultOf: $resultOf, credits: $credits, nonAcademicCredits: $nonAcademicCredits, image: $image, qrCode: $qrCode)';
   }
 }

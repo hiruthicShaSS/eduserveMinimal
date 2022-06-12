@@ -1,20 +1,19 @@
 // 🐦 Flutter imports:
-import 'package:eduserveMinimal/global/constants.dart';
-import 'package:eduserveMinimal/global/enum.dart';
-import 'package:eduserveMinimal/global/exceptions.dart';
-import 'package:eduserveMinimal/global/service/currency_to_unicode.dart';
-import 'package:eduserveMinimal/providers/app_state.dart';
-import 'package:eduserveMinimal/view/fees/widgets/fee_container.dart';
 import 'package:flutter/material.dart';
 
 // 📦 Package imports:
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 // 🌎 Project imports:
+import 'package:eduserveMinimal/global/constants.dart';
+import 'package:eduserveMinimal/global/enum.dart';
+import 'package:eduserveMinimal/global/exceptions.dart';
+import 'package:eduserveMinimal/global/service/currency_to_unicode.dart';
 import 'package:eduserveMinimal/models/fees.dart';
+import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:eduserveMinimal/providers/theme.dart';
-import 'package:provider/provider.dart';
+import 'package:eduserveMinimal/view/fees/widgets/fee_container.dart';
 
 class FeesView extends StatelessWidget {
   @override
@@ -25,7 +24,7 @@ class FeesView extends StatelessWidget {
       body: SafeArea(
         child: Consumer(builder: (context, AppState appState, _) {
           return FutureBuilder(
-            future: appState.fees,
+            future: appState.getFees(),
             builder: (context, AsyncSnapshot<Fees> snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 if (snapshot.hasError) {

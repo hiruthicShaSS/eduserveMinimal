@@ -1,10 +1,12 @@
 // 📦 Package imports:
+import 'package:html/dom.dart';
+import 'package:http/http.dart';
+
+// 🌎 Project imports:
 import 'package:eduserveMinimal/global/service/month_to_int.dart';
 import 'package:eduserveMinimal/models/semester_summary_result.dart';
 import 'package:eduserveMinimal/service/auth.dart';
 import 'package:eduserveMinimal/service/network_service.dart';
-import 'package:http/http.dart';
-import 'package:html/dom.dart';
 
 Future<List<SemesterSummaryResult>> getSemesterSummary() async {
   NetworkService _networkService = NetworkService();

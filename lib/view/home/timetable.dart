@@ -1,14 +1,17 @@
-// 🐦 Flutter imports:
+// 🎯 Dart imports:
 import 'dart:developer';
 
-import 'package:eduserveMinimal/models/timetable_entry.dart';
-import 'package:eduserveMinimal/providers/app_state.dart';
+// 🐦 Flutter imports:
 import 'package:flutter/material.dart';
 
-// 🌎 Project imports:
+// 📦 Package imports:
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:table_sticky_headers/table_sticky_headers.dart';
+
+// 🌎 Project imports:
+import 'package:eduserveMinimal/models/timetable_entry.dart';
+import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:eduserveMinimal/view/misc/widgets/table_cell.dart' as tableCell;
 
 class TimeTableScreen extends StatefulWidget {
@@ -26,7 +29,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
         child: RotatedBox(
           quarterTurns: 1,
           child: FutureBuilder(
-            future: Provider.of<AppState>(context).timetable,
+            future: Provider.of<AppState>(context).getTimetableData(),
             builder: (context, AsyncSnapshot<List<TimeTableEntry>> snapshot) {
               if (snapshot.hasError) {
                 log("", error: snapshot.error);

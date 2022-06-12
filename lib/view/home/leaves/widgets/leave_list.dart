@@ -1,10 +1,12 @@
 // 🐦 Flutter imports:
-import 'package:eduserveMinimal/models/leave/other_leave.dart';
 import 'package:flutter/material.dart';
 
 // 📦 Package imports:
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:shimmer/shimmer.dart';
+
+// 🌎 Project imports:
+import 'package:eduserveMinimal/models/leave/other_leave.dart';
 
 class LeaveList extends StatelessWidget {
   const LeaveList({Key? key, required this.leave, this.isLoading = false})

@@ -1,14 +1,18 @@
+// 🎯 Dart imports:
 import 'dart:developer';
 
+// 🐦 Flutter imports:
+import 'package:flutter/material.dart';
+
+// 📦 Package imports:
+import 'package:provider/provider.dart';
+
+// 🌎 Project imports:
 import 'package:eduserveMinimal/global/constants.dart';
 import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/providers/cache.dart';
-import 'package:eduserveMinimal/view/home/internal_exams/widgets/internal_marks_table.dart';
-import 'package:flutter/material.dart';
-
-// 🌎 Project imports:
 import 'package:eduserveMinimal/service/internal_marks.dart';
-import 'package:provider/provider.dart';
+import 'package:eduserveMinimal/view/home/internal_exams/widgets/internal_marks_table.dart';
 
 class InternalMarksScreen extends StatefulWidget {
   @override

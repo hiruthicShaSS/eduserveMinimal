@@ -1,7 +1,9 @@
 // 📦 Package imports:
-import 'package:eduserveMinimal/service/auth.dart';
-import 'package:http/http.dart';
 import 'package:html/dom.dart';
+import 'package:http/http.dart';
+
+// 🌎 Project imports:
+import 'package:eduserveMinimal/service/auth.dart';
 
 Future<bool> fillFeedbackForm(Map rating) async {
   Map<String, String> headers = AuthService.headers;

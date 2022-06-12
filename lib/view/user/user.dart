@@ -1,5 +1,16 @@
+// 🎯 Dart imports:
 import 'dart:developer';
 
+// 🐦 Flutter imports:
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+// 📦 Package imports:
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+// 🌎 Project imports:
 import 'package:eduserveMinimal/global/constants.dart';
 import 'package:eduserveMinimal/global/enum.dart';
 import 'package:eduserveMinimal/global/exceptions.dart';
@@ -10,15 +21,6 @@ import 'package:eduserveMinimal/view/home/widgets/semester_summary_widget.dart';
 import 'package:eduserveMinimal/view/user/widgets/user_detail.dart';
 import 'package:eduserveMinimal/view/user/widgets/user_header.dart';
 import 'package:eduserveMinimal/view/user/widgets/user_main_container.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
-// 📦 Package imports:
-import 'package:fluttertoast/fluttertoast.dart';
-
-// 🌎 Project imports:
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class UserScreen extends StatelessWidget {
   @override
@@ -27,7 +29,7 @@ class UserScreen extends StatelessWidget {
       body: SafeArea(
         child: Consumer(builder: (context, AppState appState, _) {
           return FutureBuilder(
-              future: appState.user,
+              future: appState.getUser(),
               builder: (context, AsyncSnapshot<User> snapshot) {
                 if (snapshot.hasError) {
                   log("Error fetching user data: ", error: snapshot.error);

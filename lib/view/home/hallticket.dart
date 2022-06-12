@@ -1,14 +1,17 @@
-// 🐦 Flutter imports:
+// 🎯 Dart imports:
 import 'dart:developer';
 
+// 🐦 Flutter imports:
+import 'package:flutter/material.dart';
+
+// 📦 Package imports:
+import 'package:provider/provider.dart';
+
+// 🌎 Project imports:
 import 'package:eduserveMinimal/global/constants.dart';
 import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/models/hallticket/hallticket.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
-import 'package:flutter/material.dart';
-
-// 🌎 Project imports:
-import 'package:provider/provider.dart';
 
 class HallTicketView extends StatefulWidget {
   @override
@@ -30,7 +33,7 @@ class _HallTicketViewState extends State<HallTicketView> {
           child: Column(
             children: [
               FutureBuilder(
-                  future: Provider.of<AppState>(context).hallTicket,
+                  future: Provider.of<AppState>(context).getHallTicketData(),
                   builder: (context, AsyncSnapshot<HallTicket> snapshot) {
                     if (snapshot.hasError) {
                       log("", error: snapshot.error);

@@ -1,10 +1,12 @@
 // 🐦 Flutter imports:
 import 'package:flutter/material.dart';
 
+// 📦 Package imports:
+import 'package:provider/provider.dart';
+
 // 🌎 Project imports:
 import 'package:eduserveMinimal/global/enum.dart';
 import 'package:eduserveMinimal/providers/theme.dart';
-import 'package:provider/provider.dart';
 
 class ApplyLeaveView extends StatefulWidget {
   const ApplyLeaveView({Key? key, this.leaveType = LeaveType.Medical})

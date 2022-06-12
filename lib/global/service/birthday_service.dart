@@ -1,8 +1,11 @@
-import 'package:eduserveMinimal/service/auth.dart';
+// 📦 Package imports:
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:http/http.dart';
 import 'package:html/dom.dart';
+import 'package:http/http.dart';
 import 'package:intl/intl.dart';
+
+// 🌎 Project imports:
+import 'package:eduserveMinimal/service/auth.dart';
 
 Future<void> cacheBirthDate() async {
   Response res = await get(

@@ -1,3 +1,4 @@
+// 🌎 Project imports:
 import 'package:eduserveMinimal/models/hallticket/subject.dart';
 
 class HallTicket {

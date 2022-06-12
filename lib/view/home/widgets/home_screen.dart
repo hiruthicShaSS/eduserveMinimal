@@ -1,12 +1,18 @@
+// 🐦 Flutter imports:
+import 'package:eduserveMinimal/controller/cache_controller.dart';
+import 'package:flutter/material.dart';
+
+// 📦 Package imports:
 import 'package:connectivity/connectivity.dart';
+import 'package:provider/provider.dart';
+
+// 🌎 Project imports:
 import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:eduserveMinimal/providers/issue_provider.dart';
 import 'package:eduserveMinimal/service/auth.dart';
 import 'package:eduserveMinimal/view/home/leaves/leave_information.dart';
 import 'package:eduserveMinimal/view/home/widgets/attendance_summary_basic.dart';
 import 'package:eduserveMinimal/view/home/widgets/attendance_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({
@@ -42,7 +48,7 @@ class HomeScreen extends StatelessWidget {
         }
 
         await AuthService().login();
-        Provider.of<AppState>(context, listen: false).refresh();
+        await Provider.of<AppState>(context, listen: false).refresh();
       },
       child: CustomScrollView(
         slivers: [

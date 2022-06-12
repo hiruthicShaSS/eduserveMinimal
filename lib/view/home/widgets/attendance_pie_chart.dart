@@ -1,15 +1,15 @@
 // 🐦 Flutter imports:
-import 'package:eduserveMinimal/models/attendance/semester_attendance.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 // 📦 Package imports:
 import 'package:fl_chart/fl_chart.dart';
+import 'package:provider/provider.dart';
 
 // 🌎 Project imports:
 import 'package:eduserveMinimal/global/widgets/dot_container.dart';
+import 'package:eduserveMinimal/models/attendance/semester_attendance.dart';
 import 'package:eduserveMinimal/providers/theme.dart';
-import 'package:provider/provider.dart';
 
 class AttendancePieChart extends StatelessWidget {
   const AttendancePieChart({Key? key, required this.semesterAttendance})

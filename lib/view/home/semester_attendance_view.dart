@@ -1,11 +1,16 @@
+// 🐦 Flutter imports:
+import 'package:flutter/material.dart';
+
+// 📦 Package imports:
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:table_sticky_headers/table_sticky_headers.dart';
+
+// 🌎 Project imports:
 import 'package:eduserveMinimal/global/enum.dart';
 import 'package:eduserveMinimal/models/attendance/attendance.dart';
 import 'package:eduserveMinimal/models/attendance/semester_attendance.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
-import 'package:table_sticky_headers/table_sticky_headers.dart';
 import 'package:eduserveMinimal/view/misc/widgets/table_cell.dart' as tableCell;
 
 class SemesterAttendanceView extends StatelessWidget {
@@ -19,7 +24,7 @@ class SemesterAttendanceView extends StatelessWidget {
       body: SafeArea(
         child: Consumer(builder: (context, AppState appState, _) {
           return FutureBuilder(
-            future: appState.attendance,
+            future: appState.getAttendance(),
             builder: (BuildContext context,
                 AsyncSnapshot<SemesterAttendance> snapshot) {
               if (snapshot.hasError) {

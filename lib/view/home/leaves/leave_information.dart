@@ -1,16 +1,18 @@
 // 🐦 Flutter imports:
-import 'package:eduserveMinimal/models/leave/on_duty_leave.dart';
-import 'package:eduserveMinimal/models/leave/other_leave.dart';
-import 'package:eduserveMinimal/providers/app_state.dart';
-import 'package:eduserveMinimal/view/home/leaves/widgets/leave_list.dart';
-import 'package:eduserveMinimal/view/home/leaves/widgets/on_duty_list.dart';
 import 'package:flutter/material.dart';
+
+// 📦 Package imports:
+import 'package:provider/provider.dart';
 
 // 🌎 Project imports:
 import 'package:eduserveMinimal/models/leave/leave.dart';
+import 'package:eduserveMinimal/models/leave/on_duty_leave.dart';
+import 'package:eduserveMinimal/models/leave/other_leave.dart';
+import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:eduserveMinimal/providers/theme.dart';
+import 'package:eduserveMinimal/view/home/leaves/widgets/leave_list.dart';
+import 'package:eduserveMinimal/view/home/leaves/widgets/on_duty_list.dart';
 import 'package:eduserveMinimal/view/misc/widgets/dot_tab_bar_indeicator.dart';
-import 'package:provider/provider.dart';
 
 class LeaveInformationWidget extends StatefulWidget {
   const LeaveInformationWidget({Key? key}) : super(key: key);
@@ -37,24 +39,21 @@ class _LeaveInformationWidgetState extends State<LeaveInformationWidget>
       height: MediaQuery.of(context).size.height * 0.55,
       child: Column(
         children: [
-          Consumer(builder: (_, ThemeProvider themeProvider, __) {
-            return TabBar(
-              controller: _tabController,
-              tabs: [
-                Tab(text: "Leave"),
-                Tab(text: "On-Duty Details"),
-              ],
-              indicator: CircleTabIndicator(
-                  color: Theme.of(context).primaryColor, radius: 5),
-              labelColor:
-                  themeProvider.currentThemeData.textTheme.bodyText1!.color,
-              overlayColor: MaterialStateProperty.resolveWith(
-                  (states) => Colors.transparent),
-            );
-          }),
+          TabBar(
+            controller: _tabController,
+            tabs: [
+              Tab(text: "Leave"),
+              Tab(text: "On-Duty Details"),
+            ],
+            indicator: CircleTabIndicator(
+                color: Theme.of(context).primaryColor, radius: 5),
+            labelColor: Theme.of(context).textTheme.bodyText1!.color,
+            overlayColor: MaterialStateProperty.resolveWith(
+                (states) => Colors.transparent),
+          ),
           Expanded(
             child: FutureBuilder(
-              future: Provider.of<AppState>(context).leaveInfo,
+              future: Provider.of<AppState>(context).getLeaveInformation(),
               builder: (context, AsyncSnapshot<Leave> snapshot) {
                 if (snapshot.hasError) {
                   print(snapshot.error);

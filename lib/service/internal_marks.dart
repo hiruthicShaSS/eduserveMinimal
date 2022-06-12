@@ -1,10 +1,13 @@
+// 📦 Package imports:
+import 'package:html/dom.dart';
+import 'package:http/http.dart';
+import 'package:intl/intl.dart';
+
+// 🌎 Project imports:
 import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/models/internal_mark.dart';
 import 'package:eduserveMinimal/service/auth.dart';
 import 'package:eduserveMinimal/service/network_service.dart';
-import 'package:http/http.dart';
-import 'package:html/dom.dart';
-import 'package:intl/intl.dart';
 
 class InternalMarksService {
   NetworkService _networkService = NetworkService();

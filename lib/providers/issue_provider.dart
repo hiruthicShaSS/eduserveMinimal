@@ -1,5 +1,8 @@
-import 'package:eduserveMinimal/global/enum.dart';
+// 🐦 Flutter imports:
 import 'package:flutter/cupertino.dart';
+
+// 🌎 Project imports:
+import 'package:eduserveMinimal/global/enum.dart';
 
 class IssueProvider extends ChangeNotifier {
   Set<Issue> _issues = Set();

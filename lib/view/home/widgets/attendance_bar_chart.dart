@@ -1,13 +1,15 @@
 // 🐦 Flutter imports:
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:eduserveMinimal/models/attendance/attendance.dart';
-import 'package:eduserveMinimal/models/attendance/semester_attendance.dart';
-import 'package:eduserveMinimal/view/home/semester_attendance_view.dart';
 import 'package:flutter/material.dart';
 
 // 📦 Package imports:
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
+
+// 🌎 Project imports:
+import 'package:eduserveMinimal/models/attendance/attendance.dart';
+import 'package:eduserveMinimal/models/attendance/semester_attendance.dart';
+import 'package:eduserveMinimal/view/home/semester_attendance_view.dart';
 
 class AttendanceBarChart extends StatelessWidget {
   const AttendanceBarChart({Key? key, required this.semesterAttendance})

@@ -1,9 +1,13 @@
-import 'package:eduserveMinimal/service/auth.dart';
-import 'package:eduserveMinimal/view/settings/test.dart';
+// 🐦 Flutter imports:
 import 'package:flutter/material.dart';
+
+// 📦 Package imports:
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+
+// 🌎 Project imports:
+import 'package:eduserveMinimal/service/auth.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({Key? key, this.username}) : super(key: key);

@@ -1,14 +1,15 @@
+// 📦 Package imports:
+import 'package:html/dom.dart';
+import 'package:http/http.dart';
+import 'package:intl/intl.dart';
+
+// 🌎 Project imports:
 import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/models/attendance/attendance.dart';
 import 'package:eduserveMinimal/models/attendance/attendance_summary.dart';
 import 'package:eduserveMinimal/models/attendance/semester_attendance.dart';
 import 'package:eduserveMinimal/service/auth.dart';
 import 'package:eduserveMinimal/service/network_service.dart';
-import 'package:http/http.dart';
-
-// 🌎 Project imports:
-import 'package:html/dom.dart';
-import 'package:intl/intl.dart';
 
 Future<SemesterAttendance> getAttendanceSummary([retries = 0]) async {
   NetworkService _networkService = NetworkService();

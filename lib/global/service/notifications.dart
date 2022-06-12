@@ -1,7 +1,12 @@
+// 🐦 Flutter imports:
+import 'package:flutter/material.dart';
+
+// 📦 Package imports:
 import 'package:awesome_notifications/awesome_notifications.dart';
+
+// 🌎 Project imports:
 import 'package:eduserveMinimal/global/constants.dart';
 import 'package:eduserveMinimal/global/utilities/notification.dart';
-import 'package:flutter/material.dart';
 
 Future<void> createUpcomingClassNotification(String body, String? venue,
     NotificationWeekAndTime notificationWeekAndTime) async {

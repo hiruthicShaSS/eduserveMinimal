@@ -1,8 +1,12 @@
+// 🎯 Dart imports:
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:eduserveMinimal/global/exceptions.dart';
+// 📦 Package imports:
 import 'package:http/http.dart';
+
+// 🌎 Project imports:
+import 'package:eduserveMinimal/global/exceptions.dart';
 
 class NetworkService {
   late Client client;

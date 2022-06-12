@@ -1,11 +1,15 @@
+// 🎯 Dart imports:
 import 'dart:math';
 
-import 'package:eduserveMinimal/global/enum.dart';
+// 🐦 Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 // 📦 Package imports:
 import 'package:shared_preferences/shared_preferences.dart';
+
+// 🌎 Project imports:
+import 'package:eduserveMinimal/global/enum.dart';
 
 class ThemeProvider extends ChangeNotifier {
   ThemeMode themeMode = ThemeMode.system;

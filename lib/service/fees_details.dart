@@ -1,11 +1,12 @@
-import 'package:eduserveMinimal/service/auth.dart';
-import 'package:eduserveMinimal/service/network_service.dart';
-import 'package:http/http.dart';
+// 📦 Package imports:
 import 'package:html/dom.dart';
+import 'package:http/http.dart';
+import 'package:intl/intl.dart';
 
 // 🌎 Project imports:
 import 'package:eduserveMinimal/models/fees.dart';
-import 'package:intl/intl.dart';
+import 'package:eduserveMinimal/service/auth.dart';
+import 'package:eduserveMinimal/service/network_service.dart';
 
 Future<Fees> getFeesDetails() async {
   NetworkService _networkService = NetworkService();
@@ -13,16 +14,15 @@ Future<Fees> getFeesDetails() async {
   String feesDownload = "/Student/Fees/DownloadReceipt.aspx";
   String feesOverallStatement = "/Student/Fees/FeesStatement.aspx";
 
-  Response page = await _networkService.get(
+  Response res = await _networkService.get(
     Uri.parse("https://eduserve.karunya.edu${feesDownload}"),
     headers: AuthService.headers,
   );
 
-  if (page.body.indexOf("Login") != -1) {
+  if (res.body.indexOf("Login") != -1) {
     await AuthService().login();
   }
 
-  Response res;
   try {
     res = await _networkService.get(
       Uri.parse("https://eduserve.karunya.edu${feesOverallStatement}"),

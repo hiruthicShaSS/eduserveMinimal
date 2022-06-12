@@ -1,8 +1,12 @@
 // 🐦 Flutter imports:
-import 'package:eduserveMinimal/view/settings/widgets/credentials_form.dart';
 import 'package:flutter/material.dart';
+
+// 📦 Package imports:
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+// 🌎 Project imports:
+import 'widgets/credentials_form.dart';
 
 class Credentials extends StatefulWidget {
   final bool? pushHomePage;

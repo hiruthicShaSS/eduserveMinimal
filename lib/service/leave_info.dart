@@ -1,12 +1,12 @@
 // 📦 Package imports:
-import 'package:eduserveMinimal/models/leave/on_duty_leave.dart';
-import 'package:eduserveMinimal/models/leave/other_leave.dart';
-import 'package:eduserveMinimal/service/auth.dart';
-import 'package:http/http.dart';
 import 'package:html/dom.dart';
+import 'package:http/http.dart';
 
 // 🌎 Project imports:
 import 'package:eduserveMinimal/models/leave/leave.dart';
+import 'package:eduserveMinimal/models/leave/on_duty_leave.dart';
+import 'package:eduserveMinimal/models/leave/other_leave.dart';
+import 'package:eduserveMinimal/service/auth.dart';
 
 Future<Leave> getLeaveInfo() async {
   Map<String, String> headers = AuthService.headers;

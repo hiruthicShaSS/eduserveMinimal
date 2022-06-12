@@ -1,10 +1,12 @@
+// 📦 Package imports:
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:html/dom.dart';
+import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+// 🌎 Project imports:
 import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/service/network_service.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:http/http.dart';
-
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:html/dom.dart';
 
 class AuthService {
   static Map<String, String> headers = {};

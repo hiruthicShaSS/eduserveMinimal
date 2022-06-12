@@ -1,15 +1,17 @@
-import 'package:connectivity/connectivity.dart';
-import 'package:eduserveMinimal/edu_serve_minimal.dart';
+// 🐦 Flutter imports:
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+
+// 📦 Package imports:
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+// 🌎 Project imports:
 import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/global/widgets/network_aware_widget.dart';
 import 'package:eduserveMinimal/service/auth.dart';
-import 'package:eduserveMinimal/view/settings/forgot_password.dart';
-import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../../home_screen_controller.dart';
 
 class CredentialsForm extends StatefulWidget {
   const CredentialsForm({Key? key}) : super(key: key);
@@ -194,9 +196,7 @@ class _CredentialsFormState extends State<CredentialsForm> {
                   RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30)),
                 ),
-                fixedSize: MaterialStateProperty.all(
-                  Size(MediaQuery.of(context).size.width, 45),
-                ),
+                fixedSize: MaterialStateProperty.all(Size(300, 45)),
               ),
             ),
           ),

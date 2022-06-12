@@ -1,16 +1,18 @@
 // 🐦 Flutter imports:
-import 'package:eduserveMinimal/models/leave/on_duty_leave.dart';
-import 'package:eduserveMinimal/models/leave/other_leave.dart';
-import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:flutter/material.dart';
+
+// 📦 Package imports:
+import 'package:provider/provider.dart';
 
 // 🌎 Project imports:
 import 'package:eduserveMinimal/models/leave/leave.dart';
+import 'package:eduserveMinimal/models/leave/on_duty_leave.dart';
+import 'package:eduserveMinimal/models/leave/other_leave.dart';
+import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:eduserveMinimal/providers/theme.dart';
-import 'package:eduserveMinimal/view/misc/widgets/dot_tab_bar_indeicator.dart';
 import 'package:eduserveMinimal/view/home/leaves/widgets/leave_list.dart';
 import 'package:eduserveMinimal/view/home/leaves/widgets/on_duty_list.dart';
-import 'package:provider/provider.dart';
+import 'package:eduserveMinimal/view/misc/widgets/dot_tab_bar_indeicator.dart';
 
 class LeaveInformation extends StatefulWidget {
   const LeaveInformation({Key? key}) : super(key: key);
@@ -54,7 +56,7 @@ class _LeaveInformationState extends State<LeaveInformation>
           }),
           Expanded(
             child: FutureBuilder(
-              future: Provider.of<AppState>(context).leaveInfo,
+              future: Provider.of<AppState>(context).getLeaveInformation(),
               builder: (context, AsyncSnapshot<Leave> snapshot) {
                 if (snapshot.hasError) {
                   print(snapshot.error);

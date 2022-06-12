@@ -1,21 +1,29 @@
-// 📦 Package imports:
+// 🎯 Dart imports:
 import 'dart:convert';
 
+// 📦 Package imports:
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:html/dom.dart';
+import 'package:http/http.dart';
+
+// 🌎 Project imports:
 import 'package:eduserveMinimal/models/user.dart';
 import 'package:eduserveMinimal/service/auth.dart';
 import 'package:eduserveMinimal/service/network_service.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:http/http.dart';
-import 'package:html/dom.dart';
 
 Future<User> getStudentInfo() async {
   NetworkService _networkService = NetworkService();
 
-  String studentHomePage = await AuthService().login();
+  Response res = await _networkService.get(
+    Uri.parse("https://eduserve.karunya.edu/Student/Home.aspx"),
+    headers: AuthService.headers,
+  );
 
-  if (studentHomePage == "") return User();
+  if (res.body.indexOf("Login") != -1) {
+    await AuthService().login();
+  }
 
-  Document html = Document.html(studentHomePage);
+  Document html = Document.html(res.body);
 
   String? studentImage =
       html.querySelector("#mainContent_IMGSTUDENT")?.attributes["src"];

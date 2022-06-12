@@ -1,11 +1,13 @@
 // 📦 Package imports:
+import 'package:html/dom.dart';
+import 'package:http/http.dart';
+
+// 🌎 Project imports:
 import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/models/hallticket/hallticket.dart';
 import 'package:eduserveMinimal/models/hallticket/subject.dart';
 import 'package:eduserveMinimal/service/auth.dart';
 import 'package:eduserveMinimal/service/network_service.dart';
-import 'package:http/http.dart';
-import 'package:html/dom.dart';
 
 Future<HallTicket> getHallTicket() async {
   NetworkService _networkService = NetworkService();

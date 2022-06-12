@@ -1,10 +1,19 @@
-// 🐦 Flutter imports:
+// 🎯 Dart imports:
 import 'dart:developer';
 import 'dart:typed_data';
 
-import 'package:auto_size_text/auto_size_text.dart';
+// 🐦 Flutter imports:
+import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+
+// 📦 Package imports:
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:eduserveMinimal/global/constants.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:new_version/new_version.dart';
+import 'package:package_info/package_info.dart';
+import 'package:provider/provider.dart';
+
+// 🌎 Project imports:
 import 'package:eduserveMinimal/global/enum.dart';
 import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/global/service/birthday_service.dart';
@@ -15,28 +24,18 @@ import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:eduserveMinimal/providers/cache.dart';
 import 'package:eduserveMinimal/providers/issue_provider.dart';
 import 'package:eduserveMinimal/providers/theme.dart';
+import 'package:eduserveMinimal/service/fees_details.dart';
 import 'package:eduserveMinimal/service/get_hallticket.dart';
 import 'package:eduserveMinimal/service/student_info.dart';
-import 'package:eduserveMinimal/view/home/widgets/home_screen.dart';
-import 'package:eduserveMinimal/view/misc/issues.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-
-// 📦 Package imports:
-import 'package:new_version/new_version.dart';
-import 'package:package_info/package_info.dart';
-import 'package:provider/provider.dart';
-
-// 🌎 Project imports:
 import 'package:eduserveMinimal/view/fees/fees.dart';
 import 'package:eduserveMinimal/view/home/hallticket.dart';
 import 'package:eduserveMinimal/view/home/internal_exams/internals_screen.dart';
-import 'package:eduserveMinimal/view/settings/settings.dart';
 import 'package:eduserveMinimal/view/home/timetable.dart';
+import 'package:eduserveMinimal/view/home/widgets/home_screen.dart';
 import 'package:eduserveMinimal/view/misc/birthday.dart';
+import 'package:eduserveMinimal/view/misc/issues.dart';
+import 'package:eduserveMinimal/view/settings/settings.dart';
 import 'package:eduserveMinimal/view/user/user.dart';
-import 'package:eduserveMinimal/service/fees_details.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -289,7 +288,7 @@ class _HomePageState extends State<HomePage> {
 
     try {
       if (!Provider.of<AppState>(context, listen: false).isTimetableCached) {
-        await Provider.of<AppState>(context, listen: false).timetable;
+        await Provider.of<AppState>(context, listen: false).getTimetableData();
       }
     } on NetworkException {
     } on NoRecordsException {

@@ -1,10 +1,12 @@
 // 📦 Package imports:
+import 'package:html/dom.dart';
+import 'package:http/http.dart';
+
+// 🌎 Project imports:
 import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/models/timetable_entry.dart';
 import 'package:eduserveMinimal/service/auth.dart';
 import 'package:eduserveMinimal/service/network_service.dart';
-import 'package:http/http.dart';
-import 'package:html/dom.dart';
 
 Future<List<TimeTableEntry>> getTimetable() async {
   NetworkService _networkService = NetworkService();
