@@ -4,10 +4,13 @@ import 'package:eduserveMinimal/global/service/notifications.dart';
 import 'package:eduserveMinimal/models/user.dart';
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future<Map<String, double>?> checkForAttendanceChange(
     {showNotification = false}) async {
   FlutterSecureStorage storage = FlutterSecureStorage();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.reload();
 
   String? lastAttendanceString =
       await storage.read(key: storage_key_lastAttendancePercent);
@@ -40,7 +43,11 @@ Future<Map<String, double>?> checkForAttendanceChange(
         }
 
         if (notification.isNotEmpty) {
-          if (showNotification) createAttendanceNotification(notification);
+          if (showNotification) {
+            if (prefs.getBool("showAttendanceDropNotification") ?? false) {
+              createAttendanceNotification(notification);
+            }
+          }
         }
       }
     }

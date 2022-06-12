@@ -80,8 +80,3 @@ Future<void> cancelAllUpcomingClassNotification() async {
   await AwesomeNotifications()
       .cancelSchedulesByChannelKey(timeTableNotificationChannelKey);
 }
-
-Future<void> cancelAllAbsentNotification() async {
-  await AwesomeNotifications()
-      .cancelSchedulesByChannelKey(timeTableNotificationChannelKey);
-}

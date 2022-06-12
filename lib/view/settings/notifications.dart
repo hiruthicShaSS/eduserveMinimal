@@ -25,6 +25,8 @@ class _NotificationsViewState extends State<NotificationsView> {
   bool _timetableDownloading = false;
 
   bool _notifyUpcomingClass = false;
+  bool _notifyAbsent = false;
+  bool _notifyAttendanceDrop = false;
   int _alertBefore = 15;
 
   @override
@@ -34,6 +36,9 @@ class _NotificationsViewState extends State<NotificationsView> {
         _notifyUpcomingClass =
             prefs.getBool("upcomingClassesScheduled") ?? false;
         _alertBefore = prefs.getInt("alertBefore") ?? 15;
+        _notifyAbsent = prefs.getBool("showAbsentNotification") ?? false;
+        _notifyAttendanceDrop =
+            prefs.getBool("showAttendanceDropNotification") ?? false;
       });
     });
     super.didChangeDependencies();
@@ -45,72 +50,93 @@ class _NotificationsViewState extends State<NotificationsView> {
       body: SafeArea(
         child: Column(
           children: [
-            Column(
+            ExpansionTile(
+              title: Text("Upcoming Class"),
               children: [
-                ExpansionTile(
-                  title: Text("Upcoming Class"),
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("Enabled"),
-                          _timetableDownloading
-                              ? SizedBox(
-                                  width: 40, child: LinearProgressIndicator())
-                              : Switch(
-                                  value: _notifyUpcomingClass,
-                                  onChanged: (value) async {
-                                    if (value) {
-                                      await setupSchedule(context);
-                                    } else {
-                                      await cancelAllUpcomingClassNotification();
-                                      setState(() {
-                                        _notifyUpcomingClass = false;
-                                      });
-                                    }
-                                  },
-                                ),
-                        ],
-                      ),
-                    ),
-                    if (_notifyUpcomingClass)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Row(
-                          children: [
-                            Text("Alert before:"),
-                            Expanded(
-                              child: Wrap(
-                                children: List.generate(
-                                  4,
-                                  (index) => TextButton(
-                                    onPressed: () => setupSchedule(context,
-                                        alertBefore: (index + 1) * 5),
-                                    child: Text(((index + 1) * 5).toString()),
-                                    style: ButtonStyle(
-                                      backgroundColor:
-                                          _alertBefore == (index + 1) * 5
-                                              ? MaterialStateProperty.all(
-                                                  Colors.greenAccent
-                                                      .withOpacity(0.3),
-                                                )
-                                              : null,
-                                      shape: MaterialStateProperty.all(
-                                        CircleBorder(),
-                                      ),
-                                    ),
-                                  ),
-                                ).toList(),
-                              ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Enabled"),
+                      _timetableDownloading
+                          ? SizedBox(
+                              width: 40, child: LinearProgressIndicator())
+                          : Switch(
+                              value: _notifyUpcomingClass,
+                              onChanged: (value) async {
+                                if (value) {
+                                  await setupSchedule(context);
+                                } else {
+                                  await cancelAllUpcomingClassNotification();
+                                  setState(() {
+                                    _notifyUpcomingClass = false;
+                                  });
+                                }
+                              },
                             ),
-                          ],
-                        ),
-                      ),
-                  ],
+                    ],
+                  ),
                 ),
+                if (_notifyUpcomingClass)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Row(
+                      children: [
+                        Text("Alert before:"),
+                        Expanded(
+                          child: Wrap(
+                            children: List.generate(
+                              4,
+                              (index) => TextButton(
+                                onPressed: () => setupSchedule(context,
+                                    alertBefore: (index + 1) * 5),
+                                child: Text(((index + 1) * 5).toString()),
+                                style: ButtonStyle(
+                                  backgroundColor: _alertBefore ==
+                                          (index + 1) * 5
+                                      ? MaterialStateProperty.all(
+                                          Colors.greenAccent.withOpacity(0.3),
+                                        )
+                                      : null,
+                                  shape: MaterialStateProperty.all(
+                                    CircleBorder(),
+                                  ),
+                                ),
+                              ),
+                            ).toList(),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
               ],
+            ),
+            ListTile(
+              title: Text("Last Absent Hours"),
+              trailing: Switch(
+                value: _notifyAbsent,
+                onChanged: (value) async {
+                  SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  await prefs.setBool("showAbsentNotification", value);
+
+                  setState(() => _notifyAbsent = value);
+                },
+              ),
+            ),
+            ListTile(
+              title: Text("Attendance Percent Drop"),
+              trailing: Switch(
+                value: _notifyAttendanceDrop,
+                onChanged: (value) async {
+                  SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  await prefs.setBool("showAttendanceDropNotification", value);
+
+                  setState(() => _notifyAttendanceDrop = value);
+                },
+              ),
             ),
           ],
         ),

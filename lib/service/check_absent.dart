@@ -31,6 +31,7 @@ Future<bool> checkForAbsent({
   bool showNotification = true,
 }) async {
   SharedPreferences _prefs = await SharedPreferences.getInstance();
+  _prefs.reload();
 
   if (_prefs.containsKey("absentClassShownAt")) {
     String lastAbsentDateString = _prefs.getString("absentClassShownAt")!;
@@ -109,14 +110,16 @@ Future<bool> checkForAbsent({
         }
 
         if (showNotification) {
-          createAbsentNotification(
-            "You have missed ${absentClasses.length} class${absentClasses.length > 1 ? "es" : ""}",
-            data,
-            {"date": yesterday.millisecondsSinceEpoch.toString()},
-          );
+          if (_prefs.getBool("showAbsentNotification") ?? false) {
+            createAbsentNotification(
+              "You have missed ${absentClasses.length} class${absentClasses.length > 1 ? "es" : ""}",
+              data,
+              {"date": yesterday.millisecondsSinceEpoch.toString()},
+            );
 
-          await _prefs.setString(
-              "absentClassShownAt", DateTime.now().toString());
+            await _prefs.setString(
+                "absentClassShownAt", DateTime.now().toString());
+          }
         }
 
         return true;
