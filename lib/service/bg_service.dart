@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:ui';
 
-// 🐦 Flutter imports:
 import 'package:flutter/material.dart';
 
 // 📦 Package imports:
@@ -12,6 +11,8 @@ import 'package:flutter_background_service_android/flutter_background_service_an
 
 // 🌎 Project imports:
 import 'package:eduserveMinimal/service/check_absent.dart';
+
+import 'check_for_attendance_change.dart';
 
 Future<void> initializeBackgroundService() async {
   final service = FlutterBackgroundService();
@@ -76,4 +77,7 @@ void onStart(ServiceInstance service) async {
 
   Timer.periodic(const Duration(hours: 4),
       (timer) => checkForAbsent(showNotification: true));
+
+  Timer.periodic(const Duration(hours: 6),
+      (timer) => checkForAttendanceChange(showNotification: true));
 }

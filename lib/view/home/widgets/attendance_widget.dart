@@ -2,6 +2,7 @@
 import 'dart:developer';
 
 // 🐦 Flutter imports:
+import 'package:eduserveMinimal/service/check_for_attendance_change.dart';
 import 'package:flutter/material.dart';
 
 // 📦 Package imports:
@@ -101,11 +102,17 @@ class AttendanceContainer extends StatelessWidget {
                       minFontSize: 20,
                       maxFontSize: 50,
                     ),
-                    Spacer(),
-                    AutoSizeText(
-                      user.attendance.toString() + "%",
-                      minFontSize: 30,
-                      maxFontSize: 40,
+                    const Spacer(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        AutoSizeText(
+                          user.attendance.toString() + "%",
+                          minFontSize: 30,
+                          maxFontSize: 40,
+                        ),
+                        _AttendanceChangeIcon(attendance: user.attendance),
+                      ],
                     ),
                   ],
                 ),
@@ -137,11 +144,19 @@ class AttendanceContainer extends StatelessWidget {
                       minFontSize: 20,
                       maxFontSize: 50,
                     ),
-                    Spacer(),
-                    AutoSizeText(
-                      user.assemblyAttendance.toString() + "%",
-                      minFontSize: 30,
-                      maxFontSize: 40,
+                    const Spacer(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        AutoSizeText(
+                          user.assemblyAttendance.toString() + "%",
+                          minFontSize: 30,
+                          maxFontSize: 40,
+                        ),
+                        _AttendanceChangeIcon(
+                          attendance: user.assemblyAttendance,
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -157,6 +172,34 @@ class AttendanceContainer extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _AttendanceChangeIcon extends StatelessWidget {
+  const _AttendanceChangeIcon({Key? key, required this.attendance})
+      : super(key: key);
+
+  final double attendance;
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: checkForAttendanceChange(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          Map<String, double> data =
+              Map<String, double>.from(snapshot.data! as Map);
+
+          return attendance == data["att"]!
+              ? const SizedBox()
+              : attendance > data["att"]!
+                  ? const Icon(Icons.arrow_upward, color: Colors.greenAccent)
+                  : const Icon(Icons.arrow_downward, color: Colors.redAccent);
+        }
+
+        return const SizedBox();
+      },
     );
   }
 }

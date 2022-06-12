@@ -41,17 +41,12 @@ Future<void> createUpcomingClassNotification(String body, String? venue,
   );
 }
 
-Future<void> cancelAllUpcomingClassNotification() async {
-  await AwesomeNotifications()
-      .cancelSchedulesByChannelKey(timeTableNotificationChannelKey);
-}
-
 Future<void> createAbsentNotification(
     String title, String body, Map<String, String> payload) async {
   AwesomeNotifications().createNotification(
     content: NotificationContent(
-      id: absentNMotificationId,
-      channelKey: absentNMotificationChannelKey,
+      id: absentNotificationId,
+      channelKey: absentNotificationChannelKey,
       title: title,
       body: body,
       color: Colors.red,
@@ -62,4 +57,31 @@ Future<void> createAbsentNotification(
       payload: payload,
     ),
   );
+}
+
+Future<void> createAttendanceNotification(String body) async {
+  AwesomeNotifications().createNotification(
+    content: NotificationContent(
+      id: createUniqueId(),
+      channelKey: attendanceNotificationChannelKey,
+      criticalAlert: true,
+      title: "Your attendance percentage has been dropped!",
+      body: body,
+      color: Colors.amberAccent,
+      notificationLayout: NotificationLayout.BigText,
+      category: NotificationCategory.Status,
+      fullScreenIntent: true,
+      wakeUpScreen: true,
+    ),
+  );
+}
+
+Future<void> cancelAllUpcomingClassNotification() async {
+  await AwesomeNotifications()
+      .cancelSchedulesByChannelKey(timeTableNotificationChannelKey);
+}
+
+Future<void> cancelAllAbsentNotification() async {
+  await AwesomeNotifications()
+      .cancelSchedulesByChannelKey(timeTableNotificationChannelKey);
 }

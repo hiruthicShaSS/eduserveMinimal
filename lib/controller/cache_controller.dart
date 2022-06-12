@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 // 📦 Package imports:
+import 'package:eduserveMinimal/global/constants.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -21,11 +22,6 @@ class CacheController {
   List<TimeTableEntry>? _timeTable;
   Leave? _leave;
   HallTicket? _hallTicket;
-
-  String prefs_key_timeTableLastUpdate = "timetable_data_last_update";
-  String prefs_key_userLastUpdate = "user_data_last_update";
-  String storage_key_timetableData = "timetable_data";
-  String storage_key_userData = "user_data";
 
   static late final SharedPreferences _prefs;
   final FlutterSecureStorage _storage = FlutterSecureStorage();
@@ -116,6 +112,17 @@ class CacheController {
 
       return;
     }
+
+    User? oldUserData = await getUserFromStorage();
+    await _storage.write(
+      key: storage_key_lastAttendancePercent,
+      value: jsonEncode(
+        {
+          "att": oldUserData?.attendance ?? _user!.attendance,
+          "asm": oldUserData?.assemblyAttendance ?? _user!.assemblyAttendance
+        },
+      ),
+    );
 
     await _storage.write(key: storage_key_userData, value: _user!.toJson());
     await _prefs.setString(prefs_key_userLastUpdate, DateTime.now().toString());
