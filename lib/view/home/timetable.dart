@@ -6,7 +6,6 @@ import 'package:eduserveMinimal/providers/app_state.dart';
 import 'package:flutter/material.dart';
 
 // 🌎 Project imports:
-import 'package:eduserveMinimal/service/timetable.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:table_sticky_headers/table_sticky_headers.dart';

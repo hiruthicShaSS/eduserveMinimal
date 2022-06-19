@@ -1,10 +1,10 @@
 import 'package:beautifulsoup/beautifulsoup.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 
-import 'package:eduserveMinimal/service/scrap.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:html/dom.dart';
 
@@ -101,7 +101,8 @@ class AuthService {
           msg: "Your login attempt was not successful. Please try again.",
           gravity: ToastGravity.CENTER);
 
-      return "Login error";
+      throw LoginError(
+          "Your login attempt was not successful. Please try again.");
     }
 
     if (res.statusCode == 302) {
@@ -113,10 +114,8 @@ class AuthService {
     }
 
     if (res.body.contains("Hourly Feedback")) {
-      return "feedback form found";
+      throw FeedbackFormFound("Feedback form found!");
     }
-
-    Scraper.cache["home"] = res.body;
 
     return res.body;
   }
