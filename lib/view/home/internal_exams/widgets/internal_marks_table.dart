@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/models/internal_mark.dart';
 import 'package:eduserveMinimal/providers/cache.dart';
@@ -94,7 +95,11 @@ class _InternalMarksTableState extends State<InternalMarksTable> {
                           internalMarks[i].subjectCode,
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        Text(internalMarks[i].subjectName),
+                        AutoSizeText(
+                          internalMarks[i].subjectName,
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ],
                     ),
                   ),
@@ -172,7 +177,7 @@ class _InternalMarksTableState extends State<InternalMarksTable> {
                   stickyLegendWidth: 110,
                   stickyLegendHeight: 80,
                   contentCellWidth: 150,
-                  contentCellHeight: 100,
+                  contentCellHeight: 120,
                 ),
                 legendCell:
                     tableCell.TableCell.legend("Subject Code / Subject Name"),

@@ -90,7 +90,6 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                const SizedBox(height: 10),
                                 Text(
                                   data[j][i].code,
                                   style: TextStyle(
