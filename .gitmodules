@@ -1,6 +1,3 @@
 [submodule "beautifulsoup.dart"]
 	path = beautifulsoup.dart
 	url = https://github.com/hiruthicShaSS/beautifulsoup.dart
-[submodule "flutter_screen"]
-	path = flutter_screen
-	url = https://github.com/hiruthicShaSS/flutter_screen.git
