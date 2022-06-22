@@ -188,6 +188,8 @@ class _AttendanceChangeIcon extends StatelessWidget {
       future: checkForAttendanceChange(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
+          if (!snapshot.hasData) return SizedBox();
+
           Map<String, double> data =
               Map<String, double>.from(snapshot.data! as Map);
 

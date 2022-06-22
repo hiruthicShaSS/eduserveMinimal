@@ -51,15 +51,32 @@ class Settings extends StatelessWidget {
                 child: Text("Notifications"),
               ),
             ),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                child: Text("Update credentials"),
-                onPressed: () {
-                  Navigator.of(context).pushNamed("/credentials",
-                      arguments: {"isFromAuth": false});
-                },
-              ),
+            Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 4),
+                    child: ElevatedButton(
+                      child: Text("Credentials"),
+                      onPressed: () {
+                        Navigator.of(context).pushNamed("/credentials",
+                            arguments: {"isFromAuth": false});
+                      },
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 4),
+                    child: ElevatedButton(
+                      child: Text("Privacy"),
+                      onPressed: () {
+                        Navigator.of(context).pushNamed("/privacy");
+                      },
+                    ),
+                  ),
+                ),
+              ],
             ),
             SizedBox(
               width: double.infinity,

@@ -13,6 +13,12 @@ const String timeTableNotificationGroupKey = "timetable-group";
 const String absentNotificationChannelKey = "absent";
 const String attendanceNotificationChannelKey = "attendance";
 const String attendanceNotificationGroupKey = "attendance-group";
+
+const String attachRegisterNumberToCrashLogs =
+    "attachRegisterNumberToCrashLogs";
+const String attachKmailToCrashLogs = "attachKmailToCrashLogs";
+const String attachNameToCrashLogs = "attachNameToCrashLogs";
+
 const int absentNotificationId = 1;
 const int timeTableNotificationId = 0;
 

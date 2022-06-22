@@ -1,4 +1,5 @@
 // 🐦 Flutter imports:
+import 'package:eduserveMinimal/models/user.dart';
 import 'package:flutter/material.dart';
 
 // 📦 Package imports:
@@ -10,6 +11,7 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 // 🌎 Project imports:
 import 'package:eduserveMinimal/edu_serve_minimal.dart';
 import 'package:eduserveMinimal/global/constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,13 +22,45 @@ void main() async {
     notificationChannels,
   );
 
+  final SharedPreferences _prefs = await SharedPreferences.getInstance();
+  final FlutterSecureStorage _storage = FlutterSecureStorage();
+
+  final bool _attachRegisterNumberToCrashLogs =
+      _prefs.getBool(attachRegisterNumberToCrashLogs) ?? false;
+  final bool _attachKmailToCrashLogs =
+      _prefs.getBool(attachKmailToCrashLogs) ?? false;
+  final bool _attachNameToCrashLogs =
+      _prefs.getBool(attachNameToCrashLogs) ?? false;
+
+  SentryUser? _sentryUser;
+  if (await _storage.containsKey(key: storage_key_userData)) {
+    String? userDataString = await _storage.read(key: storage_key_userData);
+
+    if (userDataString != null) {
+      User user = User.fromJson(userDataString);
+
+      _sentryUser = SentryUser(
+        id: _attachRegisterNumberToCrashLogs ? user.registerNumber : null,
+        username: _attachNameToCrashLogs ? user.name : null,
+        email: _attachKmailToCrashLogs ? user.kmail : null,
+      );
+    }
+  }
+
   await SentryFlutter.init(
     (options) async {
       PackageInfo info = await PackageInfo.fromPlatform();
 
-      options.dsn =
-          "https://5cf3e648046b4e67a059fc4d6b8fa0fd@o1022830.ingest.sentry.io/6010044";
-      options.release = info.version + "+" + info.buildNumber;
+      options
+        ..dsn =
+            "https://5cf3e648046b4e67a059fc4d6b8fa0fd@o1022830.ingest.sentry.io/6010044"
+        ..release = info.version + "+" + info.buildNumber
+        ..enableAutoSessionTracking
+        ..beforeSend = (event, {hint}) async {
+          event = event.copyWith(user: _sentryUser);
+
+          return event;
+        };
     },
     appRunner: () => runApp(EduserveMinimal(flavor: "production")),
   );

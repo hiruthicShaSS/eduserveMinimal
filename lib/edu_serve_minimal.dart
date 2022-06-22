@@ -1,4 +1,5 @@
 // 🐦 Flutter imports:
+import 'package:eduserveMinimal/view/settings/privacy.dart';
 import 'package:flutter/material.dart';
 
 // 📦 Package imports:
@@ -38,23 +39,23 @@ class EduserveMinimal extends StatelessWidget {
         debugShowCheckedModeBanner: flavor == "development",
         title: "eduserveMinimal",
         initialRoute: "/homeController",
-        routes: {
-          "/homeController": (BuildContext context) => const HomeController(),
-          "/home": (BuildContext context) => const HomePage(),
-          "/feedbackForm": (BuildContext context) => FeedbackForm(),
-          "/timetable": (BuildContext context) => TimeTableScreen(),
-          "/apply_leave": (BuildContext context) => const ApplyLeaveView(),
-          "/fees": (BuildContext context) => FeesView(),
-          "/credentials": (BuildContext context) => const Credentials(),
-          "/user": (BuildContext context) => UserScreen(),
-          "/forgotPassword": (BuildContext context) =>
-              const ForgotPasswordScreen(),
-          "/notifications": (BuildContext context) => const NotificationsView(),
-          "/attributions": (BuildContext context) => const AttributionScreen(),
-        },
         darkTheme: Provider.of<ThemeProvider>(context).getDarkTheme,
         themeMode: Provider.of<ThemeProvider>(context).themeMode,
         theme: Provider.of<ThemeProvider>(context).currentThemeData,
+        routes: {
+          "/homeController": (_) => const HomeController(),
+          "/home": (_) => const HomePage(),
+          "/feedbackForm": (_) => FeedbackForm(),
+          "/timetable": (_) => TimeTableScreen(),
+          "/apply_leave": (_) => const ApplyLeaveView(),
+          "/fees": (_) => FeesView(),
+          "/credentials": (_) => const Credentials(),
+          "/user": (_) => UserScreen(),
+          "/forgotPassword": (_) => const ForgotPasswordScreen(),
+          "/notifications": (_) => const NotificationsView(),
+          "/attributions": (_) => const AttributionScreen(),
+          "/privacy": (_) => const PrivacyScreen(),
+        },
       ),
     );
   }
