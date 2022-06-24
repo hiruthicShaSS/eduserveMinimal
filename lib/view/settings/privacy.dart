@@ -31,8 +31,10 @@ class _PrivacyScreenState extends State<PrivacyScreen> {
           child: Column(
             children: [
               ExpansionTile(
+                key: PageStorageKey(DateTime.now().millisecondsSinceEpoch),
                 onExpansionChanged: updatePersonalDataAttachementToCrash,
-                initiallyExpanded: !_attachRegisterNumberToCrashLogs,
+                initiallyExpanded: _attachRegisterNumberToCrashLogs,
+                maintainState: true,
                 trailing: IgnorePointer(
                   child: Switch(
                     value: _attachRegisterNumberToCrashLogs,
@@ -112,6 +114,7 @@ class _PrivacyScreenState extends State<PrivacyScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     await prefs.setBool(attachRegisterNumberToCrashLogs, value);
+
     setState(() {
       _attachRegisterNumberToCrashLogs = value;
     });
