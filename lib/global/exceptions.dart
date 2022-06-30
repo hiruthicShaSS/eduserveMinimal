@@ -1,4 +1,17 @@
-class NoRecordsException implements Exception {
+import 'package:sentry_flutter/sentry_flutter.dart';
+
+class BaseException implements Exception {
+  BaseException([this.message]) {
+    Sentry.addBreadcrumb(Breadcrumb(message: message, category: "exception"));
+  }
+
+  final String? message;
+
+  @override
+  String toString() => 'BaseException(message: $message)';
+}
+
+class NoRecordsException implements BaseException {
   const NoRecordsException([this.message]);
 
   final String? message;
@@ -9,7 +22,7 @@ class NoRecordsException implements Exception {
   }
 }
 
-class MiscellaneousErrorInEduserve implements Exception {
+class MiscellaneousErrorInEduserve implements BaseException {
   const MiscellaneousErrorInEduserve([this.message]);
 
   final String? message;
@@ -20,7 +33,7 @@ class MiscellaneousErrorInEduserve implements Exception {
   }
 }
 
-class NoHallTicketAvailable implements Exception {
+class NoHallTicketAvailable implements BaseException {
   const NoHallTicketAvailable([this.message]);
 
   final String? message;
@@ -31,7 +44,7 @@ class NoHallTicketAvailable implements Exception {
   }
 }
 
-class LoginError implements Exception {
+class LoginError implements BaseException {
   const LoginError([this.message]);
 
   final String? message;
@@ -42,7 +55,7 @@ class LoginError implements Exception {
   }
 }
 
-class FeedbackFormFound implements Exception {
+class FeedbackFormFound implements BaseException {
   const FeedbackFormFound([this.message]);
 
   final String? message;
@@ -53,8 +66,10 @@ class FeedbackFormFound implements Exception {
   }
 }
 
-class NetworkException implements Exception {
-  const NetworkException([this.message, this.actualException]);
+class NetworkException implements BaseException {
+  NetworkException([this.message, this.actualException]) {
+    Sentry.addBreadcrumb(Breadcrumb(message: "Network error"));
+  }
 
   final String? message;
   final Exception? actualException;

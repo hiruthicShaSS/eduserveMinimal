@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 // 🌎 Project imports:
 import 'package:eduserveMinimal/global/enum.dart';
 import 'package:eduserveMinimal/providers/theme.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class LoggingInScreen extends StatelessWidget {
   const LoggingInScreen({Key? key}) : super(key: key);
@@ -15,6 +16,7 @@ class LoggingInScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AppTheme appTheme = Provider.of<ThemeProvider>(context).currentAppTheme;
+    Sentry.addBreadcrumb(Breadcrumb(message: "Authenticating user"));
 
     return Material(
       color: Theme.of(context).brightness != Brightness.light

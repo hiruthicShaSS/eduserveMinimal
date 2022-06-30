@@ -20,6 +20,7 @@ import 'package:eduserveMinimal/view/home/timetable.dart';
 import 'package:eduserveMinimal/view/settings/attribution.dart';
 import 'package:eduserveMinimal/view/settings/notifications.dart';
 import 'package:eduserveMinimal/view/user/user.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'view/home_screen_controller.dart';
 
 class EduserveMinimal extends StatelessWidget {
@@ -56,6 +57,7 @@ class EduserveMinimal extends StatelessWidget {
           "/attributions": (_) => const AttributionScreen(),
           "/privacy": (_) => const PrivacyScreen(),
         },
+        navigatorObservers: [SentryNavigatorObserver()],
       ),
     );
   }

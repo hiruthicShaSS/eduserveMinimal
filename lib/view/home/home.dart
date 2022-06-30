@@ -36,6 +36,7 @@ import 'package:eduserveMinimal/view/misc/birthday.dart';
 import 'package:eduserveMinimal/view/misc/issues.dart';
 import 'package:eduserveMinimal/view/settings/settings.dart';
 import 'package:eduserveMinimal/view/user/user.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -59,6 +60,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     userImageFuture = getStudentInfo();
+
+    Sentry.addBreadcrumb(Breadcrumb(message: "Authenticated user"));
 
     AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
       if (!isAllowed) {
