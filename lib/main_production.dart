@@ -39,11 +39,15 @@ void main() async {
     if (userDataString != null) {
       User user = User.fromJson(userDataString);
 
-      _sentryUser = SentryUser(
-        id: _attachRegisterNumberToCrashLogs ? user.registerNumber : null,
-        username: _attachNameToCrashLogs ? user.name : null,
-        email: _attachKmailToCrashLogs ? user.kmail : null,
-      );
+      if (_attachRegisterNumberToCrashLogs ||
+          _attachNameToCrashLogs ||
+          _attachKmailToCrashLogs) {
+        _sentryUser = SentryUser(
+          id: _attachRegisterNumberToCrashLogs ? user.registerNumber : null,
+          username: _attachNameToCrashLogs ? user.name : null,
+          email: _attachKmailToCrashLogs ? user.kmail : null,
+        );
+      }
     }
   }
 

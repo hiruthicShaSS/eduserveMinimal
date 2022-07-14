@@ -21,6 +21,7 @@ class TimeTableScreen extends StatefulWidget {
 
 class _TimeTableScreenState extends State<TimeTableScreen> {
   List<String> weekdays = ['mon', 'tue', 'wed', 'thu', 'fri'];
+  bool _retry = false;
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +33,11 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
             future: Provider.of<AppState>(context).getTimetableData(),
             builder: (context, AsyncSnapshot<List<TimeTableEntry>> snapshot) {
               if (snapshot.hasError) {
+                if (_retry) {
+                  WidgetsBinding.instance.addPostFrameCallback(
+                      (_) => setState(() => _retry = false));
+                }
+
                 log("", error: snapshot.error);
 
                 return Padding(
@@ -42,8 +48,10 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                       children: [
                         Text(snapshot.error.toString()),
                         TextButton(
-                          onPressed: () => setState(() {}),
-                          child: Text("Re try"),
+                          onPressed: () => setState(() => _retry = true),
+                          child: _retry
+                              ? CircularProgressIndicator()
+                              : const Text("Re try"),
                         ),
                       ],
                     ),
@@ -52,6 +60,11 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
               }
 
               if (snapshot.connectionState == ConnectionState.done) {
+                if (_retry) {
+                  WidgetsBinding.instance.addPostFrameCallback(
+                      (_) => setState(() => _retry = false));
+                }
+
                 List<TimeTableEntry> timeTable = snapshot.data!;
                 List<List<TimeTableSubject>> data = [];
 

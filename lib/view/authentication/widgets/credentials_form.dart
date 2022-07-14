@@ -1,4 +1,5 @@
 // 🐦 Flutter imports:
+import 'package:eduserveMinimal/view/feedback_form/feedback_form.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -277,6 +278,9 @@ class _CredentialsFormState extends State<CredentialsForm> {
       });
 
       return;
+    } on FeedbackFormFound {
+      Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(builder: (_) => FeedbackForm()));
     }
 
     Navigator.of(context).pop();

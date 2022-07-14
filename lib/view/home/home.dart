@@ -173,8 +173,10 @@ class _HomePageState extends State<HomePage> {
           currentIndex: _selectedIndex,
           selectedItemColor: Theme.of(context).colorScheme.primary,
           type: BottomNavigationBarType.fixed,
-          unselectedItemColor:
-              Theme.of(context).colorScheme.surface.withOpacity(0.4),
+          unselectedItemColor: (Theme.of(context).brightness == Brightness.light
+                  ? Colors.black
+                  : Colors.white)
+              .withOpacity(0.6),
           onTap: (index) {
             _pageController.animateToPage(
               index,

@@ -96,7 +96,9 @@ class AttendanceBarChart extends StatelessWidget {
                     ),
                   ),
                   barGroups: List.generate(
-                    attendance.sublist(0, 7).length,
+                    attendance.length > 7
+                        ? attendance.sublist(0, 7).length
+                        : attendance.length,
                     (index) => BarChartGroupData(
                       x: index,
                       barRods: [

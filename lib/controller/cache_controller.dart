@@ -155,6 +155,20 @@ class CacheController {
     return null;
   }
 
+  Future<void> resetTimeTable() async {
+    _timeTable = null;
+
+    await _prefs.remove(prefs_key_timeTableLastUpdate);
+    await _storage.delete(key: storage_key_timetableData);
+  }
+
+  Future<void> resetUser() async {
+    _user = null;
+
+    await _prefs.remove(prefs_key_userLastUpdate);
+    await _storage.delete(key: storage_key_userData);
+  }
+
   void clear() {
     _fees = null;
     _hallTicket = null;

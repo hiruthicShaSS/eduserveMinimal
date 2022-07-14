@@ -103,4 +103,9 @@ class AppState extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  Future<void> resetTimeTable() async =>
+      await _cacheController.resetTimeTable();
+
+  Future<void> resetUser() async => await _cacheController.resetUser();
 }
