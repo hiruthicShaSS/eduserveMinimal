@@ -29,7 +29,7 @@ class FeesView extends StatelessWidget {
               if (snapshot.connectionState == ConnectionState.done) {
                 if (snapshot.hasError) {
                   if (snapshot.error.runtimeType == NetworkException) {
-                    return Center(child: Text(noInternetText));
+                    return Center(child: Text(kNoInternetText));
                   }
                 }
 

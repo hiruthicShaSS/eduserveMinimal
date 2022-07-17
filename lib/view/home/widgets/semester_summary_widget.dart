@@ -32,7 +32,7 @@ class SemesterSummaryWidget extends StatelessWidget {
             if (snapshot.error.runtimeType == NetworkException) {
               return Center(
                   child:
-                      Text("$noInternetText. Unable to load semester graph."));
+                      Text("$kNoInternetText. Unable to load semester graph."));
             }
           }
 

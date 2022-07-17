@@ -65,7 +65,7 @@ class _InternalMarksTableState extends State<InternalMarksTable> {
               case NoRecordsException:
                 return Center(child: Text(snapshot.error.toString()));
               case NetworkException:
-                return Center(child: Text(noInternetText));
+                return Center(child: Text(kNoInternetText));
             }
           }
 

@@ -28,7 +28,7 @@ class AttendanceContainer extends StatelessWidget {
           log("Error fetching attendance data: ", error: snapshot.error);
 
           if (snapshot.error.runtimeType == NetworkException) {
-            return Center(child: Text(noInternetText));
+            return Center(child: Text(kNoInternetText));
           }
         }
 

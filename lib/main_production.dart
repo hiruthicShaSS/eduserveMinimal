@@ -26,15 +26,15 @@ void main() async {
   final FlutterSecureStorage _storage = FlutterSecureStorage();
 
   final bool _attachRegisterNumberToCrashLogs =
-      _prefs.getBool(attachRegisterNumberToCrashLogs) ?? false;
+      _prefs.getBool(kAttachRegisterNumberToCrashLogs) ?? false;
   final bool _attachKmailToCrashLogs =
-      _prefs.getBool(attachKmailToCrashLogs) ?? false;
+      _prefs.getBool(kAttachKmailToCrashLogs) ?? false;
   final bool _attachNameToCrashLogs =
-      _prefs.getBool(attachNameToCrashLogs) ?? false;
+      _prefs.getBool(kAttachNameToCrashLogs) ?? false;
 
   SentryUser? _sentryUser;
-  if (await _storage.containsKey(key: storage_key_userData)) {
-    String? userDataString = await _storage.read(key: storage_key_userData);
+  if (await _storage.containsKey(key: kStorage_key_userData)) {
+    String? userDataString = await _storage.read(key: kStorage_key_userData);
 
     if (userDataString != null) {
       User user = User.fromJson(userDataString);

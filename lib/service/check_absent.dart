@@ -61,7 +61,7 @@ Future<bool> checkForAbsent({
       }
     }
   } on NetworkException catch (e) {
-    log("$noInternetText. Unable to check for absent hours.", error: e);
+    log("$kNoInternetText. Unable to check for absent hours.", error: e);
   } catch (_) {
     return false;
   }

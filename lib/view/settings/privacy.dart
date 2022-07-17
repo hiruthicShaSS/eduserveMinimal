@@ -66,7 +66,7 @@ class _PrivacyScreenState extends State<PrivacyScreen> {
                             SharedPreferences prefs =
                                 await SharedPreferences.getInstance();
 
-                            await prefs.setBool(attachKmailToCrashLogs, value);
+                            await prefs.setBool(kAttachKmailToCrashLogs, value);
                             setState(() {
                               _attachKmailToCrash = value;
                             });
@@ -83,7 +83,7 @@ class _PrivacyScreenState extends State<PrivacyScreen> {
                             SharedPreferences prefs =
                                 await SharedPreferences.getInstance();
 
-                            await prefs.setBool(attachNameToCrashLogs, value);
+                            await prefs.setBool(kAttachNameToCrashLogs, value);
                             setState(() {
                               _attachNameToCrash = value;
                             });
@@ -104,16 +104,16 @@ class _PrivacyScreenState extends State<PrivacyScreen> {
 
     setState(() {
       _attachRegisterNumberToCrashLogs =
-          prefs.getBool(attachRegisterNumberToCrashLogs) ?? false;
-      _attachKmailToCrash = prefs.getBool(attachKmailToCrashLogs) ?? false;
-      _attachNameToCrash = prefs.getBool(attachNameToCrashLogs) ?? false;
+          prefs.getBool(kAttachRegisterNumberToCrashLogs) ?? false;
+      _attachKmailToCrash = prefs.getBool(kAttachKmailToCrashLogs) ?? false;
+      _attachNameToCrash = prefs.getBool(kAttachNameToCrashLogs) ?? false;
     });
   }
 
   Future<void> updatePersonalDataAttachementToCrash(bool value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    await prefs.setBool(attachRegisterNumberToCrashLogs, value);
+    await prefs.setBool(kAttachRegisterNumberToCrashLogs, value);
 
     setState(() {
       _attachRegisterNumberToCrashLogs = value;

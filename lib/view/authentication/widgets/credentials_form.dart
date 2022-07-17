@@ -272,6 +272,7 @@ class _CredentialsFormState extends State<CredentialsForm> {
       await AuthService().login(
         username: _usernameController.text,
         password: _passwordController.text,
+        update: widget.isFromAuth,
       );
     } on LoginError {
       Navigator.of(context).pop();
@@ -285,6 +286,7 @@ class _CredentialsFormState extends State<CredentialsForm> {
       return;
     } on FeedbackFormFound {
       if (!widget.isFromAuth) {
+        AuthService().login();
         Provider.of<AppState>(context, listen: false)
             .refresh(shouldNotifyListeners: false);
         Provider.of<RestartProvider>(context, listen: false).restart();
@@ -306,6 +308,7 @@ class _CredentialsFormState extends State<CredentialsForm> {
     Fluttertoast.showToast(msg: "Credentials updated successfully");
 
     if (!widget.isFromAuth) {
+      AuthService().login();
       Provider.of<AppState>(context, listen: false)
           .refresh(shouldNotifyListeners: false);
       Provider.of<RestartProvider>(context, listen: false).restart();

@@ -1,4 +1,4 @@
-// 📦 Package imports:
+import 'package:eduserveMinimal/global/constants.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:html/dom.dart';
 import 'package:http/http.dart';
@@ -11,6 +11,7 @@ import 'package:eduserveMinimal/service/network_service.dart';
 class AuthService {
   static Map<String, String> headers = {};
   static Map<String, String> formData = {};
+  static String? cookie;
   NetworkService _networkService = NetworkService();
 
   Future<Map<String, String>> basicFormData([String? htmlPage]) async {
@@ -54,12 +55,18 @@ class AuthService {
     return data;
   }
 
-  Future<String> login(
-      {String? username, String? password, Function? callback}) async {
+  Future<String> login({
+    String? username,
+    String? password,
+    bool update = false,
+    Function? callback,
+  }) async {
     final FlutterSecureStorage storage = FlutterSecureStorage();
 
-    username = await storage.read(key: "username") ?? username;
-    password = await storage.read(key: "password") ?? password;
+    if (!update) {
+      username = await storage.read(key: "username");
+      password = await storage.read(key: "password");
+    }
 
     Map<String?, String?>? login_data = {
       "RadScriptManager1_TSM": "",
@@ -72,9 +79,9 @@ class AuthService {
       "ctl00\$mainContent\$Login1\$Password": password,
       "ctl00\$mainContent\$Login1\$LoginButton": "Log In"
     };
-    var res = await _networkService.get(Uri.parse(
+    Response res = await _networkService.get(Uri.parse(
         "https://eduserve.karunya.edu/Login.aspx?ReturnUrl=%2fStudent%2fAttSummary.aspx"));
-    var eduserveCookie = res.headers["set-cookie"]!;
+    String eduserveCookie = res.headers["set-cookie"]!;
 
     Document html = Document.html(res.body);
 
@@ -111,7 +118,7 @@ class AuthService {
     }
 
     if (res.statusCode == 302) {
-      headers["cookie"] =
+      headers["cookie"] = cookie ??
           headers["cookie"]! + "; ${res.headers['set-cookie']!.split(';')[0]}";
       res = await _networkService.get(
           Uri.parse("https://eduserve.karunya.edu${res.headers["location"]}"),
@@ -131,7 +138,12 @@ class AuthService {
 
     await storage.delete(key: "username");
     await storage.delete(key: "password");
+    await storage.delete(key: kStorage_key_lastAttendancePercent);
+    await storage.delete(key: kStorage_key_timetableData);
+    await storage.delete(key: kStorage_key_userData);
     await prefs.remove("autoFillFeedbackValue");
+    await prefs.remove(kPrefs_key_timeTableLastUpdate);
+    await prefs.remove(kPrefs_key_userLastUpdate);
   }
 
   Future forgotPassrword(String username, String dob, String kmail) async {

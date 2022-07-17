@@ -13,16 +13,16 @@ Future<Map<String, double>?> checkForAttendanceChange(
   prefs.reload();
 
   String? lastAttendanceString =
-      await storage.read(key: storage_key_lastAttendancePercent);
+      await storage.read(key: kStorage_key_lastAttendancePercent);
   String? currentAttendanceString =
-      await storage.read(key: storage_key_userData);
+      await storage.read(key: kStorage_key_userData);
 
   if (lastAttendanceString != null) {
     Map<String, double> lastAttendance =
         Map<String, double>.from(jsonDecode(lastAttendanceString));
 
     if (currentAttendanceString != null) {
-      String? userString = await storage.read(key: storage_key_userData);
+      String? userString = await storage.read(key: kStorage_key_userData);
 
       if (userString != null) {
         User user = User.fromJson(userString);

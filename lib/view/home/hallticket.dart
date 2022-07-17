@@ -39,7 +39,7 @@ class _HallTicketViewState extends State<HallTicketView> {
                       log("", error: snapshot.error);
 
                       if (snapshot.error.runtimeType == NetworkException) {
-                        return Center(child: Text(noInternetText));
+                        return Center(child: Text(kNoInternetText));
                       }
                     }
 

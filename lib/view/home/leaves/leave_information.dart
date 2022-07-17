@@ -9,7 +9,6 @@ import 'package:eduserveMinimal/models/leave/leave.dart';
 import 'package:eduserveMinimal/models/leave/on_duty_leave.dart';
 import 'package:eduserveMinimal/models/leave/other_leave.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
-import 'package:eduserveMinimal/providers/theme.dart';
 import 'package:eduserveMinimal/view/home/leaves/widgets/leave_list.dart';
 import 'package:eduserveMinimal/view/home/leaves/widgets/on_duty_list.dart';
 import 'package:eduserveMinimal/view/misc/widgets/dot_tab_bar_indeicator.dart';

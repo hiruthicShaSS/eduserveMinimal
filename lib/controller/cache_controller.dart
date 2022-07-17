@@ -69,9 +69,9 @@ class CacheController {
     final FlutterSecureStorage storage = FlutterSecureStorage();
 
     await storage.write(
-        key: storage_key_timetableData, value: jsonEncode(_timeTable));
+        key: kStorage_key_timetableData, value: jsonEncode(_timeTable));
     await prefs.setString(
-        prefs_key_timeTableLastUpdate, DateTime.now().toString());
+        kPrefs_key_timeTableLastUpdate, DateTime.now().toString());
 
     log("✅ Timetable cached to local storage.");
   }
@@ -80,17 +80,17 @@ class CacheController {
     DateTime today = DateTime.now();
     int lastUpdate = 100;
 
-    if (_prefs.containsKey(prefs_key_timeTableLastUpdate)) {
+    if (_prefs.containsKey(kPrefs_key_timeTableLastUpdate)) {
       lastUpdate = today
           .difference(
-              DateTime.parse(_prefs.getString(prefs_key_timeTableLastUpdate)!))
+              DateTime.parse(_prefs.getString(kPrefs_key_timeTableLastUpdate)!))
           .inDays;
     }
 
-    if (await _storage.containsKey(key: storage_key_timetableData) &&
+    if (await _storage.containsKey(key: kStorage_key_timetableData) &&
         lastUpdate < 90) {
       String? timetableString =
-          await _storage.read(key: storage_key_timetableData);
+          await _storage.read(key: kStorage_key_timetableData);
 
       if (timetableString != null) {
         List timetableList = jsonDecode(timetableString);
@@ -115,7 +115,7 @@ class CacheController {
 
     User? oldUserData = await getUserFromStorage();
     await _storage.write(
-      key: storage_key_lastAttendancePercent,
+      key: kStorage_key_lastAttendancePercent,
       value: jsonEncode(
         {
           "att": oldUserData?.attendance ?? _user!.attendance,
@@ -124,8 +124,9 @@ class CacheController {
       ),
     );
 
-    await _storage.write(key: storage_key_userData, value: _user!.toJson());
-    await _prefs.setString(prefs_key_userLastUpdate, DateTime.now().toString());
+    await _storage.write(key: kStorage_key_userData, value: _user!.toJson());
+    await _prefs.setString(
+        kPrefs_key_userLastUpdate, DateTime.now().toString());
 
     log("✅ User data cached to local storage.");
   }
@@ -134,16 +135,16 @@ class CacheController {
     DateTime today = DateTime.now();
     int lastUpdate = 24;
 
-    if (_prefs.containsKey(prefs_key_userLastUpdate)) {
+    if (_prefs.containsKey(kPrefs_key_userLastUpdate)) {
       lastUpdate = today
           .difference(
-              DateTime.parse(_prefs.getString(prefs_key_userLastUpdate)!))
+              DateTime.parse(_prefs.getString(kPrefs_key_userLastUpdate)!))
           .inHours;
     }
 
-    if (await _storage.containsKey(key: storage_key_userData) &&
+    if (await _storage.containsKey(key: kStorage_key_userData) &&
         lastUpdate < 23) {
-      String? userDataString = await _storage.read(key: storage_key_userData);
+      String? userDataString = await _storage.read(key: kStorage_key_userData);
 
       if (userDataString != null) {
         return User.fromJson(userDataString);
@@ -158,15 +159,15 @@ class CacheController {
   Future<void> resetTimeTable() async {
     _timeTable = null;
 
-    await _prefs.remove(prefs_key_timeTableLastUpdate);
-    await _storage.delete(key: storage_key_timetableData);
+    await _prefs.remove(kPrefs_key_timeTableLastUpdate);
+    await _storage.delete(key: kStorage_key_timetableData);
   }
 
   Future<void> resetUser() async {
     _user = null;
 
-    await _prefs.remove(prefs_key_userLastUpdate);
-    await _storage.delete(key: storage_key_userData);
+    await _prefs.remove(kPrefs_key_userLastUpdate);
+    await _storage.delete(key: kStorage_key_userData);
   }
 
   void clear() {
@@ -181,10 +182,10 @@ class CacheController {
   Future<void> flush() async {
     clear();
 
-    await _prefs.remove(prefs_key_timeTableLastUpdate);
-    await _prefs.remove(prefs_key_userLastUpdate);
-    await _storage.delete(key: storage_key_timetableData);
-    await _storage.delete(key: storage_key_userData);
+    await _prefs.remove(kPrefs_key_timeTableLastUpdate);
+    await _prefs.remove(kPrefs_key_userLastUpdate);
+    await _storage.delete(key: kStorage_key_timetableData);
+    await _storage.delete(key: kStorage_key_userData);
 
     log("⚠ Cached data in local storage flushed.");
   }

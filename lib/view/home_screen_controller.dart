@@ -161,7 +161,7 @@ class _HomeControllerState extends State<HomeController> {
   void initNotificationListeners() {
     try {
       AwesomeNotifications().actionStream.listen((notification) {
-        if (notification.channelKey == absentNotificationChannelKey) {
+        if (notification.channelKey == kAbsentNotificationChannelKey) {
           DateTime yesterday = DateTime.fromMillisecondsSinceEpoch(
               int.parse(notification.payload!["date"]!));
 

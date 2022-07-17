@@ -220,7 +220,7 @@ class _NotificationsViewState extends State<NotificationsView> {
       return;
     } on NetworkException catch (_) {
       _onfailure();
-      Fluttertoast.showToast(msg: noInternetText);
+      Fluttertoast.showToast(msg: kNoInternetText);
 
       return;
     }

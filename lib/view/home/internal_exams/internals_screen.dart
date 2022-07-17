@@ -40,7 +40,7 @@ class _InternalMarksScreenState extends State<InternalMarksScreen> {
                   log(snapshot.error.toString());
 
                   if (snapshot.error.runtimeType == NetworkException) {
-                    return Center(child: Text(noInternetText));
+                    return Center(child: Text(kNoInternetText));
                   }
                 }
 

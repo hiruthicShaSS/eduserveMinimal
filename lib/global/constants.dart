@@ -1,31 +1,32 @@
 // 📦 Package imports:
 import 'package:awesome_notifications/awesome_notifications.dart';
 
-const String noInternetText = "There was a problem connecting to the internet!";
-const String prefs_key_timeTableLastUpdate = "timetable_data_last_update";
-const String prefs_key_userLastUpdate = "user_data_last_update";
-const String storage_key_timetableData = "timetable_data";
-const String storage_key_userData = "user_data";
-const String storage_key_lastAttendancePercent = "last_attendance_percent";
+const String kNoInternetText =
+    "There was a problem connecting to the internet!";
+const String kPrefs_key_timeTableLastUpdate = "timetable_data_last_update";
+const String kPrefs_key_userLastUpdate = "user_data_last_update";
+const String kStorage_key_timetableData = "timetable_data";
+const String kStorage_key_userData = "user_data";
+const String kStorage_key_lastAttendancePercent = "last_attendance_percent";
 
-const String timeTableNotificationChannelKey = "timetable";
-const String timeTableNotificationGroupKey = "timetable-group";
-const String absentNotificationChannelKey = "absent";
-const String attendanceNotificationChannelKey = "attendance";
-const String attendanceNotificationGroupKey = "attendance-group";
+const String kTimeTableNotificationChannelKey = "timetable";
+const String kTimeTableNotificationGroupKey = "timetable-group";
+const String kAbsentNotificationChannelKey = "absent";
+const String kAttendanceNotificationChannelKey = "attendance";
+const String kAttendanceNotificationGroupKey = "attendance-group";
 
-const String attachRegisterNumberToCrashLogs =
+const String kAttachRegisterNumberToCrashLogs =
     "attachRegisterNumberToCrashLogs";
-const String attachKmailToCrashLogs = "attachKmailToCrashLogs";
-const String attachNameToCrashLogs = "attachNameToCrashLogs";
+const String kAttachKmailToCrashLogs = "attachKmailToCrashLogs";
+const String kAttachNameToCrashLogs = "attachNameToCrashLogs";
 
-const int absentNotificationId = 1;
-const int timeTableNotificationId = 0;
+const int kAbsentNotificationId = 1;
+const int kTimeTableNotificationId = 0;
 
 List<NotificationChannel> notificationChannels = [
   NotificationChannel(
-    channelKey: timeTableNotificationChannelKey,
-    groupKey: timeTableNotificationGroupKey,
+    channelKey: kTimeTableNotificationChannelKey,
+    groupKey: kTimeTableNotificationGroupKey,
     criticalAlerts: true,
     enableLights: true,
     defaultPrivacy: NotificationPrivacy.Public,
@@ -34,7 +35,7 @@ List<NotificationChannel> notificationChannels = [
     importance: NotificationImportance.High,
   ),
   NotificationChannel(
-    channelKey: absentNotificationChannelKey,
+    channelKey: kAbsentNotificationChannelKey,
     criticalAlerts: true,
     enableLights: true,
     defaultPrivacy: NotificationPrivacy.Public,
@@ -43,7 +44,7 @@ List<NotificationChannel> notificationChannels = [
     importance: NotificationImportance.High,
   ),
   NotificationChannel(
-    channelKey: attendanceNotificationChannelKey,
+    channelKey: kAttendanceNotificationChannelKey,
     criticalAlerts: true,
     enableLights: true,
     defaultPrivacy: NotificationPrivacy.Public,
