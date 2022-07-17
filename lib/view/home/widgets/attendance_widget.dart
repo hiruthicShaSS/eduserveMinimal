@@ -196,8 +196,8 @@ class _AttendanceChangeIcon extends StatelessWidget {
           return attendance == data["att"]!
               ? const SizedBox()
               : attendance > data["att"]!
-                  ? const Icon(Icons.arrow_upward, color: Colors.greenAccent)
-                  : const Icon(Icons.arrow_downward, color: Colors.redAccent);
+                  ? const Icon(Icons.arrow_upward, color: Colors.white)
+                  : const Icon(Icons.arrow_downward, color: Colors.white);
         }
 
         return const SizedBox();

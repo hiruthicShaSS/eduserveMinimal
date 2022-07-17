@@ -29,7 +29,7 @@ Future<Map<String, double>?> checkForAttendanceChange(
 
         String notification = "";
 
-        if (user.attendance < lastAttendance["att"]! + 10) {
+        if (user.attendance < lastAttendance["att"]!) {
           if (notification.isNotEmpty) notification += "<br />";
 
           notification +=

@@ -1,4 +1,6 @@
 // 🐦 Flutter imports:
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 // 📦 Package imports:
@@ -59,7 +61,7 @@ class _LeaveInformationState extends State<LeaveInformation>
               future: Provider.of<AppState>(context).getLeaveInformation(),
               builder: (context, AsyncSnapshot<Leave> snapshot) {
                 if (snapshot.hasError) {
-                  print(snapshot.error);
+                  log("", error: snapshot.error);
                 }
 
                 if (snapshot.connectionState == ConnectionState.done) {

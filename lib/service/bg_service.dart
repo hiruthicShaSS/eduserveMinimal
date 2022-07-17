@@ -18,21 +18,13 @@ Future<void> initializeBackgroundService() async {
   final service = FlutterBackgroundService();
   await service.configure(
     androidConfiguration: AndroidConfiguration(
-      // this will executed when app is in foreground or background in separated isolate
       onStart: onStart,
-
-      // auto start service
       autoStart: true,
       isForegroundMode: true,
     ),
     iosConfiguration: IosConfiguration(
-      // auto start service
       autoStart: true,
-
-      // this will executed when app is in foreground in separated isolate
       onForeground: onStart,
-
-      // you have to enable background fetch capability on xcode project
       onBackground: onIosBackground,
     ),
   );
@@ -65,15 +57,12 @@ void onStart(ServiceInstance service) async {
     service.stopSelf();
   });
 
-  // bring to foreground
-  Timer.periodic(const Duration(seconds: 10), (timer) async {
-    if (service is AndroidServiceInstance) {
-      service.setForegroundNotificationInfo(
-        title: "Background Service",
-        content: "Please hide this notification channel!",
-      );
-    }
-  });
+  if (service is AndroidServiceInstance) {
+    service.setForegroundNotificationInfo(
+      title: "Background Service",
+      content: "Please hide this notification channel!",
+    );
+  }
 
   Timer.periodic(const Duration(hours: 4),
       (timer) => checkForAbsent(showNotification: true));

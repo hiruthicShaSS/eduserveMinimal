@@ -81,7 +81,7 @@ class _CredentialsState extends State<Credentials> {
                   ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 30),
-                  child: CredentialsForm(),
+                  child: CredentialsForm(isFromAuth: isFromAuth),
                 ),
               ],
             ),

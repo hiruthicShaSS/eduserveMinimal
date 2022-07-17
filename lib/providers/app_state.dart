@@ -98,10 +98,10 @@ class AppState extends ChangeNotifier {
 
   void rebuildDecendants() => notifyListeners();
 
-  Future<void> refresh() async {
+  Future<void> refresh({bool shouldNotifyListeners = true}) async {
     await _cacheController.flush();
 
-    notifyListeners();
+    if (shouldNotifyListeners) notifyListeners();
   }
 
   Future<void> resetTimeTable() async =>

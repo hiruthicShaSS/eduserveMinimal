@@ -1,49 +1,43 @@
-// 📦 Package imports:
-import 'package:beautifulsoup/beautifulsoup.dart';
+import 'package:eduserveMinimal/models/feedback_entry.dart';
+import 'package:eduserveMinimal/service/auth.dart';
 import 'package:http/http.dart';
+import 'package:html/dom.dart';
 
-// 🌎 Project imports:
-import 'package:eduserveMinimal/global/gloabls.dart';
-
-Future<List> getFeedbackForm() async {
-  Map<String, String> headers = httpHeaders;
-
+Future<List<FeedbackEntry>> getFeedbackForm() async {
   Response page = await get(
-      Uri.parse("https://eduserve.karunya.edu/MIS/IQAC/HFBCollection.aspx"),
-      headers: headers);
+    Uri.parse("https://eduserve.karunya.edu/MIS/IQAC/HFBCollection.aspx"),
+    headers: AuthService.headers,
+  );
 
-  Beautifulsoup feedbackSoup = Beautifulsoup(page.body);
-  List feedbackList =
-      feedbackSoup.find_all("td").map((e) => e.text.trim()).toList();
-
-  List feedback_inputs = feedbackSoup
-      .find_all("input")
-      .map((e) => e.id)
-      .where((id) => id.contains("ClientState") && id.length > 36)
+  Document html = Document.html(page.body);
+  List<Element> rows = html
+      .querySelectorAll("tr")
+      .where((e) => e.className == "rgRow" || e.className == "rgAltRow")
       .toList();
 
-  List feedback = [];
-  List allFeedback = [];
+  List<FeedbackEntry> feedbackList = [];
+  for (int i = 0; i < rows.length; i++) {
+    List<String> rowData = html
+        .querySelectorAll("#${rows[i].id} > td")
+        .map((e) => e.text.trim())
+        .toList();
 
-  int counter = 0;
-  feedbackList.forEach((element) {
-    if (element == "Class Not Handled") {
-      feedback.add(feedback_inputs[counter]);
-      feedback.removeWhere((element) => element == "");
+    String id = Document.html(rows[i].innerHtml)
+        .querySelectorAll("input")
+        .map((e) => e.id)
+        .first;
 
-      allFeedback.add(feedback);
-      feedback = [];
-      counter++;
+    feedbackList.add(
+      FeedbackEntry(
+        hour: rowData[0],
+        subject: rowData[1],
+        faculty: rowData[2],
+        topic: rowData[3],
+        rating: 5,
+        htmlId: id,
+      ),
+    );
+  }
 
-      return;
-    }
-
-    if (element.toString().contains("Command item")) {
-      return;
-    }
-
-    feedback.add(element.toString().trim());
-  });
-
-  return allFeedback;
+  return feedbackList;
 }

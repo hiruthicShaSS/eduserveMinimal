@@ -351,10 +351,12 @@ class _HomePageState extends State<HomePage> {
               "Few features will be disabled as there is no active internet connection. Restart the app to resume!");
 
       return;
-    }
+    } on MiscellaneousErrorInEduserve {}
   }
 
   void _checkUpdates(BuildContext context) async {
+    if (!mounted) return;
+
     if (Provider.of<AppState>(context, listen: false).checkedForUpdate) return;
 
     PackageInfo info = await PackageInfo.fromPlatform();

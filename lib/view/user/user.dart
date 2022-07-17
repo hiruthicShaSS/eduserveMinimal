@@ -51,7 +51,7 @@ class UserScreen extends StatelessWidget {
                   future: SharedPreferences.getInstance(),
                   builder:
                       (context, AsyncSnapshot<SharedPreferences> snapshot) {
-                    if (snapshot.hasError) print(snapshot.error);
+                    if (snapshot.hasError) log("", error: snapshot.error);
 
                     if (snapshot.connectionState == ConnectionState.done &&
                         snapshot.data!.containsKey("userData")) {

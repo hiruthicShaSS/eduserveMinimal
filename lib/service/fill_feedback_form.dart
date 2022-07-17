@@ -1,4 +1,6 @@
 // 📦 Package imports:
+import 'dart:math';
+
 import 'package:html/dom.dart';
 import 'package:http/http.dart';
 
@@ -6,20 +8,22 @@ import 'package:http/http.dart';
 import 'package:eduserveMinimal/service/auth.dart';
 
 Future<bool> fillFeedbackForm(Map rating) async {
-  Map<String, String> headers = AuthService.headers;
   Map formData = AuthService.formData;
 
   formData["ctl00_radMenu_ClientState"] = "";
-  formData["__SCROLLPOSITIONX"] = "204";
+  formData["__SCROLLPOSITIONX"] = Random().nextInt(1000).toString();
   formData["__SCROLLPOSITIONY"] = "0";
   formData.remove("ctl00_radMenuModule_ClientState");
   formData.remove("ctl00_mainContent_grdData_ClientState");
   formData.remove("ctl00\$mainContent\$DDLACADEMICTERM");
   formData.remove("ctl00\$mainContent\$btnSave");
+  formData["__EVENTARGUMENT"] = "undefined";
+  formData["__PREVIOUSPAGE"] =
+      "BBcWHSM0KrhqXb7r_Yk015qqDcTCfu1hhXzQ6dzxYY1bMmGMr3wJHQYHd04Jh6IvgLRduVXj5GSV23B6v_i4ThMCDXI1";
 
   Response res = await get(
     Uri.parse("https://eduserve.karunya.edu/MIS/IQAC/HFBCollection.aspx"),
-    headers: headers,
+    headers: AuthService.headers,
   );
 
   void setInputs(String body) {
@@ -48,28 +52,48 @@ Future<bool> fillFeedbackForm(Map rating) async {
 
   bool feedbackSubmitted = false;
   for (int i = 0; i < rating.keys.toList().length; i++) {
-    formData[rating.keys.toList()[i]] = {
+    String key = rating.keys.toList()[i];
+    key = key.replaceAllMapped(RegExp(r".*__"), (match) {
+      if (match.group(0) != null)
+        return match.group(0)! + "rtngHFB_ClientState";
+
+      return "";
+    });
+
+    formData[key] = {
       "value": "\"${rating.values.toList()[i]}\"",
       "readOnly": "false"
     }.toString();
 
-    String eventTarget = rating.keys.toList()[i].replaceAll("_ClientState", "");
+    String eventTarget = key.replaceAll("_ClientState", "");
     formData["__EVENTTARGET"] = eventTarget.replaceAll("_", "\$");
 
     Response res = await post(
-        Uri.parse("https://eduserve.karunya.edu/MIS/IQAC/HFBCollection.aspx"));
+      Uri.parse("https://eduserve.karunya.edu/MIS/IQAC/HFBCollection.aspx"),
+      headers: AuthService.headers,
+      body: formData,
+    );
 
     formData.addAll(await AuthService().basicFormData(res.body));
+
+    formData["ctl00_mainContent_grdHFB_ClientState"] =
+        '{"selectedIndexes":["0"],"selectedCellsIndexes":[],"unselectableItemsIndexes":[],"reorderedColumns":[],"expandedItems":[],"expandedGroupItems":[],"expandedFilterItems":[],"deletedItems":[],"hidedColumns":[],"showedColumns":[],"groupColsState":{},"hierarchyState":{},"popUpLocations":{},"draggedItemsIndexes":[]}';
 
     print(res.statusCode);
 
     if (i + 1 == rating.keys.toList().length) {
       formData["ctl00\$mainContent\$btnSave"] = "Save";
+      formData["__EVENTTARGET"] =
+          r"ctl00$mainContent$grdHFB$ctl00$ctl04$rtngHFB";
       formData["__EVENTTARGET"] = "";
+      formData["__EVENTARGUMENT"] = "";
+      formData["__LASTFOCUS"] = "";
+
       res = await post(
-          Uri.parse("https://eduserve.karunya.edu/MIS/IQAC/HFBCollection.aspx"),
-          headers: headers,
-          body: formData);
+        Uri.parse("https://eduserve.karunya.edu/MIS/IQAC/HFBCollection.aspx"),
+        headers: AuthService.headers,
+        body: formData,
+      );
 
       print(res.statusCode);
 

@@ -1,4 +1,5 @@
 // 🐦 Flutter imports:
+import 'package:eduserveMinimal/providers/restart_provider.dart';
 import 'package:eduserveMinimal/view/settings/privacy.dart';
 import 'package:flutter/material.dart';
 
@@ -35,30 +36,36 @@ class EduserveMinimal extends StatelessWidget {
         ChangeNotifierProvider<ThemeProvider>(create: (_) => ThemeProvider()),
         ChangeNotifierProvider<CacheProvider>(create: (_) => CacheProvider()),
         ChangeNotifierProvider<IssueProvider>(create: (_) => IssueProvider()),
+        ChangeNotifierProvider<RestartProvider>(
+            create: (_) => RestartProvider()),
       ],
-      builder: (context, child) => MaterialApp(
-        debugShowCheckedModeBanner: flavor == "development",
-        title: "eduserveMinimal",
-        initialRoute: "/homeController",
-        darkTheme: Provider.of<ThemeProvider>(context).getDarkTheme,
-        themeMode: Provider.of<ThemeProvider>(context).themeMode,
-        theme: Provider.of<ThemeProvider>(context).currentThemeData,
-        routes: {
-          "/homeController": (_) => const HomeController(),
-          "/home": (_) => const HomePage(),
-          "/feedbackForm": (_) => FeedbackForm(),
-          "/timetable": (_) => TimeTableScreen(),
-          "/apply_leave": (_) => const ApplyLeaveView(),
-          "/fees": (_) => FeesView(),
-          "/credentials": (_) => const Credentials(),
-          "/user": (_) => UserScreen(),
-          "/forgotPassword": (_) => const ForgotPasswordScreen(),
-          "/notifications": (_) => const NotificationsView(),
-          "/attributions": (_) => const AttributionScreen(),
-          "/privacy": (_) => const PrivacyScreen(),
-        },
-        navigatorObservers: [SentryNavigatorObserver()],
-      ),
+      builder: (context, child) =>
+          Consumer(builder: (_, RestartProvider restartProvider, __) {
+        return MaterialApp(
+          key: UniqueKey(),
+          debugShowCheckedModeBanner: flavor == "development",
+          title: "eduserveMinimal",
+          initialRoute: "/homeController",
+          darkTheme: Provider.of<ThemeProvider>(context).getDarkTheme,
+          themeMode: Provider.of<ThemeProvider>(context).themeMode,
+          theme: Provider.of<ThemeProvider>(context).currentThemeData,
+          routes: {
+            "/homeController": (_) => const HomeController(),
+            "/home": (_) => const HomePage(),
+            "/feedbackForm": (_) => FeedbackForm(),
+            "/timetable": (_) => TimeTableScreen(),
+            "/apply_leave": (_) => const ApplyLeaveView(),
+            "/fees": (_) => FeesView(),
+            "/credentials": (_) => const Credentials(),
+            "/user": (_) => UserScreen(),
+            "/forgotPassword": (_) => const ForgotPasswordScreen(),
+            "/notifications": (_) => const NotificationsView(),
+            "/attributions": (_) => const AttributionScreen(),
+            "/privacy": (_) => const PrivacyScreen(),
+          },
+          navigatorObservers: [SentryNavigatorObserver()],
+        );
+      }),
     );
   }
 }

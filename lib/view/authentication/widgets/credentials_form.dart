@@ -1,4 +1,5 @@
 // 🐦 Flutter imports:
+import 'package:eduserveMinimal/providers/restart_provider.dart';
 import 'package:eduserveMinimal/view/feedback_form/feedback_form.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -6,16 +7,20 @@ import 'package:flutter/material.dart';
 // 📦 Package imports:
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // 🌎 Project imports:
 import 'package:eduserveMinimal/global/exceptions.dart';
 import 'package:eduserveMinimal/global/widgets/network_aware_widget.dart';
 import 'package:eduserveMinimal/service/auth.dart';
+import '../../../providers/app_state.dart';
 import '../../home_screen_controller.dart';
 
 class CredentialsForm extends StatefulWidget {
-  const CredentialsForm({Key? key}) : super(key: key);
+  const CredentialsForm({Key? key, this.isFromAuth = false}) : super(key: key);
+
+  final bool isFromAuth;
 
   @override
   State<CredentialsForm> createState() => _CredentialsFormState();
@@ -279,6 +284,12 @@ class _CredentialsFormState extends State<CredentialsForm> {
 
       return;
     } on FeedbackFormFound {
+      if (!widget.isFromAuth) {
+        Provider.of<AppState>(context, listen: false)
+            .refresh(shouldNotifyListeners: false);
+        Provider.of<RestartProvider>(context, listen: false).restart();
+      }
+
       Navigator.of(context)
           .pushReplacement(MaterialPageRoute(builder: (_) => FeedbackForm()));
     }
@@ -293,6 +304,12 @@ class _CredentialsFormState extends State<CredentialsForm> {
     }
 
     Fluttertoast.showToast(msg: "Credentials updated successfully");
+
+    if (!widget.isFromAuth) {
+      Provider.of<AppState>(context, listen: false)
+          .refresh(shouldNotifyListeners: false);
+      Provider.of<RestartProvider>(context, listen: false).restart();
+    }
 
     Navigator.of(context)
         .pushReplacement(MaterialPageRoute(builder: (_) => HomeController()));
