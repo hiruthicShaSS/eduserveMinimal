@@ -55,7 +55,7 @@ class _FeedbackFormState extends State<FeedbackForm> {
             _webViewController.runJavascript(
                 'document.getElementById("mainContent_Login1_UserName").value="${username}";document.getElementById("mainContent_Login1_Password").value="${password}";document.getElementById("mainContent_Login1_LoginButton").click();');
           } else if (url == "https://eduserve.karunya.edu/Student/Home.aspx") {
-            Navigator.of(context).pushNamed("/home");
+            Navigator.of(context).pushReplacementNamed("/home");
           }
         },
       ),

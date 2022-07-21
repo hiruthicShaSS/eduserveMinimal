@@ -27,6 +27,8 @@ Future<User> getStudentInfo() async {
 
   String? studentImage =
       html.querySelector("#mainContent_IMGSTUDENT")?.attributes["src"];
+  String? qrImage =
+      html.querySelector("#mainContent_IMGQRCode")?.attributes["src"];
 
   User user = User(
     registerNumber:
@@ -68,6 +70,11 @@ Future<User> getStudentInfo() async {
     headers: AuthService.headers,
   );
   user.image = imageResponse.bodyBytes;
+  imageResponse = await _networkService.get(
+    Uri.parse("https://eduserve.karunya.edu/${qrImage?.replaceAll("../", "")}"),
+    headers: AuthService.headers,
+  );
+  user.qrCode = imageResponse.bodyBytes;
 
   final FlutterSecureStorage storage = FlutterSecureStorage();
   await storage.write(key: "userData", value: jsonEncode(user.toMap()));

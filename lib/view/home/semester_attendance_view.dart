@@ -137,9 +137,9 @@ class SemesterAttendanceView extends StatelessWidget {
                     },
                     cellDimensions: CellDimensions.fixed(
                       stickyLegendWidth: 110,
-                      stickyLegendHeight: 80,
+                      stickyLegendHeight: 40,
                       contentCellWidth: 80,
-                      contentCellHeight: 50,
+                      contentCellHeight: 40,
                     ),
                   );
                 }

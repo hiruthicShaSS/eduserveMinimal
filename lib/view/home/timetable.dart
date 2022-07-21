@@ -7,12 +7,12 @@ import 'package:flutter/material.dart';
 // 📦 Package imports:
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-import 'package:table_sticky_headers/table_sticky_headers.dart';
 
 // 🌎 Project imports:
 import 'package:eduserveMinimal/models/timetable_entry.dart';
 import 'package:eduserveMinimal/providers/app_state.dart';
-import 'package:eduserveMinimal/view/misc/widgets/table_cell.dart' as tableCell;
+
+import 'widgets/timetable_widget.dart';
 
 class TimeTableScreen extends StatefulWidget {
   @override
@@ -22,6 +22,8 @@ class TimeTableScreen extends StatefulWidget {
 class _TimeTableScreenState extends State<TimeTableScreen> {
   List<String> weekdays = ['mon', 'tue', 'wed', 'thu', 'fri'];
   bool _retry = false;
+
+  GlobalKey _key = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -84,78 +86,10 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                   ]);
                 }
 
-                return StickyHeadersTable(
-                  columnsLength: data.first.length,
-                  rowsLength: data.length,
-                  columnsTitleBuilder: (i) =>
-                      tableCell.TableCell.stickyRow("Hour ${i + 1}"),
-                  rowsTitleBuilder: (i) => tableCell.TableCell.stickyColumn(
-                    text: timeTable[i].day,
-                    colorBg: weekdays.indexOf(timeTable[i].day.toLowerCase()) +
-                                1 ==
-                            DateTime.now().weekday
-                        ? Theme.of(context).colorScheme.primary.withOpacity(0.3)
-                        : Colors.transparent,
-                  ),
-                  contentCellBuilder: (i, j) => data[j][i].name.isEmpty
-                      ? const Placeholder()
-                      : tableCell.TableCell.content(
-                          colorBg:
-                              weekdays.indexOf(timeTable[j].day.toLowerCase()) +
-                                          1 ==
-                                      DateTime.now().weekday
-                                  ? Theme.of(context)
-                                      .colorScheme
-                                      .primary
-                                      .withOpacity(0.3)
-                                  : Colors.transparent,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 10),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  data[j][i].name,
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Text(
-                                  data[j][i].code,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.white.withOpacity(0.5),
-                                  ),
-                                ),
-                                const Spacer(),
-                                Wrap(
-                                  alignment: WrapAlignment.spaceBetween,
-                                  spacing: 30,
-                                  children: [
-                                    Text(
-                                      "Batch: ${data[j][i].batch}",
-                                      style: TextStyle(fontSize: 16),
-                                    ),
-                                    Text(
-                                      data[j][i].venue,
-                                      style: TextStyle(
-                                          fontSize: 16, color: Colors.green),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                  cellDimensions: CellDimensions.fixed(
-                    stickyLegendWidth: 80,
-                    stickyLegendHeight: 80,
-                    contentCellWidth: 200,
-                    contentCellHeight: 170,
-                  ),
-                  legendCell: tableCell.TableCell.legend("Day / Hour"),
+                return TimetableWidget(
+                  data: data,
+                  timeTable: timeTable,
+                  weekdays: weekdays,
                 );
               } else {
                 return Center(
