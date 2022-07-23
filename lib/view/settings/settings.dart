@@ -1,4 +1,5 @@
 // 🐦 Flutter imports:
+import 'package:eduserveMinimal/view/settings/bg_execution_settings.dart';
 import 'package:flutter/material.dart';
 
 // 📦 Package imports:
@@ -77,6 +78,16 @@ class Settings extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                child: Text("Background Execution"),
+                onPressed: () {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => BgExecutionSettings()));
+                },
+              ),
             ),
             SizedBox(
               width: double.infinity,

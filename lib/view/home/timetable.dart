@@ -23,8 +23,6 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
   List<String> weekdays = ['mon', 'tue', 'wed', 'thu', 'fri'];
   bool _retry = false;
 
-  GlobalKey _key = GlobalKey();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -54,7 +54,7 @@ class Attendance {
 
   static AttendanceType getAttendanceTypeFromString(String string) {
     switch (string) {
-      case "p":
+      case "P":
         return AttendanceType.present;
       case "A":
         return AttendanceType.absent;
@@ -66,8 +66,10 @@ class Attendance {
         return AttendanceType.none;
       case "U":
         return AttendanceType.unattended;
+      case "&nbsp;":
+        return AttendanceType.empty;
       default:
-        return AttendanceType.present;
+        return AttendanceType.none;
     }
   }
 
@@ -85,6 +87,8 @@ class Attendance {
         return "U";
       case AttendanceType.none:
         return "-";
+      case AttendanceType.empty:
+        return "";
     }
   }
 

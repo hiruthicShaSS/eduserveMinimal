@@ -11,7 +11,9 @@ import 'package:flutter_background_service_android/flutter_background_service_an
 
 // 🌎 Project imports:
 import 'package:eduserveMinimal/service/check_absent.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../global/constants.dart';
 import 'check_for_attendance_change.dart';
 
 Future<void> initializeBackgroundService() async {
@@ -57,14 +59,19 @@ void onStart(ServiceInstance service) async {
     service.stopSelf();
   });
 
-  if (service is AndroidServiceInstance) {
-    service.setForegroundNotificationInfo(
-      title: "Background Service",
-      content: "Please hide this notification channel!",
-    );
-  }
+  SharedPreferences _prefs = await SharedPreferences.getInstance();
+  Timer.periodic(
+      Duration(seconds: _prefs.getInt(kPrefs_BackgroundServiceInterval) ?? 30),
+      (timer) async {
+    if (service is AndroidServiceInstance) {
+      service.setForegroundNotificationInfo(
+        title: "Background Service",
+        content: "Please hide this notification channel!",
+      );
+    }
+  });
 
-  Timer.periodic(const Duration(hours: 4),
+  Timer.periodic(const Duration(hours: 6),
       (timer) => checkForAbsent(showNotification: true));
 
   Timer.periodic(const Duration(hours: 6),

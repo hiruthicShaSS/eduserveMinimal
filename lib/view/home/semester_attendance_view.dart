@@ -94,6 +94,8 @@ class SemesterAttendanceView extends StatelessWidget {
                       String text =
                           Attendance.getStringFromAttendanceType(data[j][i]);
 
+                      print(data[j][i]);
+
                       return tableCell.TableCell.content(
                         text: text,
                         onTap: () {
@@ -130,7 +132,7 @@ class SemesterAttendanceView extends StatelessWidget {
                             ? Colors.red
                             : text == "U"
                                 ? Colors.white.withOpacity(0.2)
-                                : text == "-"
+                                : (text == "-" || text == "")
                                     ? Colors.transparent
                                     : Colors.green.withOpacity(0.4),
                       );

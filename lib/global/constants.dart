@@ -5,6 +5,7 @@ const String kNoInternetText =
     "There was a problem connecting to the internet!";
 const String kPrefs_key_timeTableLastUpdate = "timetable_data_last_update";
 const String kPrefs_key_userLastUpdate = "user_data_last_update";
+const String kPrefs_BackgroundServiceInterval = "backgroundServiceInterval";
 const String kStorage_key_timetableData = "timetable_data";
 const String kStorage_key_userData = "user_data";
 const String kStorage_key_lastAttendancePercent = "last_attendance_percent";

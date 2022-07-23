@@ -142,9 +142,6 @@ class _HomeControllerState extends State<HomeController> {
         case "fees":
           Navigator.of(context).pushNamed("/fees");
           break;
-        case "apply_leave":
-          Navigator.of(context).pushNamed("/apply_leave");
-          break;
         case "user":
           Navigator.of(context).pushNamed("/user");
           break;
