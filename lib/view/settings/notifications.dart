@@ -1,4 +1,5 @@
 // 🐦 Flutter imports:
+import 'package:eduserveMinimal/view/settings/bg_execution_settings.dart';
 import 'package:flutter/material.dart';
 
 // 📦 Package imports:
@@ -66,6 +67,14 @@ class _NotificationsViewState extends State<NotificationsView> {
                               value: _notifyUpcomingClass,
                               onChanged: (value) async {
                                 if (value) {
+                                  SharedPreferences prefs =
+                                      await SharedPreferences.getInstance();
+                                  if (prefs.getInt(
+                                          kPrefs_BackgroundServiceInterval) ==
+                                      null) {
+                                    return showBgExecutionConsent();
+                                  }
+
                                   await setupSchedule(context);
                                 } else {
                                   await cancelAllUpcomingClassNotification();
@@ -119,6 +128,11 @@ class _NotificationsViewState extends State<NotificationsView> {
                 onChanged: (value) async {
                   SharedPreferences prefs =
                       await SharedPreferences.getInstance();
+
+                  if (prefs.getInt(kPrefs_BackgroundServiceInterval) == null) {
+                    return showBgExecutionConsent();
+                  }
+
                   await prefs.setBool("showAbsentNotification", value);
 
                   setState(() => _notifyAbsent = value);
@@ -132,6 +146,10 @@ class _NotificationsViewState extends State<NotificationsView> {
                 onChanged: (value) async {
                   SharedPreferences prefs =
                       await SharedPreferences.getInstance();
+                  if (prefs.getInt(kPrefs_BackgroundServiceInterval) == null) {
+                    return showBgExecutionConsent();
+                  }
+
                   await prefs.setBool("showAttendanceDropNotification", value);
 
                   setState(() => _notifyAttendanceDrop = value);
@@ -246,5 +264,34 @@ class _NotificationsViewState extends State<NotificationsView> {
 
     SharedPreferences.getInstance().then((prefs) =>
         prefs.setBool("upcomingClassesScheduled", _notifyUpcomingClass));
+  }
+
+  void showBgExecutionConsent() {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text("BG Execution required"),
+        content: Text(
+            "To enable this feature you need to turn on the background execution fetaure."),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(
+              "Cancel",
+              style: TextStyle(color: Colors.grey),
+            ),
+          ),
+          TextButton(
+            onPressed: () async {
+              await Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => BgExecutionSettings()));
+
+              Navigator.of(context).pop();
+            },
+            child: Text("Turn on"),
+          ),
+        ],
+      ),
+    );
   }
 }

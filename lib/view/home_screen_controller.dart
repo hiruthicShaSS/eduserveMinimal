@@ -1,4 +1,5 @@
 // 🎯 Dart imports:
+import 'dart:convert';
 import 'dart:developer';
 
 // 🐦 Flutter imports:
@@ -54,12 +55,14 @@ class _HomeControllerState extends State<HomeController> {
             noInternetWidget: const NoInternetScreen(),
             removeAwarenessAfterConnection: true,
             showDialogWhenOffline: true,
-            child: FutureBuilder(
-                future: credentialsExist(),
-                builder: (context, AsyncSnapshot<bool> snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    if (snapshot.data ?? false) {
-                      return Consumer(builder: (context, AppState appState, _) {
+            child: Consumer(builder: (context, AppState appState, _) {
+              return FutureBuilder(
+                  future: credentialsExist(appState),
+                  builder: (context, AsyncSnapshot<bool> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      if (snapshot.data ?? false) {
+                        if (appState.isLoggedIn) return const HomePage();
+
                         return FutureBuilder(
                           future: _login(appState),
                           builder: (context, AsyncSnapshot snapshot) {
@@ -85,7 +88,11 @@ class _HomeControllerState extends State<HomeController> {
                               }
                             }
 
-                            initializeBackgroundService();
+                            if (prefs
+                                    .getInt(kPrefs_BackgroundServiceInterval) !=
+                                null) {
+                              initializeBackgroundService();
+                            }
 
                             bool isAlreadyLoggedIn = appState.isLoggedIn;
 
@@ -100,14 +107,14 @@ class _HomeControllerState extends State<HomeController> {
                             return LoggingInScreen();
                           },
                         );
-                      });
+                      }
+
+                      return const Credentials();
                     }
 
-                    return const Credentials();
-                  }
-
-                  return const Center(child: CircularProgressIndicator());
-                }),
+                    return const Center(child: CircularProgressIndicator());
+                  });
+            }),
           );
         }
 
@@ -116,10 +123,24 @@ class _HomeControllerState extends State<HomeController> {
     );
   }
 
-  Future<bool> credentialsExist() async {
+  Future<bool> credentialsExist(AppState appState) async {
     final FlutterSecureStorage storage = FlutterSecureStorage();
     bool userNameExist = await storage.read(key: "username") != null;
     bool passwordExist = await storage.read(key: "password") != null;
+
+    String? lastHeaderWriteString = await storage.read(key: "header_lastWrite");
+
+    if (lastHeaderWriteString != null) {
+      DateTime lastHeaderWrite = DateTime.fromMillisecondsSinceEpoch(
+          jsonDecode(lastHeaderWriteString));
+
+      if (DateTime.now().difference(lastHeaderWrite).inMinutes < 20) {
+        // AuthService.headers =
+        //     Map.from(jsonDecode((await storage.read(key: "headers"))!));
+
+        // appState.setLoggedIn = true;
+      }
+    }
 
     return userNameExist && passwordExist;
   }
@@ -127,14 +148,12 @@ class _HomeControllerState extends State<HomeController> {
   Future _login(AppState appState) async {
     if (appState.isLoggedIn) return;
 
-    return AuthService().login();
+    return await AuthService().login();
   }
 
   void initQuickActionsEvents(BuildContext context) {
     final quickActions = QuickActions();
     quickActions.initialize((type) {
-      print(type);
-
       switch (type) {
         case "timetable":
           Navigator.of(context).pushNamed("/timetable");

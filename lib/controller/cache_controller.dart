@@ -47,10 +47,6 @@ class CacheController {
   void set setLeave(Leave leave) => _leave = leave;
   void set setHallTicket(HallTicket hallTicket) => _hallTicket = hallTicket;
 
-  void tim() {
-    print(_timeTable);
-  }
-
   User? get user => _user;
   SemesterAttendance? get semesterAttendance => _semesterAttendance;
   Fees? get fees => _fees;

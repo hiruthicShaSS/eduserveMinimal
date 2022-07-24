@@ -68,7 +68,7 @@ Future<bool> checkForAbsent({
 
   List<Attendance> attendance = _semesterAttendance!.attendance;
 
-  DateTime yesterday = DateTime(2022, 4, 19);
+  DateTime yesterday = DateTime.now().add(const Duration(days: -1));
 
   int yesterdayIndex =
       attendance.map((e) => e.date).toList().indexOf(yesterday);
@@ -89,7 +89,7 @@ Future<bool> checkForAbsent({
         }
 
         TimeTableSubject subject = getHourDataByHour(
-            _cacheController.timeTable![yesterday.weekday], i);
+            _cacheController.timeTable![yesterday.weekday - 1], i);
 
         if (subject.name.isEmpty) continue;
 

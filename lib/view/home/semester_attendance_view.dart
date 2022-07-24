@@ -94,8 +94,6 @@ class SemesterAttendanceView extends StatelessWidget {
                       String text =
                           Attendance.getStringFromAttendanceType(data[j][i]);
 
-                      print(data[j][i]);
-
                       return tableCell.TableCell.content(
                         text: text,
                         onTap: () {

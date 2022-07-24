@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:eduserveMinimal/global/constants.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:html/dom.dart';
 import 'package:http/http.dart';
+import 'package:quick_actions/quick_actions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // 🌎 Project imports:
@@ -129,6 +132,11 @@ class AuthService {
       throw FeedbackFormFound("Feedback form found!");
     }
 
+    await storage.write(key: "headers", value: jsonEncode(headers));
+    await storage.write(
+        key: "header_lastWrite",
+        value: DateTime.now().millisecondsSinceEpoch.toString());
+
     return res.body;
   }
 
@@ -144,6 +152,8 @@ class AuthService {
     await prefs.remove("autoFillFeedbackValue");
     await prefs.remove(kPrefs_key_timeTableLastUpdate);
     await prefs.remove(kPrefs_key_userLastUpdate);
+
+    await QuickActions().clearShortcutItems();
   }
 
   Future forgotPassrword(String username, String dob, String kmail) async {

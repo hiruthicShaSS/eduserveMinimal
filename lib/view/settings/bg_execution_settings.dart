@@ -30,7 +30,10 @@ class _BgExecutionSettingsState extends State<BgExecutionSettings> {
       body: Column(
         children: [
           ListTile(
-            title: Text("Enabled"),
+            title: Text(
+              "Enable",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             subtitle: Text(
                 "This is required to use features like, absent notification, attendance change and others."),
             trailing: Switch(
@@ -42,6 +45,9 @@ class _BgExecutionSettingsState extends State<BgExecutionSettings> {
                   await prefs.setInt(kPrefs_BackgroundServiceInterval, 30);
                 } else {
                   await prefs.remove(kPrefs_BackgroundServiceInterval);
+                  await prefs.remove("showAbsentNotification");
+                  await prefs.remove("showAttendanceDropNotification");
+                  await prefs.remove("upcomingClassesScheduled");
                 }
 
                 setState(() {
